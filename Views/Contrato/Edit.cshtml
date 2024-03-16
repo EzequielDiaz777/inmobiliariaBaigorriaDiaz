@@ -1,0 +1,42 @@
+@model inmobiliariaBaigorriaDiaz.Models.Contrato
+
+@{
+    ViewData["Title"] = "Edit";
+    string fecha = Model.AlquilerDesde.ToString("dd-MM-yyyy");
+}
+
+<h1>Edit</h1>
+
+<h4>Contrato</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdInquilino" class="control-label">Seleccione el Dni del inquilino.</label>
+                @*<input asp-for="IdInquilino" class="form-control"/>*@
+                <select asp-for="IdInquilino" class="form-select">
+                    @foreach (var item in ViewBag.inquilino)
+                    {
+                        <option value="@item.IdInquilino"> @item.DNI</option>
+                    }
+
+                </select>
+                <span asp-validation-for="IdInquilino" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdInmueble" class="control-label"></label>
+                <input asp-for="IdInmueble" class="form-control" />
+                <span asp-validation-for="IdInmueble" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

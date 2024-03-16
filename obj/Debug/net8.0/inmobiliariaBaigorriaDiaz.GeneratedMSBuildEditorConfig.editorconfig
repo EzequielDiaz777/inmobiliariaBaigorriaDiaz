@@ -1,0 +1,155 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = inmobiliariaBaigorriaDiaz
+build_property.RootNamespace = inmobiliariaBaigorriaDiaz
+build_property.ProjectDir = E:\Guardar\Facultad\4 - Tecnicatura en Desarrollo de Software\.Net\inmobiliariaBaigorriaDiaz\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = E:\Guardar\Facultad\4 - Tecnicatura en Desarrollo de Software\.Net\inmobiliariaBaigorriaDiaz
+build_property._RazorSourceGeneratorDebug = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Contrato/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udHJhdG9cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Contrato/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udHJhdG9cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Contrato/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udHJhdG9cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Contrato/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udHJhdG9cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Contrato/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udHJhdG9cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inmueble/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5tdWVibGVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inmueble/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5tdWVibGVcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inmueble/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5tdWVibGVcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inmueble/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5tdWVibGVcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inmueble/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5tdWVibGVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inquilino/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5xdWlsaW5vXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inquilino/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5xdWlsaW5vXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inquilino/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5xdWlsaW5vXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inquilino/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5xdWlsaW5vXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Inquilino/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5xdWlsaW5vXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Propietario/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGlldGFyaW9cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Propietario/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGlldGFyaW9cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Propietario/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGlldGFyaW9cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Propietario/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGlldGFyaW9cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Propietario/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvcGlldGFyaW9cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/TipoDeInmueble/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb0RlSW5tdWVibGVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/TipoDeInmueble/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb0RlSW5tdWVibGVcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/TipoDeInmueble/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb0RlSW5tdWVibGVcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/TipoDeInmueble/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb0RlSW5tdWVibGVcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/TipoDeInmueble/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb0RlSW5tdWVibGVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Guardar/Facultad/4 - Tecnicatura en Desarrollo de Software/.Net/inmobiliariaBaigorriaDiaz/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-hhq8lu182b
