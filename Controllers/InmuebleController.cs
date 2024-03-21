@@ -1,119 +1,140 @@
 using inmobiliariaBaigorriaDiaz.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
     public class InmuebleController : Controller
     {
-        private RepositorioInmueble ri = new RepositorioInmueble();
-        private RepositorioPropietario rp = new RepositorioPropietario();
-        private RepositorioTipoDeInmueble rtdi = new RepositorioTipoDeInmueble();
-
+        private RepositorioPropietario repoP = new RepositorioPropietario();
+        private RepositorioInmueble repoI = new RepositorioInmueble();
+        private RepositorioTipoDeInmueble repoTI = new RepositorioTipoDeInmueble();
         // GET: Inmueble
-        [HttpGet]
         public ActionResult Index()
         {
             ViewBag.Id = TempData["Id"];
-            ViewBag.entidad = "inmueble";
-            return View(ri.ObtenerInmuebles());
+            return View(repoI.ObtenerInmuebles());
         }
 
         // GET: Inmueble/Details/5
-        [HttpGet]
         public ActionResult Details(int id)
         {
-            return View(ri.ObtenerInmueblePorID(id));
+            return View(repoI.ObtenerInmueblePorID(id));
         }
 
         // GET: Inmueble/Create
-        [HttpGet]
         public ActionResult Create()
-        {
-            var propietarios = rp.ObtenerPropietarios();
-            var inmuebles = rtdi.ObtenerTiposDeInmuebles();
-            ViewBag.propietarios = propietarios;
-            ViewBag.inmuebles = inmuebles;
-            return View();
-        }
-
-        // POST: Inmueble/Create
-        [HttpPost]
-        public ActionResult Create(Inmueble inmueble)
         {
             try
             {
-                ri.AltaFisica(inmueble);
-                TempData["Id"] = inmueble.IdInmueble;
-                return RedirectToAction(nameof(Index));
+                ViewBag.Propietario = repoP.ObtenerPropietarios();
+                ViewBag.Inmueble = repoTI.ObtenerTiposDeInmuebles();
+                return View();
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.ToString());
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
                 return View();
             }
         }
 
+        // POST: Inmueble/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Inmueble inmueble)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    repoI.Alta(inmueble);
+                    TempData["Id"] = inmueble.IdInmueble;
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                    return View(inmueble);
+
+            }
+            catch (System.Exception)
+            {
+                
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al guardar el inmueble.");
+                return View(inmueble); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
+            }
+        }
+
         // GET: Inmueble/Edit/5
-        [HttpGet]
         public ActionResult Edit(int id)
         {
-            string[] lista = new string[3];
-            lista[0] = "Casa";
-            lista[1] = "Departamento";
-            lista[2] = "Oficina";
-            ViewBag.lista = lista;
-            ViewBag.propietarios = rp.ObtenerPropietarios();
-            ViewBag.inmuebles = rtdi.ObtenerTiposDeInmuebles();
-            return View(ri.ObtenerInmueblePorID(id));
+            try
+            {
+                var aux = repoI.ObtenerInmueblePorID(id);
+                ViewBag.Propietario = repoP.ObtenerPropietarios();
+                return View(aux);
+            }
+            catch (System.Exception)
+           
+            {
+                 
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
+                return View();
+            }
+
         }
 
         // POST: Inmueble/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
             {
-                // TODO: Add update logic here
-                Inmueble? i = ri.ObtenerInmueblePorID(id);
-                if (i != null)
-                {
-                    i.IdTipoDeInmueble = inmueble.IdTipoDeInmueble;
-                    i.Direccion = inmueble.Direccion;
-                    i.Ambientes = inmueble.Ambientes;
-                    i.Superficie = inmueble.Superficie;
-                    i.Latitud = inmueble.Latitud;
-                    i.Longitud = inmueble.Longitud;
-                    i.Precio = inmueble.Precio;
-                    i.Estado = inmueble.Estado;
-                    i.IdPropietario = inmueble.IdPropietario;
-                    ri.Modificacion(i);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return RedirectToAction("Index");
-                }
+                Inmueble i = repoI.ObtenerInmueblePorID(id);
+
+                i.Tipo = inmueble.Tipo;
+                i.Direccion = inmueble.Direccion;
+                i.Ambientes = inmueble.Ambientes;
+                i.Superficie = inmueble.Superficie;
+                i.Longitud = inmueble.Longitud;
+                i.Latitud = inmueble.Latitud;
+                i.Precio = inmueble.Precio;
+                i.Uso = inmueble.Uso;
+                i.Estado = inmueble.Estado;
+                i.Duenio = inmueble.Duenio;
+
+                repoI.ModificarInmueble(i);
+
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
-                return RedirectToAction("Edit");
+                // Maneja la excepción o imprime detalles para depuración
+                Console.WriteLine(ex.ToString());
+                return View();
             }
         }
 
         // GET: Inmueble/Delete/5
-        [HttpGet]
         public ActionResult Delete(int id)
         {
-            return View(ri.ObtenerInmueblePorID(id));
+            return View(repoI.ObtenerInmueblePorID(id));
         }
 
         // POST: Inmueble/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
             try
             {
-                ri.BajaFisica(id);
+                repoI.EliminarInmueble(id);
+
                 return RedirectToAction(nameof(Index));
             }
             catch

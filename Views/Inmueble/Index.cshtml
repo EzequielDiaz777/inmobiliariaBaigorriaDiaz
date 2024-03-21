@@ -4,84 +4,99 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Lista de Inmuebles</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Crear un Inmueble</a>
 </p>
-<table class="table">
+<table class="table table-striped table-hover table-bordered">
     <thead>
         <tr>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IdInmueble)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Direccion)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IdTipoDeInmueble)
             </th>
-            <th>
+             <th class="text-center">
                 @Html.DisplayNameFor(model => model.Ambientes)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Superficie)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Latitud)
-            </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Longitud)
             </th>
-            <th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Latitud)
+            </th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
-            <th>
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.Uso)
+            </th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IdPropietario)
             </th>
-            <th></th>
+            <th class="text-center">
+                Opciones
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            <td  class="text-center">
                 @Html.DisplayFor(modelItem => item.IdInmueble)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Direccion)
             </td>
-            <td>
+            <td  class="text-center">
                 @Html.DisplayFor(modelItem => item.IdTipoDeInmueble)
             </td>
-            <td>
+            <td  class="text-center">
                 @Html.DisplayFor(modelItem => item.Ambientes)
             </td>
-            <td>
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.Superficie)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Latitud)
-            </td>
-            <td>
+            <td  class="text-center">
                 @Html.DisplayFor(modelItem => item.Longitud)
             </td>
-            <td>
+            <td  class="text-center">
+                @Html.DisplayFor(modelItem => item.Latitud)
+            </td>
+            <td  class="text-center">
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
+            <td  class="text-center">
+                @Html.DisplayFor(modelItem => item.Uso)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPropietario)
+            <td  class="text-center">
+                
+                @if(!item.Estado){
+                    <span>No Disponible</span>
+                }else{
+                    <span>Disponible</span>
+                }
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            <td  class="text-center">
+                @item.Duenio?.ToString()
+            </td>
+            <td class="text-center">
+                <a href="@Url.Action("Edit", new { id = item.IdInmueble })" title="Editar"> <i class="fas fa-edit"></i></a>
+    |
+                <a href="@Url.Action("Details", new { id = item.IdInmueble })" title="Detalles"> <i class="fas fa-info-circle"></i></a>
+    |
+                <a href="@Url.Action("Delete", new { id = item.IdInmueble })" title="Eliminar"> <i class="fas fa-trash-alt text-danger"></i></a>
             </td>
         </tr>
 }

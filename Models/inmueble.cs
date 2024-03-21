@@ -1,47 +1,51 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace inmobiliariaBaigorriaDiaz.Models
+namespace inmobiliariaBaigorriaDiaz.Models;
+
+public class Inmueble
 {
-    public class Inmueble
-    {
-        [Display(Name = "Nº de inmueble")]
-        public int IdInmueble { get; set; }
+    [Key]
+    [Display(Name = "Nº")]
+    public int IdInmueble { get; set; }
 
-        [Required]
-        [Display(Name = "Dirección")]
-        public string Direccion { get; set; } = "";
+    [Required]
+    [Display(Name = "Tipo")]
+    public int IdTipoDeInmueble { get; set; }
 
-        [Required]
-        [Display(Name = "Tipo de inmueble")]
-        public int IdTipoDeInmueble { get; set; }
+    [ForeignKey(nameof(IdTipoDeInmueble))]
+    public TipoDeInmueble? Tipo { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(IdTipoDeInmueble))]
-        public TipoDeInmueble TipoDeInmueble { get; set; } = new TipoDeInmueble();
+    [Required]
+    public string Direccion { get; set; }
 
-        [Required]
-        public int Ambientes { get; set; } = 0;
+    [Required]
+    public int Ambientes { get; set; }
 
-        [Required]
-        public decimal Superficie { get; set; } = 0;
+    [Required]
+    public decimal Superficie { get; set; }
 
-        public string? Latitud { get; set; }
+    public decimal? Longitud { get; set; }
 
-        public string? Longitud { get; set; }
+    public decimal? Latitud { get; set; }
 
-        [Required]
-        public decimal Precio { get; set; }
+    [Required]
+    public decimal Precio { get; set; }
 
-        [Required]
-        public bool Estado { get; set; }
+    [Required]
+    public string Uso { get; set; } = "";
+    
+    [Required]
+    public bool Estado { get; set;}
 
-        [Display(Name = "Dueño")]
-        [Required]
-        public int IdPropietario { get; set; }
+    [Display(Name = "Dueño")]
+    public int IdPropietario { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(IdPropietario))]
-        public Propietario Duenio { get; set; } = new Propietario();
-    }
+    [ForeignKey(nameof(IdPropietario))]
+    public Propietario? Duenio { get; set; }
+
 }

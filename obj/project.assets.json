@@ -6791,24 +6791,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\long_\\.nuget\\packages\\": {}
+    "C:\\Users\\Familia\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Guardar\\Facultad\\4 - Tecnicatura en Desarrollo de Software\\.Net\\inmobiliariaBaigorriaDiaz\\inmobiliariaBaigorriaDiaz.csproj",
+      "projectUniqueName": "C:\\Users\\Familia\\Documents\\GitHub\\inmobiliariaBaigorriaDiaz\\inmobiliariaBaigorriaDiaz.csproj",
       "projectName": "inmobiliariaBaigorriaDiaz",
-      "projectPath": "E:\\Guardar\\Facultad\\4 - Tecnicatura en Desarrollo de Software\\.Net\\inmobiliariaBaigorriaDiaz\\inmobiliariaBaigorriaDiaz.csproj",
-      "packagesPath": "C:\\Users\\long_\\.nuget\\packages\\",
-      "outputPath": "E:\\Guardar\\Facultad\\4 - Tecnicatura en Desarrollo de Software\\.Net\\inmobiliariaBaigorriaDiaz\\obj\\",
+      "projectPath": "C:\\Users\\Familia\\Documents\\GitHub\\inmobiliariaBaigorriaDiaz\\inmobiliariaBaigorriaDiaz.csproj",
+      "packagesPath": "C:\\Users\\Familia\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Familia\\Documents\\GitHub\\inmobiliariaBaigorriaDiaz\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\long_\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Familia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

@@ -1,235 +1,251 @@
 using MySql.Data.MySqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace inmobiliariaBaigorriaDiaz.Models
+namespace inmobiliariaBaigorriaDiaz.Models;
+
+public class RepositorioInmueble
 {
-	public class RepositorioInmueble
-	{
-		protected readonly string connectionString;
-		private RepositorioPropietario rp = new RepositorioPropietario();
-		private RepositorioTipoDeInmueble rtdi = new RepositorioTipoDeInmueble();
+    protected readonly string connectionString;
+    public RepositorioInmueble()
+    {
+        connectionString = "Server=localhost;User=root;Password=;Database=inmobiliariabaigorriadiaz;";
+    }
 
-		public RepositorioInmueble()
-		{
-			connectionString = "Server=localhost;User=root;Password=;Database=inmobiliariabaigorriadiaz;SslMode=none";
-		}
+    public int Alta(Inmueble inmueble)
+    {
+        var res = -1;
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"INSERT INTO inmueble(IdTipoDeInmueble,Direccion,Ambientes,Superficie,Longitud,Latitud,Precio,Uso,Estado,IdPropietario) 
+            VALUES(@IdTipoDeInmueble,@Direccion,@Ambientes,@Superficie,@Longitud,@Latitud,@Precio,@Uso,@Estado,@IdPropietario);
+            SELECT LAST_INSERT_ID()";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@IdTipoDeInmueble", inmueble.IdTipoDeInmueble);
+                cmd.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
+                cmd.Parameters.AddWithValue("@Ambientes", inmueble.Ambientes);
+                cmd.Parameters.AddWithValue("@Superficie", inmueble.Superficie);
+                cmd.Parameters.AddWithValue("@Longitud", inmueble.Longitud.HasValue ? inmueble.Longitud.Value : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Latitud", inmueble.Latitud.HasValue ? inmueble.Latitud.Value : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Precio", inmueble.Precio);
+                cmd.Parameters.AddWithValue("@Uso", inmueble.Uso);
+                cmd.Parameters.AddWithValue("@Estado", inmueble.Estado);
+                cmd.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
+                conn.Open();
+                res = Convert.ToInt32(cmd.ExecuteScalar());
+                inmueble.IdInmueble = res;
+                conn.Close();
+            }
+        }
+        return res;
+    }
 
-		public int AltaFisica(Inmueble inmueble)
-		{
-			var res = -1;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @"INSERT INTO inmueble(IdPropietario, IdTipoDeInmueble, Direccion, Ambientes, Superficie, Latitud, Longitud, Precio, Estado) 
-				VALUES (@IdPropietario, @IdTipoDeInmueble, @Direccion, @Ambientes, @Superficie, @Latitud, @Longitud, @Precio, @Estado);
-				SELECT LAST_INSERT_ID();";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
-					cmd.Parameters.AddWithValue("@IdTipoDeInmueble", inmueble.IdTipoDeInmueble);
-					cmd.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
-					cmd.Parameters.AddWithValue("@Ambientes", inmueble.Ambientes);
-					cmd.Parameters.AddWithValue("@Superficie", inmueble.Superficie);
-					cmd.Parameters.AddWithValue("@Latitud", string.IsNullOrEmpty(string.Format("inmueble.Latitud")) ? 0 : inmueble.Latitud);
-					cmd.Parameters.AddWithValue("@Longitud", string.IsNullOrEmpty(string.Format("inmueble.Longitud")) ? 0 : inmueble.Longitud);
-					cmd.Parameters.AddWithValue("@Precio", inmueble.Precio);
-					cmd.Parameters.AddWithValue("@Estado", inmueble.Estado);
-					conn.Open();
-					res = Convert.ToInt32(cmd.ExecuteScalar());
-					inmueble.IdInmueble = res;
-					conn.Close();
-				}
-			}
-			return res;
-		}
+    public void EliminarInmueble(int id)
+    {
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = "DELETE FROM inmueble WHERE IdInmueble=@Id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                int rowsAffected = cmd.ExecuteNonQuery(); // Obtiene la cantidad de filas afectadas por la eliminación
+                conn.Close();
 
-		public bool AltaLogica(int id)
-		{
-			bool baja;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @"UPDATE inmueble SET Estado = 1 FROM inmueble WHERE IdInmueble = @id";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@id", id);
-					conn.Open();
-					baja = cmd.ExecuteNonQuery() != 0;
-					conn.Close();
-				}
-			}
-			return baja;
-		}
+                if (rowsAffected == 0)
+                {
+                    throw new InvalidOperationException($"No se encontró ningún Inmueble con el ID {id} para eliminar.");
+                }
+            }
+        }
+    }
 
-		public bool BajaFisica(int id)
-		{
-			bool baja;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @"DELETE FROM inmueble WHERE IdInmueble = @id";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@id", id);
-					conn.Open();
-					baja = cmd.ExecuteNonQuery() != 0;
-					conn.Close();
-				}
-			}
-			return baja;
-		}
+    public void ModificarInmueble(Inmueble i)
+    {
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"UPDATE inmueble SET
+                     IdTipoDeInmueble=@IdTipoDeInmueble,
+                     Direccion=@Direccion,
+                     Ambientes=@Ambientes,
+                     Superficie=@Superficie,
+                     Longitud=@Longitud,
+                     Latitud=@Latitud,
+                     Precio=@Precio,
+                     Uso=@Uso,
+                     Estado=@Estado,
+                     IdPropietario=@IdPropietario
+                     WHERE IdInmueble=@IdInmueble";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@IdInmueble", i.IdInmueble);
+                cmd.Parameters.AddWithValue("@IdTipoDeInmueble", i.IdTipoDeInmueble);
+                cmd.Parameters.AddWithValue("@Direccion", i.Direccion);
+                cmd.Parameters.AddWithValue("@Ambientes", i.Ambientes);
+                cmd.Parameters.AddWithValue("@Superficie", i.Superficie);
+                cmd.Parameters.AddWithValue("@Longitud", i.Longitud.HasValue ? i.Longitud.Value : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Latitud", i.Latitud.HasValue ? i.Latitud.Value : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Precio", i.Precio);
+                cmd.Parameters.AddWithValue("@Uso", i.Uso);
+                cmd.Parameters.AddWithValue("@Estado", i.Estado);
+                cmd.Parameters.AddWithValue("@IdPropietario", i.IdPropietario);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+    }
 
-		public bool BajaFisicaLogica(int id)
-		{
-			bool baja;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @"UPDATE inmueble SET Estado = 0 FROM inmueble WHERE IdInmueble = @id";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@id", id);
-					conn.Open();
-					baja = cmd.ExecuteNonQuery() != 0;
-					conn.Close();
-				}
-			}
-			return baja;
-		}
+    public List<Inmueble> ObtenerInmuebles()
+    {
+        List<Inmueble> inmuebles = new List<Inmueble>();
 
-		public int Modificacion(Inmueble inmueble)
-		{
-			int res;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @"UPDATE inmueble SET 
-							IdTipoDeInmueble = @IdTipoDeInmueble,
-							Direccion = @Direccion,
-							Ambientes = @Ambientes,
-							Superficie = @Superficie,
-							Latitud = @Latitud,
-							Longitud = @Longitud,
-							Precio = @Precio,
-							Estado = @Estado,
-							IdPropietario = @IdPropietario
-							WHERE IdInmueble = @IdInmueble";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@IdInmueble", inmueble.IdInmueble);
-					cmd.Parameters.AddWithValue("@IdTipoDeInmueble", inmueble.IdTipoDeInmueble);
-					cmd.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
-					cmd.Parameters.AddWithValue("@Ambientes", inmueble.Ambientes);
-					cmd.Parameters.AddWithValue("@Superficie", inmueble.Superficie);
-					cmd.Parameters.AddWithValue("@Latitud", string.IsNullOrEmpty(string.Format("inmueble.Latitud")) ? 0 : inmueble.Latitud);
-					cmd.Parameters.AddWithValue("@Longitud", string.IsNullOrEmpty(string.Format("inmueble.Longitud")) ? 0 : inmueble.Longitud);
-					cmd.Parameters.AddWithValue("@Precio", inmueble.Precio);
-					cmd.Parameters.AddWithValue("@Estado", inmueble.Estado);
-					cmd.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
-					Console.WriteLine(inmueble.Estado);
-					conn.Open();
-					res = cmd.ExecuteNonQuery();
-					conn.Close();
-				}
-			}
-			return res;
-		}
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"SELECT i.IdInmueble, i.IdTipoDeInmueble, i.Direccion, i.Ambientes, i.Superficie, i.Longitud, i.Latitud, i.Precio, i.Uso, i.Estado, p.IdPropietario as IdPropietario, p.Nombre as PropietarioNombre, p.Apellido as PropietarioApellido
+        FROM inmueble i INNER JOIN propietario p ON i.IdPropietario = p.IdPropietario";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Inmueble inmueble = new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32("IdInmueble"),
+                            IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble"),
+                            Direccion = reader.GetString("Direccion"),
+                            Ambientes = reader.GetInt32("Ambientes"),
+                            Superficie = reader.GetDecimal("Superficie"),
+                            Longitud = reader.IsDBNull(reader.GetOrdinal("Longitud")) ? (decimal?)null : reader.GetDecimal("Longitud"),
+                            Latitud = reader.IsDBNull(reader.GetOrdinal("Latitud")) ? (decimal?)null : reader.GetDecimal("Latitud"),
+                            Precio = reader.GetDecimal("Precio"),
+                            Uso = reader.GetString("Uso"),
+                            Estado = reader.GetBoolean("Estado"),
+                            //PropietarioId = reader.GetInt32("PropietarioId"),
+                            Duenio = new Propietario
+                            {
+                                IdPropietario = reader.GetInt32("IdPropietario"),
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido"),
+                            }
+                        };
+                        inmuebles.Add(inmueble);
+                    }
+                }
+                conn.Close();
+            }
+        }
+
+        return inmuebles;
+    }
 
 
-		public List<Inmueble> ObtenerInmuebles()
-		{
-			var res = new List<Inmueble>();
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @$"SELECT 
-							IdInmueble, 
-							{nameof(Inmueble.IdTipoDeInmueble)}, 
-							{nameof(Inmueble.Direccion)}, 
-							{nameof(Inmueble.Ambientes)}, 
-							{nameof(Inmueble.Superficie)}, 
-							{nameof(Inmueble.Latitud)}, 
-							{nameof(Inmueble.Longitud)}, 
-							{nameof(Inmueble.Precio)}, 
-							{nameof(Inmueble.Estado)}, 
-							{nameof(Inmueble.IdPropietario)} 
-							FROM inmueble;";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					conn.Open();
-					using (MySqlDataReader reader = cmd.ExecuteReader())
-					{
-						while (reader.Read())
-						{
-							int IdPropietario = reader.GetInt32("IdPropietario");
-							int IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble");
-							var tipoDeInmueble = rtdi.ObtenerTipoDeInmueblePorID(IdTipoDeInmueble);
-							var propietario = rp.ObtenerPropietarioPorID(IdPropietario);
-							res.Add(new Inmueble
-							{
-								IdInmueble = reader.GetInt32("IdInmueble"),
-								IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble"),
-								TipoDeInmueble = tipoDeInmueble,
-								Direccion = reader.GetString("Direccion"),
-								Ambientes = reader.GetInt32("Ambientes"),
-								Superficie = reader.GetDecimal("Superficie"),
-								Latitud = reader["Latitud"] != DBNull.Value ? reader.GetString("Latitud") : "",
-								Longitud = reader["Longitud"] != DBNull.Value ? reader.GetString("Longitud") : "",
-								Precio = reader.GetDecimal("Precio"),
-								Estado = reader.GetBoolean("Estado"),
-								IdPropietario = reader.GetInt32("IdPropietario"),
-								Duenio = propietario
-							});
-						}
-					}
-					conn.Close();
-				}
-			}
-			return res;
-		}
+    public Inmueble ObtenerInmueblePorID(int id)
+    {
+        Inmueble res = null;
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"SELECT i.IdInmueble as Id, i.IdTipoDeInmueble, i.Direccion, i.Ambientes, i.Superficie, i.Longitud, i.Latitud, i.Precio, i.Uso, i.Estado, p.IdPropietario as IdPropietario, p.Nombre as PropietarioNombre, p.Apellido as PropietarioApellido 
+                    FROM inmueble i INNER JOIN propietario p ON i.IdPropietario = p.IdPropietario
+                    WHERE i.IdInmueble = @Id";
 
-		public Inmueble ObtenerInmueblePorID(int id)
-		{
-			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
-			using MySqlConnection conn = mySqlConnection;
-			var sql = @$"SELECT 
-						{nameof(Inmueble.IdTipoDeInmueble)}, 
-						{nameof(Inmueble.Direccion)}, 
-						{nameof(Inmueble.Ambientes)}, 
-						{nameof(Inmueble.Superficie)}, 
-						{nameof(Inmueble.Latitud)}, 
-						{nameof(Inmueble.Longitud)}, 
-						{nameof(Inmueble.Precio)}, 
-						{nameof(Inmueble.Estado)}, 
-						{nameof(Inmueble.IdPropietario)} 
-					FROM inmueble 
-					WHERE IdInmueble = @id";
-			Inmueble inmueble = new Inmueble();
-			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-			{
-				cmd.Parameters.AddWithValue("@id", id);
-				conn.Open();
-				using (MySqlDataReader reader = cmd.ExecuteReader())
-				{
-					if (reader.Read())
-					{
-						int IdPropietario = reader.GetInt32("IdPropietario");
-						int IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble");
-						var tipoDeInmueble = rtdi.ObtenerTipoDeInmueblePorID(IdTipoDeInmueble);
-						var propietario = new Propietario();
-						propietario = rp.ObtenerPropietarioPorID(IdPropietario);
-						inmueble = new Inmueble
-						{
-							IdInmueble = reader.GetInt32("IdInmueble"),
-							TipoDeInmueble = tipoDeInmueble,
-							Direccion = reader.GetString("Direccion"),
-							Ambientes = reader.GetInt32("Ambientes"),
-							Superficie = reader.GetDecimal("Superficie"),
-							Latitud = reader["Latitud"] != DBNull.Value ? reader.GetString("Latitud") : "",
-							Longitud = reader["Longitud"] != DBNull.Value ? reader.GetString("Longitud") : "",
-							Precio = reader.GetDecimal("Precio"),
-							Estado = reader.GetBoolean("Estado"),
-							IdPropietario = reader.GetInt32("IdPropietario"),
-							Duenio = propietario
-						};
-					}
-				}
-				conn.Close();
-			}
-			return inmueble;
-		}
-	}
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        res = new Inmueble();
+                        res.IdInmueble = reader.GetInt32("Id");
+                        res.IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble");
+                        res.Direccion = reader.GetString("Direccion");
+                        res.Ambientes = reader.GetInt32("Ambientes");
+                        res.Superficie = reader.GetDecimal("Superficie");
+                        res.Longitud = reader.IsDBNull(reader.GetOrdinal("Longitud")) ? (decimal?)null : reader.GetDecimal("Longitud");
+                        res.Latitud = reader.IsDBNull(reader.GetOrdinal("Latitud")) ? (decimal?)null : reader.GetDecimal("Latitud");
+                        res.Precio = reader.GetDecimal("Precio");
+                        res.Uso = reader.GetString("Uso");
+                        res.Estado = reader.GetBoolean("Estado");
+                        res.IdPropietario = reader.GetInt32("IdPropietario");
+                        res.Duenio = new Propietario
+                        {
+                            IdPropietario = reader.GetInt32("IdPropietario"),
+                            Nombre = reader.GetString("PropietarioNombre"),
+                            Apellido = reader.GetString("PropietarioApellido"),
+                        };
+
+                    }
+
+                }
+                conn.Close();
+            }
+        }
+
+        if (res == null)
+        {
+            throw new Exception("No se encontró ningún Inmueble con el ID especificado.");
+        }
+
+        return res;
+    }
+
+    public List<Inmueble> ObtenerInmueblesPorPropietario(int id)
+    {
+        List<Inmueble> inmuebles = new List<Inmueble>();
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @"SELECT  i.IdInmueble as IdInmueble, i.IdTipoDeInmueble, i.Direccion, i.Ambientes, i.Superficie, i.Longitud, i.Latitud, i.Precio, i.Uso, i.Estado, p.IdPropietario, p.Nombre, p.Apellido 
+            FROM inmueble i 
+            JOIN Propietario p ON i.IdPropietario = p.IdPropietario";
+            
+
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.CommandType = CommandType.Text;
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Inmueble inmueble = new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32("IdInmueble"),
+                            IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble"),
+                            Direccion = reader.GetString("Direccion"),
+                            Ambientes = reader.GetInt32("Ambientes"),
+                            Superficie = reader.GetDecimal("Superficie"),
+                            Longitud = reader.IsDBNull(reader.GetOrdinal("Longitud")) ? (decimal?)null : reader.GetDecimal("Longitud"),
+                            Latitud = reader.IsDBNull(reader.GetOrdinal("Latitud")) ? (decimal?)null : reader.GetDecimal("Latitud"),
+                            Precio = reader.GetDecimal("Precio"),
+                            Uso = reader.GetString("Uso"),
+                            Estado = reader.GetBoolean("Estado"),
+                            IdPropietario = reader.GetInt32("IdPropietario"),
+                            Duenio = new Propietario
+                            {
+                                IdPropietario = reader.GetInt32("IdPropietario"),
+                                Nombre = reader.GetString("Nombre"),
+                                Apellido = reader.GetString("Apellido"),
+                            }
+                        };
+                        inmuebles.Add(inmueble);
+                    }
+                }
+                conn.Close();
+            }
+        }
+
+        return inmuebles;
+    }
+
+
 }

@@ -7,6 +7,7 @@
     <title>@ViewData["Title"] - inmobiliariaBaigorriaDiaz</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link rel="stylesheet" href="~/inmobiliariaBaigorriaDiaz.styles.css" asp-append-version="true" />
 </head>
 
@@ -52,6 +53,25 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <div class="">
+                @if (ViewBag.Id != null)
+                {
+                    <div id="alertMessage" class="alert alert-primary alert-dismissible fade show fadeOut" role="alert">
+                        <strong>¡Éxito!</strong> Datos Guardados Correctamente!
+                        <button type="button" class ="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&#x2714;</span>
+                        </button>
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            var alertMessage = document.getElementById('alertMessage');
+                            alertMessage.style.display = 'none';
+                            alertMessage.remove();
+                        }, 4000);
+                    </script>
+
+                }
+            </div>
             @RenderBody()
         </main>
     </div>
