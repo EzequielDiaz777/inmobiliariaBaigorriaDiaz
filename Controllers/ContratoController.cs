@@ -30,8 +30,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.inmuebles = rinm.ObtenerInmuebles();
-            ViewBag.inquilinos = rinq.ObtenerInquilinos();
+            ViewBag.Inmuebles = rinm.ObtenerInmuebles();
+            ViewBag.Inquilinos = rinq.ObtenerInquilinos();
             return View();
         }
 
@@ -90,7 +90,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                rc.BajaFisica(id);
+                rc.BajaLogica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -10,17 +10,35 @@
     <h4>Contrato</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Inquilino.DNI)
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdContrato)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Inquilino.DNI)
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdContrato)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Inmueble.Duenio.DNI)
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInquilino)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Inmueble.Duenio.DNI)
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdInquilino)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInmueble)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdInmueble)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PrecioDeContrato)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PrecioDeContrato)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Estado)
         </dd>
     </dl>
 </div>

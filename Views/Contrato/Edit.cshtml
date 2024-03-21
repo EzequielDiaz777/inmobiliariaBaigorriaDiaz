@@ -31,6 +31,16 @@
                 <span asp-validation-for="IdInmueble" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="PrecioDeContrato" class="control-label"></label>
+                <input asp-for="PrecioDeContrato" class="form-control" />
+                <span asp-validation-for="PrecioDeContrato" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Estado" /> @Html.DisplayNameFor(model => model.Estado)
+                </label>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -40,3 +50,4 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+

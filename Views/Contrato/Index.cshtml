@@ -13,10 +13,16 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.IdContrato)
+            </th>
+            <th>
                 Nombre del Inquilino
             </th>
             <th>
                 Domicilio del Inmueble
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrecioDeContrato)
             </th>
             <th>
                 Fecha de Inicio del Contrato
@@ -25,8 +31,9 @@
                 Fecha de Fin del Contrato
             </th>
             <th>
-
+                @Html.DisplayNameFor(model => model.Estado)
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -34,10 +41,16 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.IdContrato)
+                </td>
+                <td>
                     @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
                 </td>
                 <td>
                     @(item.Inmueble.Direccion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrecioDeContrato)
                 </td>
                 <td>
                     @(item.AlquilerDesde.ToString("dd/MM/yyyy"))
@@ -46,8 +59,11 @@
                     @(item.AlquilerHasta.ToString("dd/MM/yyyy"))
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.IdContrato }) |
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.IdContrato }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.IdContrato }) |
                     @Html.ActionLink("Delete", "Delete", new { id = item.IdContrato })
                 </td>
             </tr>
