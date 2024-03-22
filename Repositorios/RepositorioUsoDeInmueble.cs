@@ -16,11 +16,11 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"INSERT INTO UsoDeInmueble(Uso, Estado) VALUES (@Uso, 1);
+				var sql = @$"INSERT INTO {nameof(UsoDeInmueble)}({nameof(UsoDeInmueble.Nombre)}, {nameof(UsoDeInmueble.Estado)}) VALUES (@Nombre, 1);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
-					cmd.Parameters.AddWithValue("@Uso", UsoDeInmueble.Uso);
+					cmd.Parameters.AddWithValue("@Nombre", UsoDeInmueble.Nombre);
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					UsoDeInmueble.IdUsoDeInmueble = res;
@@ -35,7 +35,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE UsoDeInmueble SET Estado = 1 FROM UsoDeInmueble WHERE IdUsoDeInmueble = @id";
+				var sql = @$"UPDATE {nameof(UsoDeInmueble)} SET {nameof(UsoDeInmueble.Estado)} = 1 WHERE {nameof(UsoDeInmueble.IdUsoDeInmueble)} = @id;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -52,9 +52,9 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE UsoDeInmueble SET 
-                            Estado = 0 
-                            WHERE IdUsoDeInmueble = @id";
+				var sql = @$"UPDATE {nameof(UsoDeInmueble)} SET 
+                            {nameof(UsoDeInmueble.Estado)} = 0 
+                            WHERE {nameof(UsoDeInmueble.IdUsoDeInmueble)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -71,15 +71,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			int res;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE UsoDeInmueble SET 
-                            IdUsoDeInmueble = @IdUsoDeInmueble,
-							Uso = @Uso,
-                            Estado = @Estado
-							WHERE IdUsoDeInmueble = @IdUsoDeInmueble;";
+				var sql = @$"UPDATE {nameof(UsoDeInmueble)} SET 
+                            {nameof(UsoDeInmueble.IdUsoDeInmueble)} = @IdUsoDeInmueble,
+							{nameof(UsoDeInmueble.Nombre)} = @Nombre,
+                            {nameof(UsoDeInmueble.Estado)} = @Estado
+							WHERE {nameof(UsoDeInmueble.IdUsoDeInmueble)} = @IdUsoDeInmueble;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdUsoDeInmueble", UsoDeInmueble.IdUsoDeInmueble);
-					cmd.Parameters.AddWithValue("@Uso", UsoDeInmueble.Uso);
+					cmd.Parameters.AddWithValue("@Nombre", UsoDeInmueble.Nombre);
 					cmd.Parameters.AddWithValue("@Estado", UsoDeInmueble.Estado);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
@@ -96,9 +96,9 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			{
 				var sql = @$"SELECT 
 						{nameof(UsoDeInmueble.IdUsoDeInmueble)}, 
-						{nameof(UsoDeInmueble.Uso)},
+						{nameof(UsoDeInmueble.Nombre)},
 						{nameof(UsoDeInmueble.Estado)}				
-					FROM UsoDeInmueble";
+					FROM {nameof(UsoDeInmueble)}";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -109,7 +109,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							res.Add(new UsoDeInmueble
 							{
 								IdUsoDeInmueble = reader.GetInt32("IdUsoDeInmueble"),
-								Uso = reader.GetString("Uso"),
+								Nombre = reader.GetString("Nombre"),
 								Estado = reader.GetBoolean("Estado"),
 							});
 						}
@@ -127,11 +127,11 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			using MySqlConnection conn = mySqlConnection;
 			var sql = @$"SELECT 
 							{nameof(UsoDeInmueble.IdUsoDeInmueble)}, 
-							{nameof(UsoDeInmueble.Uso)}, 
+							{nameof(UsoDeInmueble.Nombre)}, 
 							{nameof(UsoDeInmueble.Estado)}
-						FROM UsoDeInmueble 
-						WHERE IdUsoDeInmueble = @id";
-			UsoDeInmueble usoDeInmueble = new UsoDeInmueble();
+						FROM {nameof(UsoDeInmueble)} 
+						WHERE {nameof(UsoDeInmueble.IdUsoDeInmueble)} = @id";
+			UsoDeInmueble? usoDeInmueble = new UsoDeInmueble();
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{
 				cmd.Parameters.AddWithValue("@id", id);
@@ -143,7 +143,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						usoDeInmueble = new UsoDeInmueble
 						{
 							IdUsoDeInmueble = reader.GetInt32("IdUsoDeInmueble"),
-							Uso = reader.GetString("Uso"),
+							Nombre = reader.GetString("Nombre"),
 							Estado = reader.GetBoolean("Estado"),
 						};
 					}

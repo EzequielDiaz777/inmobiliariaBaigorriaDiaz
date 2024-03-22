@@ -7,7 +7,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 		[Display(Name = "Código")]
 		public int IdUsoDeInmueble { get; set; }
 		[Required]
-		public string Uso { get; set; } = "";
+		public string Nombre { get; set; } = "";
 		[Required]
 		public bool Estado {get; set;} = true;
 	}

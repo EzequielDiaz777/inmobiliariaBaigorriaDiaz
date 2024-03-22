@@ -4,62 +4,44 @@
     ViewData["Title"] = "Index";
 }
 
-<h1 class="text-center"><u>Lista de usos de inmuebles</u></h1>
+<h1>Index</h1>
 
-<a class="btn btn-primary" asp-action="Create">Crear</a>
-<br>
-<br>
-<table class="table table-striped table-hover table-bordered">
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
     <thead>
         <tr>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.IdUsoDeInmueble)
             </th>
-            <th class="text-center">
-                @Html.DisplayNameFor(model => model.Uso)
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
             </th>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
-            <th class="text-center button-column">
-                Opciones
-            </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @if(Model != null)@foreach (var item in Model)
-        {
-            <tr>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.IdUsoDeInmueble)
-                </td>
-                <td class="text-center">
-                    @Html.DisplayFor(modelItem => item.Uso)
-                </td>
-                <td class="text-center">
-
-                    @if (!item.Estado)
-                    {
-                        <span>No Disponible</span>
-                    }
-                    else
-                    {
-                        <span>Disponible</span>
-                    }
-                </td>
-                <td class="text-center">
-                    <span>
-                        <a href="@Url.Action("Edit", new { id = item.IdUsoDeInmueble })" title="Editar"> <i
-                                class="fas fa-edit"></i></a>
-                        |
-                        <a href="@Url.Action("Details", new { id = item.IdUsoDeInmueble })" title="Detalles"> <i
-                                class="fas fa-info-circle"></i></a>
-                        |
-                        <a href="@Url.Action("Delete", new { id = item.IdUsoDeInmueble })" title="Eliminar"> <i
-                                class="fas fa-trash-alt text-danger"></i></a>
-                    </span>
-                </td>
-            </tr>
-        }
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdUsoDeInmueble)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
     </tbody>
 </table>
