@@ -5,7 +5,7 @@
     string fecha = Model.AlquilerDesde.ToString("dd-MM-yyyy");
 }
 
-<h1>Edit</h1>
+<h1>Actualizar</h1>
 
 <h4>Contrato</h4>
 <hr />
@@ -38,14 +38,14 @@
                     <input class="form-check-input" asp-for="Estado" /> @Html.DisplayNameFor(model => model.Estado)
                 </label>
             </div>
+            <br>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar" style="margin-right: 30px;"/>
+                <button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
+                    Lista</button>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 

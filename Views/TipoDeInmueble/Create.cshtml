@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Crear</h1>
 
 <h4>TipoDeInmueble</h4>
 <hr />
@@ -17,8 +17,11 @@
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+            <br>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Dar de Alta" class="btn btn-primary btn-guardar" style="margin-right: 30px;"/>
+                <button type="button" onclick="window.location.href='@Url.Action("Index", "TipoDeInmueble")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
+                    Lista</button>
             </div>
         </form>
     </div>

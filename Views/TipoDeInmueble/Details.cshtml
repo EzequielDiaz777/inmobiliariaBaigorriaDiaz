@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Detalles</h1>
 
 <div>
     <h4>TipoDeInmueble</h4>
@@ -31,6 +31,6 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdTipoDeInmueble }) |
-    <a asp-action="Index">Back to List</a>
+    <a href="@Url.Action("Edit", new { id = Model.IdTipoDeInmueble })" class="btn btn-primary btn-editar" style="margin-right: 30px;">Editar</a>
+    <button type="button" onclick="window.location.href='@Url.Action("Index", "TipoDeInmueble")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la Lista</button>
 </div>
