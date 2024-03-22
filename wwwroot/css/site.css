@@ -17,6 +17,10 @@ html {
   min-height: 100%;
 }
 
+.button-column {
+    white-space: nowrap; /* Evita que los botones se envuelvan a la siguiente línea */
+}
+
 body {
   margin-bottom: 60px;
 }

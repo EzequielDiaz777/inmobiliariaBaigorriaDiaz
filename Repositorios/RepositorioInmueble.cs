@@ -162,9 +162,9 @@ public class RepositorioInmueble
     }
 
 
-    public Inmueble ObtenerInmueblePorID(int id)
+    public Inmueble? ObtenerInmueblePorID(int id)
     {
-        Inmueble res = null;
+        Inmueble? res = null;
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql = @"SELECT i.IdInmueble, 
@@ -290,7 +290,6 @@ public class RepositorioInmueble
                 conn.Close();
             }
         }
-
         return inmuebles;
     }
 

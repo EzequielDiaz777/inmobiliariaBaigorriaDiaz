@@ -4,67 +4,76 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1 class="text-center"><u>Lista de Contratos</u></h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Crear un contrato</a>
 </p>
-<table class="table">
+<table class="table table-striped table-hover table-bordered">
     <thead>
         <tr>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.IdContrato)
             </th>
-            <th>
+            <th class="text-center">
                 Nombre del Inquilino
             </th>
-            <th>
+            <th class="text-center">
                 Domicilio del Inmueble
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
-            <th>
+            <th class="text-center">
                 Fecha de Inicio del Contrato
             </th>
-            <th>
+            <th class="text-center">
                 Fecha de Fin del Contrato
             </th>
-            <th>
+            <th class="text-center">
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
-            <th></th>
+            <th class="text-center">
+                Opciones
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td  class="text-center">
                     @Html.DisplayFor(modelItem => item.IdContrato)
                 </td>
-                <td>
+                <td  class="text-center">
                     @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
                 </td>
-                <td>
+                <td  class="text-center">
                     @(item.Inmueble.Direccion)
                 </td>
-                <td>
+                <td  class="text-center">
                     @Html.DisplayFor(modelItem => item.Precio)
                 </td>
-                <td>
+                <td  class="text-center">
                     @(item.AlquilerDesde.ToString("dd/MM/yyyy"))
                 </td>
-                <td>
+                <td  class="text-center">
                     @(item.AlquilerHasta.ToString("dd/MM/yyyy"))
                 </td>
-                <td>
+                <td  class="text-center">
                     @Html.DisplayFor(modelItem => item.Estado)
                 </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.IdContrato }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdContrato }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.IdContrato })
+                <td  class="text-center">
+                    <span class="button-column">
+                        <a href="@Url.Action("Edit", new { id = item.IdContrato })" title="Editar"> <i
+                                class="fas fa-edit"></i></a>
+                        |
+                        <a href="@Url.Action("Details", new { id = item.IdContrato })" title="Detalles"> <i
+                                class="fas fa-info-circle"></i></a>
+                        |
+                        <a href="@Url.Action("Delete", new { id = item.IdContrato })" title="Eliminar"> <i
+                                class="fas fa-trash-alt text-danger"></i></a>
+                    </span>
                 </td>
             </tr>
         }

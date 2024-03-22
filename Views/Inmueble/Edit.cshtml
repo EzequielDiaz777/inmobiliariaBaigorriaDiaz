@@ -61,19 +61,20 @@
             <div class="form-group">
                 <label asp-for="Uso" class="control-label"></label>
                 <select asp-for="Uso" class="form-select">
-                    @if (ViewBag.UsoS == "Residencial")
+                    @if (ViewBag.UsoSeleccionado == "Residencial")
                     {
+                        @:
                         <option selected value="Residencial">Residencial</option>
                         <option value="Comercial">Comercial</option>
                         <option value="Evento">Evento</option>
                     }
-                    else if (ViewBag.UsoS == "Comercial")
+                    else if (Model.Uso == "Comercial")
                     {
                         <option value="Residencial">Residencial</option>
                         <option selected value="Comercial">Comercial</option>
                         <option value="Evento">Evento</option>
                     }
-                    else if (ViewBag.UsoS == "Evento")
+                    else if (ViewBag.UsoSeleccionado == "Evento")
                     {
                         <option value="Residencial">Residencial</option>
                         <option value="Comercial">Comercial</option>

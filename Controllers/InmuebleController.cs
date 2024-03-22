@@ -70,9 +70,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 var aux = repoI.ObtenerInmueblePorID(id);
                 ViewBag.Propietarios = repoP.ObtenerPropietarios();
                 ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
-                ViewBag.NombreDelTipoDeInmuebleS = aux.Tipo.Nombre;
-                ViewBag.UsoS = aux.Uso.ToString();
-                ViewBag.IdPropietarioS = aux.IdPropietario;
+                ViewBag.NombreDelTipoDeInmuebleSeleccionado = aux.Tipo.Nombre;
+                ViewBag.UsoSeleccionado = aux.Uso.ToString();
+                ViewBag.IdPropietarioSeleccionado = aux.IdPropietario;
                 return View(aux);
             }
             catch (System.Exception)

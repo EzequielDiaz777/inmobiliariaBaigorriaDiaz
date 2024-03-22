@@ -4,16 +4,12 @@ namespace inmobiliariaBaigorriaDiaz.Models
 {
     public class TipoDeInmueble
     {
-        [Display(Name = "Código del tipo de inmueble")]
+        [Display(Name = "Código")]
         public int IdTipoDeInmueble { get; set; }
         [Required]
         [Display(Name = "Tipo de inmueble")]
         public string Nombre { get; set; } = "";
         [Display(Name = "Disponible")]
         public bool Estado { get; set; }
-        /*public override string ToString()
-        {
-            return $"{Tipo}";
-        }*/
     }
 }

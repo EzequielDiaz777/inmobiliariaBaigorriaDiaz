@@ -45,7 +45,7 @@
             <th class="text-center">
                 @Html.DisplayNameFor(model => model.IdPropietario)
             </th>
-            <th class="text-center">
+            <th class="text-center button-column">
                 Opciones
             </th>
         </tr>
@@ -53,7 +53,7 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td  class="text-center">
+            <td class="text-center">
                 @Html.DisplayFor(modelItem => item.IdInmueble)
             </td>
             <td class="text-center">
@@ -92,11 +92,13 @@
                 @item.Duenio?.ToString()
             </td>
             <td class="text-center">
-                <a href="@Url.Action("Edit", new { id = item.IdInmueble })" title="Editar"> <i class="fas fa-edit"></i></a>
-    |
-                <a href="@Url.Action("Details", new { id = item.IdInmueble })" title="Detalles"> <i class="fas fa-info-circle"></i></a>
-    |
-                <a href="@Url.Action("Delete", new { id = item.IdInmueble })" title="Eliminar"> <i class="fas fa-trash-alt text-danger"></i></a>
+                <span class="button-column">
+                    <a href="@Url.Action("Edit", new { id = item.IdInmueble })" title="Editar"> <i class="fas fa-edit"></i></a>
+        |
+                    <a href="@Url.Action("Details", new { id = item.IdInmueble })" title="Detalles"> <i class="fas fa-info-circle"></i></a>
+        |
+                    <a href="@Url.Action("Delete", new { id = item.IdInmueble })" title="Eliminar"> <i class="fas fa-trash-alt text-danger"></i></a>
+                </span>
             </td>
         </tr>
 }
