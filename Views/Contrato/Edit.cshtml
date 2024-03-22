@@ -15,13 +15,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="IdInquilino" class="control-label">Seleccione el Dni del inquilino.</label>
-                @*<input asp-for="IdInquilino" class="form-control"/>*@
                 <select asp-for="IdInquilino" class="form-select">
-                    @foreach (var item in ViewBag.inquilino)
+                    @foreach (var item in ViewBag.Inquilinos)
                     {
                         <option value="@item.IdInquilino"> @item.DNI</option>
                     }
-
                 </select>
                 <span asp-validation-for="IdInquilino" class="text-danger"></span>
             </div>
@@ -31,9 +29,9 @@
                 <span asp-validation-for="IdInmueble" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PrecioDeContrato" class="control-label"></label>
-                <input asp-for="PrecioDeContrato" class="form-control" />
-                <span asp-validation-for="PrecioDeContrato" class="text-danger"></span>
+                <label asp-for="Precio" class="control-label"></label>
+                <input asp-for="Precio" class="form-control" />
+                <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">

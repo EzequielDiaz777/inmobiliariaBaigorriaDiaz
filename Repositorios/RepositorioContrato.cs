@@ -17,23 +17,24 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"INSERT INTO contrato(IdInquilino, IdInmueble, PrecioDeContrato, AlquilerDesde, AlquilerHasta, Estado) 
-				VALUES (@IdInquilino, @IdInmueble, @PrecioDeContrato, @AlquilerDesde, @AlquilerHasta, @Estado);
+				var sql = @"INSERT INTO contrato(IdInquilino, IdInmueble, Precio, AlquilerDesde, AlquilerHasta, AlquilerHastaOriginal, Estado) 
+				VALUES (@IdInquilino, @IdInmueble, @Precio, @AlquilerDesde, @AlquilerHasta, @AlquilerHastaOriginal, @Estado);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdInquilino", contrato.IdInquilino);
 					cmd.Parameters.AddWithValue("@IdInmueble", contrato.IdInmueble);
-					cmd.Parameters.AddWithValue("@PrecioDeContrato", contrato.PrecioDeContrato);
+					cmd.Parameters.AddWithValue("@Precio", contrato.Precio);
 					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde.ToDateTime(TimeOnly.MinValue));
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta.ToDateTime(TimeOnly.MinValue));
+					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal.ToDateTime(TimeOnly.MinValue));
 					cmd.Parameters.AddWithValue("@Estado", 1);
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					Console.WriteLine(res);
 					contrato.IdContrato = res;
 					conn.Close();
-					}
+				}
 			}
 			return res;
 		}
@@ -97,9 +98,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				var sql = @"UPDATE contrato SET 
 				IdInquilino = @IdInquilino,
 				IdInmueble = @IdInmueble,
-				PrecioDeContrato = @PrecioDeContrato,
+				Precio = @Precio,
 				AlquilerDesde = @AlquilerDesde,
 				AlquilerHasta = @AlquilerHasta,
+				AlquilerHastaOriginal = @AlquilerHastaOriginal,
 				Estado = @Estado,
 				WHERE IdContrato = @IdContrato";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -109,6 +111,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@IdInmueble", contrato.IdInmueble);
 					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde);
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta);
+					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal);
+					cmd.Parameters.AddWithValue("@Estado", contrato.Estado);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
@@ -125,10 +129,11 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				string sql = @$"SELECT 
 								{nameof(Contrato.IdContrato)}, 
 								{nameof(Contrato.IdInmueble)}, 
-								{nameof(Contrato.PrecioDeContrato)},
+								{nameof(Contrato.Precio)},
 								{nameof(Contrato.IdInquilino)}, 
 								{nameof(Contrato.AlquilerDesde)}, 
 								{nameof(Contrato.AlquilerHasta)},
+								{nameof(Contrato.AlquilerHastaOriginal)},
 								{nameof(Contrato.Estado)}
 							FROM contrato;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -139,16 +144,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{
 							int IdInmueble = reader.GetInt32("IdInmueble");
 							int IdInquilino = reader.GetInt32("IdInquilino");
-							Console.WriteLine("OC IdInmueble: " + IdInmueble);
-							Console.WriteLine("OC IdInquilino: "+IdInquilino);
 							var inmueble = rInm.ObtenerInmueblePorID(IdInmueble);
 							var inquilino = rInq.ObtenerInquilinoPorID(IdInquilino);
 							res.Add(new Contrato
 							{
 								IdContrato = reader.GetInt32("IdContrato"),
-								PrecioDeContrato = reader.GetDecimal("PrecioDeContrato"),
+								Precio = reader.GetDecimal("Precio"),
 								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
 								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
+								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
 								Estado = reader.GetBoolean("Estado"),
 								Inmueble = inmueble,
 								Inquilino = inquilino
@@ -164,16 +168,20 @@ namespace inmobiliariaBaigorriaDiaz.Models
 		{
 			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
 			using MySqlConnection conn = mySqlConnection;
-			var sql = @$"SELECT 
-						{nameof(Contrato.IdContrato)}, 
-						{nameof(Contrato.IdInmueble)}, 
-						{nameof(Contrato.IdInquilino)}, 
-						{nameof(Contrato.PrecioDeContrato)},
-						{nameof(Contrato.AlquilerDesde)}, 
-						{nameof(Contrato.AlquilerHasta)},
-						{nameof(Contrato.Estado)}
-					FROM contrato
-					WHERE IdContrato = @id;";
+			var sql = @$"SELECT {nameof(Contrato.IdContrato)},
+							c.{nameof(Contrato.IdInmueble)},
+							c.{nameof(Contrato.IdInquilino)},
+							c.{nameof(Contrato.Precio)},
+							{nameof(Contrato.AlquilerDesde)}, 
+							{nameof(Contrato.AlquilerHasta)}, 
+							{nameof(Contrato.AlquilerHastaOriginal)}, 
+							c.{nameof(Contrato.Estado)},
+							i.Nombre, i.Apellido, 
+							inm.Direccion 
+						FROM contrato AS c 
+						INNER JOIN inquilino AS i ON c.IdInquilino = i.IdInquilino 
+						INNER JOIN inmueble AS inm ON c.IdInmueble = inm.IdInmueble  
+						WHERE IdContrato = @Id;";
 			Contrato contrato = new Contrato();
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{
@@ -183,22 +191,29 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				{
 					if (reader.Read())
 					{
-						int IdInmueble = reader.GetInt32("IdInmueble");
-						int IdInquilino = reader.GetInt32("IdInquilino");
-						var inmueble = rInm.ObtenerInmueblePorID(IdInmueble);
-						var inquilino = rInq.ObtenerInquilinoPorID(IdInquilino);
 						contrato = new Contrato
 						{
 							IdContrato = reader.GetInt32("IdContrato"),
+							IdInquilino = reader.GetInt32("IdInquilino"),
+							IdInmueble = reader.GetInt32("IdInmueble"),
 							AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
 							AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
-							Inmueble = inmueble,
-							Inquilino = inquilino
+							AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
+							Inmueble = new Inmueble
+							{
+								Direccion = reader.GetString("Direccion"),
+							},
+							Inquilino = new Inquilino
+							{
+								Nombre = reader.GetString("Nombre"),
+								Apellido = reader.GetString("Apellido"),
+							}
 						};
 					}
 				}
 				conn.Close();
 			}
+			Console.WriteLine(contrato.Inquilino.Apellido);
 			return contrato;
 		}
 	}

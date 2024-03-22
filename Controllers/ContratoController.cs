@@ -56,6 +56,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
+            ViewBag.Inmuebles = rinm.ObtenerInmuebles();
+            ViewBag.Inquilinos = rinq.ObtenerInquilinos();
             return View(rc.ObtenerContratoById(id));
         }
 

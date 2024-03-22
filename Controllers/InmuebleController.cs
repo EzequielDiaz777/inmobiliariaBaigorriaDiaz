@@ -17,6 +17,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Index()
         {
             ViewBag.Id = TempData["Id"];
+            ViewBag.entidad = "inmueble";
             return View(repoI.ObtenerInmuebles());
         }
 
@@ -31,8 +32,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                ViewBag.Propietario = repoP.ObtenerPropietarios();
-                ViewBag.Inmueble = repoTI.ObtenerTiposDeInmuebles();
+                ViewBag.Propietarios = repoP.ObtenerPropietarios();
+                ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
                 return View();
             }
             catch (Exception e)
@@ -50,22 +51,14 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    repoI.Alta(inmueble);
-                    TempData["Id"] = inmueble.IdInmueble;
-                    return RedirectToAction(nameof(Index));
-
-                }
-                else
-                    return View(inmueble);
+                repoI.Alta(inmueble);
+                TempData["Id"] = inmueble.IdInmueble;
+                return RedirectToAction(nameof(Index));
 
             }
             catch (System.Exception)
             {
-                
-                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al guardar el inmueble.");
-                return View(inmueble); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
+                return View(); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
             }
         }
 
@@ -75,18 +68,19 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             try
             {
                 var aux = repoI.ObtenerInmueblePorID(id);
-                ViewBag.Propietario = repoP.ObtenerPropietarios();
+                ViewBag.Propietarios = repoP.ObtenerPropietarios();
+                ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
+                ViewBag.NombreDelTipoDeInmuebleS = aux.Tipo.Nombre;
+                ViewBag.UsoS = aux.Uso.ToString();
+                ViewBag.IdPropietarioS = aux.IdPropietario;
                 return View(aux);
             }
             catch (System.Exception)
-           
             {
-                 
-                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
                 return View();
             }
-
         }
+
 
         // POST: Inmueble/Edit/5
         [HttpPost]
@@ -129,12 +123,11 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // POST: Inmueble/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
                 repoI.EliminarInmueble(id);
-
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -16,12 +16,11 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"INSERT INTO tipodeinmueble(Tipo, Estado) VALUES (@Tipo, @Estado);
+				var sql = @"INSERT INTO tipodeinmueble(Nombre, Estado) VALUES (@Nombre, 1);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
-					cmd.Parameters.AddWithValue("@Tipo", tipoDeInmueble.Tipo);
-					cmd.Parameters.AddWithValue("@Estado", tipoDeInmueble.Estado);
+					cmd.Parameters.AddWithValue("@Nombre", tipoDeInmueble.Nombre);
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					tipoDeInmueble.IdTipoDeInmueble = res;
@@ -74,13 +73,13 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			{
 				var sql = @"UPDATE tipodeinmueble SET 
                             IdTipoDeInmueble = @IdTipoDeInmueble,
-							Tipo = @Tipo,
+							Nombre = @Nombre,
                             Estado = @Estado
 							WHERE IdTipoDeInmueble = @IdTipoDeInmueble;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdTipoDeInmueble", tipoDeInmueble.IdTipoDeInmueble);
-					cmd.Parameters.AddWithValue("@Tipo", tipoDeInmueble.Tipo);
+					cmd.Parameters.AddWithValue("@Nombre", tipoDeInmueble.Nombre);
 					cmd.Parameters.AddWithValue("@Estado", tipoDeInmueble.Estado);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
@@ -97,7 +96,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			{
 				var sql = @$"SELECT 
 						{nameof(TipoDeInmueble.IdTipoDeInmueble)}, 
-						{nameof(TipoDeInmueble.Tipo)},
+						{nameof(TipoDeInmueble.Nombre)},
 						{nameof(TipoDeInmueble.Estado)}				
 					FROM tipodeinmueble";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -110,7 +109,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							res.Add(new TipoDeInmueble
 							{
 								IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble"),
-								Tipo = reader.GetString("Tipo"),
+								Nombre = reader.GetString("Nombre"),
 								Estado = reader.GetBoolean("Estado"),
 							});
 						}
@@ -127,7 +126,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			using MySqlConnection conn = mySqlConnection;
 			var sql = @$"SELECT 
 							{nameof(TipoDeInmueble.IdTipoDeInmueble)}, 
-							{nameof(TipoDeInmueble.Tipo)}, 
+							{nameof(TipoDeInmueble.Nombre)}, 
 							{nameof(TipoDeInmueble.Estado)}
 						FROM tipodeinmueble 
 						WHERE IdTipoDeInmueble = @id";
@@ -143,7 +142,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						tipoDeInmueble = new TipoDeInmueble
 						{
 							IdTipoDeInmueble = reader.GetInt32("IdTipoDeInmueble"),
-							Tipo = reader.GetString("Tipo"),
+							Nombre = reader.GetString("Nombre"),
 							Estado = reader.GetBoolean("Estado"),
 						};
 					}

@@ -22,7 +22,7 @@
                 Domicilio del Inmueble
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PrecioDeContrato)
+                @Html.DisplayNameFor(model => model.Precio)
             </th>
             <th>
                 Fecha de Inicio del Contrato
@@ -50,7 +50,7 @@
                     @(item.Inmueble.Direccion)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PrecioDeContrato)
+                    @Html.DisplayFor(modelItem => item.Precio)
                 </td>
                 <td>
                     @(item.AlquilerDesde.ToString("dd/MM/yyyy"))

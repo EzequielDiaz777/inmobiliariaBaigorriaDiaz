@@ -18,10 +18,10 @@ public class Inmueble
     public int IdTipoDeInmueble { get; set; }
 
     [ForeignKey(nameof(IdTipoDeInmueble))]
-    public TipoDeInmueble? Tipo { get; set; }
+    public TipoDeInmueble Tipo { get; set; } = new TipoDeInmueble();
 
     [Required]
-    public string Direccion { get; set; }
+    public string Direccion { get; set; } = "";
 
     [Required]
     public int Ambientes { get; set; }
@@ -46,6 +46,6 @@ public class Inmueble
     public int IdPropietario { get; set; }
 
     [ForeignKey(nameof(IdPropietario))]
-    public Propietario? Duenio { get; set; }
+    public Propietario Duenio { get; set; } = new Propietario();
 
 }

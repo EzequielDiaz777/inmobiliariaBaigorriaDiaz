@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.IdTipoDeInmueble)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tipo)
+                @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Estado)
@@ -32,14 +32,15 @@
                     @Html.DisplayFor(modelItem => item.IdTipoDeInmueble)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Tipo)
+                    @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Estado)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.IdTipoDeInmueble }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.IdTipoDeInmueble })
+                    @Html.ActionLink("Details", "Details", new { id = item.IdTipoDeInmueble }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.IdTipoDeInmueble})
                 </td>
             </tr>
         }

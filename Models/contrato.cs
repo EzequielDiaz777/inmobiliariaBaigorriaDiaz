@@ -17,12 +17,13 @@ namespace inmobiliariaBaigorriaDiaz.Models
         public int IdInmueble { get; set; }
         [Required]
         [Display(Name = "Precio del contrato")]
-        public decimal PrecioDeContrato { get; set; }
+        public decimal Precio { get; set; }
         [Required]
         public DateOnly AlquilerDesde { get; set; }
-
         [Required]
         public DateOnly AlquilerHasta { get; set; }
+        [Required]
+        public DateOnly AlquilerHastaOriginal { get; set; }
         [Required]
         [Display(Name = "Contrato vigente")]
         public bool Estado { get; set; }

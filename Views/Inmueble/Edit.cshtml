@@ -12,19 +12,26 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="IdInmueble" class="control-label"></label>
-                <input asp-for="IdInmueble" class="form-control" readonly/>
-                <span asp-validation-for="IdInmueble" class="text-danger"></span>
+                <label class="control-label">Tipo de inmueble</label>
+                <select class="form-select" name="IdTipoDeInmueble">
+                    @foreach (var item in ViewBag.TiposDeInmuebles)
+                    {
+                        @if (ViewBag.NombreDelTipoDeInmuebleS == item.Nombre)
+                        {
+                            <option selected value="@item.IdTipoDeInmueble">@(item.Nombre)</option>
+                        }
+                        else
+                        {
+                            <option value="@item.IdTipoDeInmueble">@(item.Nombre)</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="IdTipoDeInmueble" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Direccion" class="control-label"></label>
                 <input asp-for="Direccion" class="form-control" />
                 <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdTipoDeInmueble" class="control-label"></label>
-                <input asp-for="IdTipoDeInmueble" class="form-control" />
-                <span asp-validation-for="IdTipoDeInmueble" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Ambientes" class="control-label"></label>
@@ -54,31 +61,42 @@
             <div class="form-group">
                 <label asp-for="Uso" class="control-label"></label>
                 <select asp-for="Uso" class="form-select">
-                    <option value="Residencial">Residencial</option>
-                    <option value="Comercial">Comercial</option>
-                    <option value="Evento">Evento</option>
+                    @if (ViewBag.UsoS == "Residencial")
+                    {
+                        <option selected value="Residencial">Residencial</option>
+                        <option value="Comercial">Comercial</option>
+                        <option value="Evento">Evento</option>
+                    }
+                    else if (ViewBag.UsoS == "Comercial")
+                    {
+                        <option value="Residencial">Residencial</option>
+                        <option selected value="Comercial">Comercial</option>
+                        <option value="Evento">Evento</option>
+                    }
+                    else if (ViewBag.UsoS == "Evento")
+                    {
+                        <option value="Residencial">Residencial</option>
+                        <option value="Comercial">Comercial</option>
+                        <option selected value="Evento">Evento</option>
+                    }
                 </select>
                 <span asp-validation-for="Uso" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <select asp-for="Estado" class="form-select">
-                    <option value="">Seleccione un Estado</option>
-                    <option value="false">No Disponible</option>
-                    <option value="true">Disponible</option>
-                </select>
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label class="control-label">Propietario</label>
-                <select class = "form-select" name = "IdPropietario">
-                @if (ViewBag.Propietario != null)
-                {
-                    @foreach (var item in ViewBag.Propietario)
+                <select class="form-select" name="IdPropietario">
+                    @foreach (var item in ViewBag.Propietarios)
                     {
-                        @:<option @(item.IdPropietario == Model.Duenio.IdPropietario ? "selected" : "") value="@item.IdPropietario">@(item.ToString())</option>
+                        @if (ViewBag.IdPropietarioS == item.IdPropietario)
+                        {
+                            <option selected value="@item.IdPropietario">@(item.ToString())</option>
+                        }
+                        else
+                        {
+                            <option value="@item.IdPropietario">@(item.ToString())</option>
+                        }
                     }
-                }
                 </select>
                 <span asp-validation-for="IdPropietario" class="text-danger"></span>
             </div>
@@ -93,4 +111,3 @@
 <div>
     <a asp-action="Index">Volver a la Lista</a>
 </div>
-

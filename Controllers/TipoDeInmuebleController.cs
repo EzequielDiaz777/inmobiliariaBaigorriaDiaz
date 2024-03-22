@@ -65,8 +65,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 TipoDeInmueble tdi = rtdi.ObtenerTipoDeInmueblePorID(id);
                 if (tdi != null)
                 {
-                    tdi.Tipo = tipoDeInmueble.Tipo;
-                    Console.WriteLine(tdi.Tipo);
+                    tdi.Nombre = tipoDeInmueble.Nombre;
+                    Console.WriteLine(tdi.Nombre);
                     tdi.Estado = tipoDeInmueble.Estado;
                     Console.WriteLine(tdi.Estado);
                     rtdi.Modificacion(tdi);
@@ -81,6 +81,28 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 Console.WriteLine(ex.Message.ToString());
                 return RedirectToAction("Edit");
+            }
+        }
+
+        public ActionResult Delete(int id)
+        {
+            return View(rtdi.ObtenerTipoDeInmueblePorID(id));
+        }
+
+        // POST: Inmueble/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                rtdi.BajaLogica(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
             }
         }
     }
