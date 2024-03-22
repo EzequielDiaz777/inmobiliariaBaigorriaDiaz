@@ -4,7 +4,7 @@
     ViewData["Title"] = "Eliminar";
 }
 
-<h2>Eliminar Inmueble</h2>
+<h2>Eliminar</h2>
 
 <h6>Está seguro que quiere eliminar un Inmueble?</h6>
 <div>
@@ -83,7 +83,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="submit" value="Borrar" class="btn btn-danger" /> |
-        <a asp-action="Index">Volver a la Lista</a>
+        <input type="submit" value="Baja" class="btn btn-danger" style="margin-right: 30px;" />
+        <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmueble")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la Lista</button>
     </form>
 </div>

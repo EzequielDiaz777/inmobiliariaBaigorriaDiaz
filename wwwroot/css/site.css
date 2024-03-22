@@ -32,3 +32,16 @@ th {
 .centered-row td {
   text-align: center;
 }
+
+.btn-guardar:hover {
+  background-color: green;
+}
+
+.btn-editar:hover {
+  background-color: green;
+}
+
+dl.row dt, dl.row dd {
+  border-top: 1px solid #dee2e6;
+  padding-top: 10px;
+}
