@@ -24,3 +24,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+th {
+  text-align: center;
+}
+
+.centered-row td {
+  text-align: center;
+}

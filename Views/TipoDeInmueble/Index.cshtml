@@ -12,16 +12,16 @@
 <table class="table table-striped table-hover table-bordered">
     <thead>
         <tr>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.IdTipoDeInmueble)
             </th>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
-            <th class="text-center">
+            <th>
                 Opciones
             </th>
         </tr>
@@ -29,17 +29,17 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td class="text-center">
+            <tr class="centered-row">
+                <td>
                     @Html.DisplayFor(modelItem => item.IdTipoDeInmueble)
                 </td>
-                <td class="text-center">
+                <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
-                <td class="text-center">
+                <td>
                     @Html.DisplayFor(modelItem => item.Estado)
                 </td>
-                <td class="text-center">
+                <td>
                     <a href="@Url.Action("Edit", new { id = item.IdTipoDeInmueble })" title="Editar"> <i
                             class="fas fa-edit"></i></a>
                     |

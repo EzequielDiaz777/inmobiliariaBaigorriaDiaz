@@ -12,22 +12,22 @@
 <table class="table table-striped table-hover table-bordered">
     <thead>
         <tr>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.DNI)
             </th>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.Apellido)
             </th>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.Telefono)
             </th>
-            <th class="text-center">
+            <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th class="text-center">
+            <th>
                 Opciones
             </th>
         </tr>
@@ -35,41 +35,41 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td class="text-center">
+            <tr class="centered-row">
+                <td>
                     @Html.DisplayFor(modelItem => item.DNI)
                 </td>
-                <td class="text-center">
+                <td>
                     @Html.DisplayFor(modelItem => item.Apellido)
                 </td>
-                <td class="text-center">
+                <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
                 @if (item.Telefono.Equals(""))
                 {
-                    <td class="text-center">
+                    <td>
                         No declarado
                     </td>
                 }
                 else
                 {
-                    <td class="text-center">
+                    <td>
                         @Html.DisplayFor(modelItem => item.Telefono)
                     </td>
                 }
                 @if (item.Email.Equals(""))
                 {
-                    <td class="text-center">
+                    <td>
                         No declarado
                     </td>
                 }
                 else
                 {
-                    <td class="text-center">
+                    <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                 }
-                <td class="text-center">
+                <td>
                     <span class="button-column">
                         <a href="@Url.Action("Edit", new { id = item.IdPropietario })" title="Editar"> <i
                                 class="fas fa-edit"></i></a>
