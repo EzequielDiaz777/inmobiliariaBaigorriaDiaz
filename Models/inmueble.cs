@@ -21,6 +21,13 @@ public class Inmueble
     public TipoDeInmueble Tipo { get; set; } = new TipoDeInmueble();
 
     [Required]
+    [Display(Name = "Uso")]
+    public int IdUsoDeInmueble { get; set; }
+    
+    [ForeignKey(nameof(IdUsoDeInmueble))]
+    public UsoDeInmueble Uso { get; set; } = new UsoDeInmueble();
+
+    [Required]
     public string Direccion { get; set; } = "";
 
     [Required]
@@ -35,9 +42,6 @@ public class Inmueble
 
     [Required]
     public decimal Precio { get; set; }
-
-    [Required]
-    public string Uso { get; set; } = "";
     
     [Required]
     public bool Estado { get; set;}

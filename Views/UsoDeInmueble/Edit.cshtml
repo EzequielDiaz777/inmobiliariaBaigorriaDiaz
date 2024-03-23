@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="IdUsoDeInmueble" class="control-label"></label>
-                <input asp-for="IdUsoDeInmueble" class="form-control" />
+                <input asp-for="IdUsoDeInmueble" class="form-control" readonly />
                 <span asp-validation-for="IdUsoDeInmueble" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -22,6 +22,7 @@
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+            <br>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Estado" /> @Html.DisplayNameFor(model => model.Estado)

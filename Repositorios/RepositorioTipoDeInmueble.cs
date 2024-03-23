@@ -97,8 +97,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				var sql = @$"SELECT 
 						{nameof(TipoDeInmueble.IdTipoDeInmueble)}, 
 						{nameof(TipoDeInmueble.Nombre)},
-						{nameof(TipoDeInmueble.Estado)}				
-					FROM tipodeinmueble";
+						{nameof(TipoDeInmueble.Estado)}
+					FROM {nameof(TipoDeInmueble)}";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();

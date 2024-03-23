@@ -1,34 +1,42 @@
+using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
     public class UsoDeInmuebleController : Controller
     {
+        private RepositorioUsoDeInmueble rudi = new RepositorioUsoDeInmueble();
         // GET: UsoDeInmuebleController
         public ActionResult Index()
         {
-            return View();
+            ViewBag.Id = TempData["Id"];
+            ViewBag.entidad = "uso de inmueble";
+            return View(rudi.ObtenerUsosDeInmuebles());
         }
 
         // GET: UsoDeInmuebleController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View(rudi.ObtenerUsoDeInmueblePorID(id));
         }
 
         // GET: UsoDeInmuebleController/Create
         public ActionResult Create()
         {
+            var usosDeInmuebles = rudi.ObtenerUsosDeInmuebles();
+            ViewBag.usosDeInmuebles = usosDeInmuebles;
             return View();
         }
 
         // POST: UsoDeInmuebleController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(UsoDeInmueble usoDeInmueble)
         {
             try
             {
+                rudi.AltaFisica(usoDeInmueble);
+                TempData["Id"] = usoDeInmueble.IdUsoDeInmueble;
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -40,28 +48,37 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // GET: UsoDeInmuebleController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(rudi.ObtenerUsoDeInmueblePorID(id));
         }
 
         // POST: UsoDeInmuebleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, UsoDeInmueble usoDeInmueble)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                UsoDeInmueble? udi = rudi.ObtenerUsoDeInmueblePorID(id);
+                if(udi != null){
+                    udi.Nombre = usoDeInmueble.Nombre;
+                    udi.Estado = usoDeInmueble.Estado;
+                    rudi.Modificacion(udi);
+                    return RedirectToAction(nameof(Index));
+                } else {
+                    return RedirectToAction("Index");
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Console.WriteLine(ex.Message.ToString());
+                return RedirectToAction("Edit");
             }
         }
 
         // GET: UsoDeInmuebleController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            return View(rudi.ObtenerUsoDeInmueblePorID(id));
         }
 
         // POST: UsoDeInmuebleController/Delete/5
@@ -71,6 +88,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
+                rudi.BajaLogica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

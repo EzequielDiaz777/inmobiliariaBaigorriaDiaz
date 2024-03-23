@@ -66,9 +66,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 if (tdi != null)
                 {
                     tdi.Nombre = tipoDeInmueble.Nombre;
-                    Console.WriteLine(tdi.Nombre);
                     tdi.Estado = tipoDeInmueble.Estado;
-                    Console.WriteLine(tdi.Estado);
                     rtdi.Modificacion(tdi);
                     return RedirectToAction("Index");
                 }

@@ -13,6 +13,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         private RepositorioPropietario repoP = new RepositorioPropietario();
         private RepositorioInmueble repoI = new RepositorioInmueble();
         private RepositorioTipoDeInmueble repoTI = new RepositorioTipoDeInmueble();
+        private RepositorioUsoDeInmueble repoUI = new RepositorioUsoDeInmueble();
         // GET: Inmueble
         public ActionResult Index()
         {
@@ -34,6 +35,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 ViewBag.Propietarios = repoP.ObtenerPropietarios();
                 ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
+                ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
                 return View();
             }
             catch (Exception e)
@@ -51,6 +53,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
+                
                 repoI.Alta(inmueble);
                 TempData["Id"] = inmueble.IdInmueble;
                 return RedirectToAction(nameof(Index));
@@ -67,13 +70,11 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                var aux = repoI.ObtenerInmueblePorID(id);
+                var inmueble = repoI.ObtenerInmueblePorID(id);
                 ViewBag.Propietarios = repoP.ObtenerPropietarios();
                 ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
-                ViewBag.NombreDelTipoDeInmuebleSeleccionado = aux.Tipo.Nombre;
-                ViewBag.UsoSeleccionado = aux.Uso.ToString();
-                ViewBag.IdPropietarioSeleccionado = aux.IdPropietario;
-                return View(aux);
+                ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
+                return View(inmueble);
             }
             catch (System.Exception)
             {
@@ -89,22 +90,24 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                Inmueble i = repoI.ObtenerInmueblePorID(id);
-
-                i.Tipo = inmueble.Tipo;
-                i.Direccion = inmueble.Direccion;
-                i.Ambientes = inmueble.Ambientes;
-                i.Superficie = inmueble.Superficie;
-                i.Longitud = inmueble.Longitud;
-                i.Latitud = inmueble.Latitud;
-                i.Precio = inmueble.Precio;
-                i.Uso = inmueble.Uso;
-                i.Estado = inmueble.Estado;
-                i.Duenio = inmueble.Duenio;
-
-                repoI.ModificarInmueble(i);
-
-                return RedirectToAction(nameof(Index));
+                Inmueble? inmuebleBD = repoI.ObtenerInmueblePorID(id);
+                if(inmuebleBD != null){
+                    inmuebleBD.Tipo = inmueble.Tipo;
+                    inmuebleBD.Direccion = inmueble.Direccion;
+                    inmuebleBD.Ambientes = inmueble.Ambientes;
+                    inmuebleBD.Superficie = inmueble.Superficie;
+                    inmuebleBD.Longitud = inmueble.Longitud;
+                    inmuebleBD.Latitud = inmueble.Latitud;
+                    inmuebleBD.Precio = inmueble.Precio;
+                    inmuebleBD.Uso = inmueble.Uso;
+                    inmuebleBD.Estado = inmueble.Estado;
+                    inmuebleBD.Duenio = inmueble.Duenio;
+                    repoI.ModificarInmueble(inmuebleBD);
+                    return RedirectToAction(nameof(Index));
+                } else {
+                    return RedirectToAction(nameof(Index));
+                }
+            
             }
             catch (Exception ex)
             {
