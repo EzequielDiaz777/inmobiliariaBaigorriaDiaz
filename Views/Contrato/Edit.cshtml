@@ -14,7 +14,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="IdInquilino" class="control-label">Seleccione el Dni del inquilino.</label>
+                <label asp-for="IdInquilino" class="control-label">Seleccione el Dni del inquilino</label>
                 <select asp-for="IdInquilino" class="form-select">
                     @foreach (var item in ViewBag.Inquilinos)
                     {

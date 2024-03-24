@@ -21,23 +21,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Tipo.Nombre)
             </th>
-             <th>
-                @Html.DisplayNameFor(model => model.Ambientes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Superficie)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Longitud)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Latitud)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Uso.Nombre)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Estado)
@@ -63,22 +48,7 @@
                 @Html.DisplayFor(modelItem => item.Tipo.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ambientes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Superficie)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Longitud)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Latitud)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Uso.Nombre)
             </td>
             <td>
                 
@@ -93,7 +63,7 @@
             </td>
             <td>
                 <span class="button-column">
-                    <a href="@Url.Action("Edit", new { id = item.IdInmueble })" title="Editar"> <i class="fas fa-edit"></i></a>
+                    <a href="@Url.Action("Edit", new { id = item.IdInmueble })" title="Editar"> <i class="fas fa-edit custom-color"></i></a>
         |
                     <a href="@Url.Action("Details", new { id = item.IdInmueble })" title="Detalles"> <i class="fas fa-info-circle"></i></a>
         |

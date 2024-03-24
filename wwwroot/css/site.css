@@ -45,3 +45,7 @@ dl.row dt, dl.row dd {
   border-top: 1px solid #dee2e6;
   padding-top: 10px;
 }
+
+.custom-color {
+  color: orange; /* Cambia el color del ícono a rojo */
+}

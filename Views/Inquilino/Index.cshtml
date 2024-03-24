@@ -22,12 +22,6 @@
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Telefono)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
                 Opciones
             </th>
         </tr>
@@ -45,33 +39,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
-                @if (item.Telefono.Equals(""))
-                {
-                    <td>
-                        No declarado
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Telefono)
-                    </td>
-                }
-                @if (item.Email.Equals(""))
-                {
-                    <td>
-                        No declarado
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                }
+                
                 <td>
                     <a href="@Url.Action("Edit", new { id = item.IdInquilino })" title="Editar"> <i
-                            class="fas fa-edit"></i></a>
+                            class="fas fa-edit custom-color"></i></a>
                     |
                     <a href="@Url.Action("Details", new { id = item.IdInquilino })" title="Detalles"> <i
                             class="fas fa-info-circle"></i></a>

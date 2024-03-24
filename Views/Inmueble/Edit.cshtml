@@ -59,24 +59,24 @@
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Uso" class="control-label"></label>
-
-                <span asp-validation-for="Uso" class="text-danger"></span>
+                <label asp-for="IdUsoDeInmueble" class="control-label">Seleccione un Uso de Inmueble</label>
+                <select asp-for="IdUsoDeInmueble" class="form-select">
+                    @foreach (var item in ViewBag.UsosDeInmuebles)
+                    {
+                        <option selected value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
+                    }
+                </select>
+                <span asp-validation-for="IdUsoDeInmueble" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label class="control-label">Propietario</label>
-                <select class="form-select" name="IdPropietario">
+                <label asp-for="IdPropietario" class="control-label">Seleccione un Propietario</label>
+                <select asp-for="IdPropietario" class="form-select">
                     @foreach (var item in ViewBag.Propietarios)
                     {
-                        @if (ViewBag.IdPropietarioS == item.IdPropietario)
-                        {
-                            <option selected value="@item.IdPropietario">@(item.ToString())</option>
-                        }
-                        else
-                        {
-                            <option value="@item.IdPropietario">@(item.ToString())</option>
-                        }
+
+                        <option selected value="@item.IdPropietario">@(item.ToString())</option>
+                        
                     }
                 </select>
                 <span asp-validation-for="IdPropietario" class="text-danger"></span>

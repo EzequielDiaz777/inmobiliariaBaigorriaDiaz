@@ -3,7 +3,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Crear</h1>
+<h1>Alta</h1>
 
 <h4>Inmueble</h4>
 <hr />
@@ -76,16 +76,9 @@
                 <span asp-validation-for="IdPropietario" class="text-danger"></span>
             </div>
             <br>
-            <style>
-                .btn-guardar:hover {
-                    background-color: green;
-                }
-            </style>
             <div class="form-group" style="text-align: center;">
-                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar" style="margin-right: 30px;" />
-                <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmuebles")'"
-                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
-                    Lista</button>
+                <input type="submit" value="Dar de Alta" class="btn btn-primary btn-guardar" style="margin-right: 30px;" />
+                <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmueble")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la Lista</button>
             </div>
         </form>
     </div>

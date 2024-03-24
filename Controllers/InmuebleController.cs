@@ -33,8 +33,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                ViewBag.Propietarios = repoP.ObtenerPropietarios();
                 ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
+                ViewBag.Propietarios = repoP.ObtenerPropietarios();
                 ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
                 return View();
             }
@@ -59,8 +59,10 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e.ToString());
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
                 return View(); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
             }
         }
@@ -68,20 +70,14 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // GET: Inmueble/Edit/5
         public ActionResult Edit(int id)
         {
-            try
-            {
-                var inmueble = repoI.ObtenerInmueblePorID(id);
+           
+               
                 ViewBag.Propietarios = repoP.ObtenerPropietarios();
                 ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
                 ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
-                return View(inmueble);
-            }
-            catch (System.Exception)
-            {
-                return View();
-            }
+                return View(repoI.ObtenerInmueblePorID(id));
+           
         }
-
 
         // POST: Inmueble/Edit/5
         [HttpPost]

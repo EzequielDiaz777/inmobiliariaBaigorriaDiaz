@@ -23,15 +23,15 @@ public class RepositorioInmueble
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql =
-                    @$"INSERT INTO ({nameof(Inmueble)}
-                        {nameof(Inmueble.IdPropietario)}
+                    @$"INSERT INTO {nameof(Inmueble)}
+                        ({nameof(Inmueble.IdPropietario)},
                         {nameof(Inmueble.IdTipoDeInmueble)},
                         {nameof(Inmueble.IdUsoDeInmueble)},
                         {nameof(Inmueble.Direccion)},
                         {nameof(Inmueble.Ambientes)},
                         {nameof(Inmueble.Superficie)},
-                        {nameof(Inmueble.Longitud)},
                         {nameof(Inmueble.Latitud)},
+                        {nameof(Inmueble.Longitud)},
                         {nameof(Inmueble.Precio)},
                         {nameof(Inmueble.Estado)})
                     VALUES(
@@ -40,9 +40,9 @@ public class RepositorioInmueble
                         @IdUsoDeInmueble,
                         @Direccion, 
                         @Ambientes, 
-                        @Superficie, 
+                        @Superficie,  
+                        @Latitud,
                         @Longitud, 
-                        @Latitud, 
                         @Precio,
                         1
                     );
@@ -58,8 +58,14 @@ public class RepositorioInmueble
                 cmd.Parameters.AddWithValue("@Longitud", inmueble.Longitud.HasValue ? inmueble.Longitud.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Latitud", inmueble.Latitud.HasValue ? inmueble.Latitud.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Precio", inmueble.Precio);
+                cmd.Parameters.AddWithValue("@Estado", 1); 
+
                 conn.Open();
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "SELECT LAST_INSERT_ID()";
                 res = Convert.ToInt32(cmd.ExecuteScalar());
+
                 inmueble.IdInmueble = res;
                 conn.Close();
             }
@@ -95,7 +101,7 @@ public class RepositorioInmueble
                     @$"UPDATE {nameof(Inmueble)} SET
                         {nameof(Inmueble.IdPropietario)} =@IdPropietario,
                         {nameof(Inmueble.IdTipoDeInmueble)} = @IdTipoDeInmueble,
-                        {nameof(Inmueble.IdUsoDeInmueble)} = @IdUsoDeInmueble.
+                        {nameof(Inmueble.IdUsoDeInmueble)} = @IdUsoDeInmueble,
                         {nameof(Inmueble.Direccion)} = @Direccion,
                         {nameof(Inmueble.Ambientes)} = @Ambientes,
                         {nameof(Inmueble.Superficie)} = @Superficie,
@@ -103,7 +109,7 @@ public class RepositorioInmueble
                         {nameof(Inmueble.Latitud)} = @Latitud,
                         {nameof(Inmueble.Precio)} = @Precio,
                         {nameof(Inmueble.Estado)} = @Estado,
-                    WHERE {nameof(Inmueble)} = @IdInmueble";
+                    WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
@@ -210,23 +216,24 @@ public class RepositorioInmueble
                             t.{nameof(TipoDeInmueble.Nombre)} AS TipoDeInmuebleNombre,
                             p.{nameof(Propietario.Nombre)} AS PropietarioNombre,
                             p.{nameof(Propietario.Apellido)} AS PropietarioApellido
-                        FROM {nameof(Inmueble)} i 
-                        INNER JOIN {nameof(Propietario)} p 
-                        ON i.{nameof(Inmueble.IdPropietario)} = p.{nameof(Propietario.IdPropietario)}
-                        INNER JOIN {nameof(TipoDeInmueble)} t
-                        ON i.{nameof(Inmueble.IdTipoDeInmueble)} = t.{nameof(TipoDeInmueble.IdTipoDeInmueble)}
-                        INNER JOIN usodeinmueble u
-                        ON i.{nameof(Inmueble.IdUsoDeInmueble)} = u.{nameof(UsoDeInmueble.IdUsoDeInmueble)}
+                        FROM inmueble AS i 
+                        INNER JOIN propietario AS p 
+                        ON i.IdPropietario= p.IdPropietario
+                        INNER JOIN tipodeinmueble AS t
+                        ON i.IdTipoDeInmueble= t.IdTipoDeInmueble
+                        INNER JOIN usodeinmueble AS u
+                        ON i.IdUsoDeInmueble= u.IdUsoDeInmueble
                         WHERE i.IdInmueble = @Id;";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@id", id);
                 conn.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     res = new Inmueble();
                     if (reader.Read())
                     {
+                       
                         res.IdInmueble = reader.GetInt32("IdInmueble");
                         res.Direccion = reader.GetString("Direccion");
                         res.Ambientes = reader.GetInt32("Ambientes");
