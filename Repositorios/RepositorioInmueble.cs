@@ -1,11 +1,5 @@
 using MySql.Data.MySqlClient;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace inmobiliariaBaigorriaDiaz.Models;
 
@@ -17,7 +11,7 @@ public class RepositorioInmueble
         connectionString = "Server=localhost;User=root;Password=;Database=inmobiliariabaigorriadiaz;";
     }
 
-    public int Alta(Inmueble inmueble)
+    public int AltaFisica(Inmueble inmueble)
     {
         var res = -1;
         using (MySqlConnection conn = new MySqlConnection(connectionString))
@@ -46,7 +40,7 @@ public class RepositorioInmueble
                         @Precio,
                         1
                     );
-            SELECT LAST_INSERT_ID()";
+                SELECT LAST_INSERT_ID()";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
@@ -71,8 +65,9 @@ public class RepositorioInmueble
         return res;
     }
 
-    public void EliminarInmueble(int id)
+    public void BajaFisica(int id)
     {
+        bool baja;
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql = @$"DELETE FROM {nameof(Inmueble)} WHERE {nameof(Inmueble.IdInmueble)} = @Id";
@@ -80,15 +75,56 @@ public class RepositorioInmueble
             {
                 cmd.Parameters.AddWithValue("@Id", id);
                 conn.Open();
-                int rowsAffected = cmd.ExecuteNonQuery(); // Obtiene la cantidad de filas afectadas por la eliminación
+				baja = cmd.ExecuteNonQuery() != 0;
                 conn.Close();
-
-                if (rowsAffected == 0)
+                if (!baja)
                 {
                     throw new InvalidOperationException($"No se encontró ningún Inmueble con el ID {id} para eliminar.");
                 }
             }
         }
+    }
+
+    public bool AltaLogica(int id)
+    {
+        bool alta;
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @$"UPDATE {nameof(Inmueble)} SET {nameof(Inmueble.Estado)} = 1 WHERE {nameof(Inmueble.IdInmueble)} = @id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                alta = cmd.ExecuteNonQuery() != 0;
+                conn.Close();
+                if (!alta)
+                {
+                    throw new InvalidOperationException($"No se encontró ningún Inmueble con el ID {id} para dar de alta.");
+                }
+            }
+        }
+        return alta;
+    }
+
+    public bool BajaLogica(int id)
+    {
+        bool baja;
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @$"UPDATE {nameof(Inmueble)} SET {nameof(Inmueble.Estado)} = 0 WHERE {nameof(Inmueble.IdInmueble)} = @id";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                baja = cmd.ExecuteNonQuery() != 0;
+                conn.Close();
+                if (!baja)
+                {
+                    throw new InvalidOperationException($"No se encontró ningún Inmueble con el ID {id} para dar de baja.");
+                }
+            }
+        }
+        return baja;
     }
 
     public void ModificarInmueble(Inmueble inmueble)
@@ -106,7 +142,6 @@ public class RepositorioInmueble
                         {nameof(Inmueble.Longitud)} = @Longitud,
                         {nameof(Inmueble.Latitud)} = @Latitud,
                         {nameof(Inmueble.Precio)} = @Precio,
-                        {nameof(Inmueble.Estado)} = @Estado,
                     WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
@@ -119,7 +154,6 @@ public class RepositorioInmueble
                 cmd.Parameters.AddWithValue("@Longitud", inmueble.Longitud.HasValue ? inmueble.Longitud.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Latitud", inmueble.Latitud.HasValue ? inmueble.Latitud.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Precio", inmueble.Precio);
-                cmd.Parameters.AddWithValue("@Estado", inmueble.Estado);
                 conn.Open();
                 cmd.ExecuteNonQuery();
                 conn.Close();

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-03-2024 a las 20:52:04
+-- Tiempo de generación: 26-03-2024 a las 00:33:00
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -117,6 +117,15 @@ CREATE TABLE `tipodeinmueble` (
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `tipodeinmueble`
+--
+
+INSERT INTO `tipodeinmueble` (`IdTipoDeInmueble`, `Nombre`, `Estado`) VALUES
+(1, 'Casa quinta', 1),
+(2, 'Casa grande', 1),
+(3, 'Casa chica', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -128,6 +137,16 @@ CREATE TABLE `usodeinmueble` (
   `Nombre` varchar(50) NOT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usodeinmueble`
+--
+
+INSERT INTO `usodeinmueble` (`IdUsoDeInmueble`, `Nombre`, `Estado`) VALUES
+(1, 'Residencial', 1),
+(2, 'Comercial', 1),
+(3, 'Evento', 1),
+(4, 'Otro', 1);
 
 --
 -- Índices para tablas volcadas
@@ -219,13 +238,13 @@ ALTER TABLE `propietario`
 -- AUTO_INCREMENT de la tabla `tipodeinmueble`
 --
 ALTER TABLE `tipodeinmueble`
-  MODIFY `IdTipoDeInmueble` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IdTipoDeInmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usodeinmueble`
 --
 ALTER TABLE `usodeinmueble`
-  MODIFY `IdUsoDeInmueble` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IdUsoDeInmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas

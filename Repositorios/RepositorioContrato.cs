@@ -5,8 +5,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 	public class RepositorioContrato
 	{
 		protected readonly string connectionString;
-		private RepositorioInmueble rInm = new RepositorioInmueble();
-		private RepositorioInquilino rInq = new RepositorioInquilino();
 		public RepositorioContrato()
 		{
 			connectionString = "Server=localhost;User=root;Password=;Database=inmobiliariabaigorriadiaz;SslMode=none";
@@ -27,14 +25,14 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Contrato.AlquilerHastaOriginal)},
 						{nameof(Contrato.Estado)}) 
 					VALUES 
-					(@IdInquilino, 
-					@IdInmueble, 
-					@Precio, 
-					@AlquilerDesde, 
-					@AlquilerHasta, 
-					@AlquilerHastaOriginal, 
-					1);
-				SELECT LAST_INSERT_ID()";
+						(@IdInquilino, 
+						@IdInmueble, 
+						@Precio, 
+						@AlquilerDesde, 
+						@AlquilerHasta, 
+						@AlquilerHastaOriginal, 
+						1);
+					SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdInquilino", contrato.IdInquilino);
@@ -44,8 +42,11 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta.ToDateTime(TimeOnly.MinValue));
 					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal.ToDateTime(TimeOnly.MinValue));
 					conn.Open();
+					cmd.ExecuteNonQuery();
+
+					cmd.CommandText = "SELECT LAST_INSERT_ID()";
 					res = Convert.ToInt32(cmd.ExecuteScalar());
-					Console.WriteLine(res);
+					
 					contrato.IdContrato = res;
 					conn.Close();
 				}
@@ -65,6 +66,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					conn.Open();
 					baja = cmd.ExecuteNonQuery() != 0;
 					conn.Close();
+					if (!baja)
+					{
+						throw new InvalidOperationException($"No se encontró ningún contrato con el ID {id} para eliminar.");
+					}
 				}
 			}
 			return baja;
@@ -104,7 +109,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			return baja;
 		}
 
-		public int Modificacion(Contrato contrato)
+		public int ModificarContrato(Contrato contrato)
 		{
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
