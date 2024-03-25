@@ -17,8 +17,21 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"INSERT INTO inquilino(Nombre, Apellido, Telefono, Email, DNI, Estado)
-				VALUES(@Nombre, @Apellido, @Telefono, @Email, @DNI, @Estado);
+				var sql = 
+						@$"INSERT INTO {nameof(Inquilino)}
+							({nameof(Inquilino.Nombre)},
+							{nameof(Inquilino.Apellido)},
+							{nameof(Inquilino.Telefono)},
+							{nameof(Inquilino.Email)},
+							{nameof(Inquilino.DNI)},
+							{nameof(Inquilino.Estado)})
+						VALUES
+							(@Nombre, 
+							@Apellido, 
+							@Telefono, 
+							@Email, 
+							@DNI, 
+							1);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -27,7 +40,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(inquilino.Email) ? "" : inquilino.Email);
 					cmd.Parameters.AddWithValue("@Telefono", string.IsNullOrEmpty(inquilino.Telefono) ? "" : inquilino.Telefono);
 					cmd.Parameters.AddWithValue("@DNI", inquilino.DNI);
-					cmd.Parameters.AddWithValue("@Estado", inquilino.Estado);
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					inquilino.IdInquilino = res;
@@ -42,7 +54,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE inquilino SET Estado = 1 WHERE IdInquilino = @id";
+				var sql = @$"UPDATE {nameof(Inquilino)} SET {nameof(Inquilino.Estado)} = 1 WHERE {nameof(Inquilino.IdInquilino)} = @$id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -59,7 +71,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"DELETE FROM inquilino WHERE IdInquilino = @id";
+				var sql = @$"DELETE FROM {nameof(Inquilino)} WHERE {nameof(Inquilino.IdInquilino)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -76,7 +88,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE inquilino SET Estado = 0 WHERE IdInquilino = @id";
+				var sql = @$"UPDATE {nameof(Inquilino)} SET {nameof(Inquilino.Estado)} = 0 WHERE {nameof(Inquilino.IdInquilino)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -93,14 +105,14 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			int res;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE inquilino SET 
-							Nombre = @Nombre, 
-							Apellido = @Apellido, 
-							Telefono = @Telefono, 
-							Email = @Email, 
-							DNI = @DNI,
-							Estado = @Estado
-							WHERE IdInquilino = @IdInquilino";
+				var sql = @$"UPDATE {nameof(Inquilino)} SET 
+							{nameof(Inquilino.Nombre)} = @Nombre, 
+							{nameof(Inquilino.Apellido)} = @Apellido, 
+							{nameof(Inquilino.Telefono)} = @Telefono, 
+							{nameof(Inquilino.Email)} = @Email, 
+							{nameof(Inquilino.DNI)} = @DNI,
+							{nameof(Inquilino.Estado)} = @Estado
+							WHERE {nameof(Inquilino.IdInquilino)} = @IdInquilino";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdInquilino", inquilino.IdInquilino);
@@ -131,7 +143,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Inquilino.Email)}, 
 						{nameof(Inquilino.DNI)}, 
 						{nameof(Inquilino.Estado)} 
-					FROM inquilino";
+					FROM {nameof(Inquilino)}";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -169,8 +181,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Inquilino.Email)}, 
 						{nameof(Inquilino.DNI)}, 
 						{nameof(Inquilino.Estado)} 
-					FROM inquilino 
-					WHERE IdInquilino = @id";
+					FROM {nameof(Inquilino)} 
+					WHERE {nameof(Inquilino.IdInquilino)} = @id";
 			Inquilino inquilino = new Inquilino();
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{

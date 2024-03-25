@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-03-2024 a las 17:26:33
+-- Tiempo de generación: 25-03-2024 a las 20:52:04
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -76,6 +76,8 @@ CREATE TABLE `inquilino` (
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
 -- Estructura de tabla para la tabla `pago`
 --
@@ -103,6 +105,8 @@ CREATE TABLE `propietario` (
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
 --
 -- Estructura de tabla para la tabla `tipodeinmueble`
 --
@@ -112,15 +116,6 @@ CREATE TABLE `tipodeinmueble` (
   `Nombre` varchar(50) NOT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `tipodeinmueble`
---
-
-INSERT INTO `tipodeinmueble` (`IdTipoDeInmueble`, `Nombre`, `Estado`) VALUES
-(1, 'Casa amplia', 0),
-(2, 'Casa chica', 1),
-(3, 'Casa quinta', 1);
 
 -- --------------------------------------------------------
 
@@ -133,16 +128,6 @@ CREATE TABLE `usodeinmueble` (
   `Nombre` varchar(50) NOT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `usodeinmueble`
---
-
-INSERT INTO `usodeinmueble` (`IdUsoDeInmueble`, `Nombre`, `Estado`) VALUES
-(1, 'Residencial', 1),
-(2, 'Comercial', 1),
-(3, 'Evento', 1),
-(4, 'Otro', 1);
 
 --
 -- Índices para tablas volcadas
@@ -204,19 +189,19 @@ ALTER TABLE `usodeinmueble`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `IdContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `IdContrato` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `inmueble`
 --
 ALTER TABLE `inmueble`
-  MODIFY `IdInmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `IdInmueble` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilino`
 --
 ALTER TABLE `inquilino`
-  MODIFY `IdInquilino` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `IdInquilino` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pago`
@@ -228,19 +213,19 @@ ALTER TABLE `pago`
 -- AUTO_INCREMENT de la tabla `propietario`
 --
 ALTER TABLE `propietario`
-  MODIFY `IdPropietario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `IdPropietario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tipodeinmueble`
 --
 ALTER TABLE `tipodeinmueble`
-  MODIFY `IdTipoDeInmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `IdTipoDeInmueble` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usodeinmueble`
 --
 ALTER TABLE `usodeinmueble`
-  MODIFY `IdUsoDeInmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `IdUsoDeInmueble` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
@@ -258,7 +243,7 @@ ALTER TABLE `contrato`
 --
 ALTER TABLE `inmueble`
   ADD CONSTRAINT `inmueble_ibfk_1` FOREIGN KEY (`IdPropietario`) REFERENCES `propietario` (`IdPropietario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `inmueble_ibfk_2` FOREIGN KEY (`IdTipoDeInmueble`) REFERENCES `tipodeinmueble` (`IdTipoDeInmueble`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `inmueble_ibfk_2` FOREIGN KEY (`IdTipoDeInmueble`) REFERENCES `tipodeinmueble` (`IdTipoDeInmueble`),
   ADD CONSTRAINT `inmueble_ibfk_3` FOREIGN KEY (`IdUsoDeInmueble`) REFERENCES `usodeinmueble` (`IdUsoDeInmueble`);
 
 --

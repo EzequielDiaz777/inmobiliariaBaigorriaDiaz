@@ -53,7 +53,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                
                 repoI.Alta(inmueble);
                 TempData["Id"] = inmueble.IdInmueble;
                 return RedirectToAction(nameof(Index));
@@ -70,13 +69,10 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // GET: Inmueble/Edit/5
         public ActionResult Edit(int id)
         {
-           
-               
-                ViewBag.Propietarios = repoP.ObtenerPropietarios();
-                ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
-                ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
-                return View(repoI.ObtenerInmueblePorID(id));
-           
+            ViewBag.Propietarios = repoP.ObtenerPropietarios();
+            ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
+            ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
+            return View(repoI.ObtenerInmueblePorID(id));  
         }
 
         // POST: Inmueble/Edit/5

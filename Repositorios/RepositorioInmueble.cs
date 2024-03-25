@@ -58,8 +58,6 @@ public class RepositorioInmueble
                 cmd.Parameters.AddWithValue("@Longitud", inmueble.Longitud.HasValue ? inmueble.Longitud.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Latitud", inmueble.Latitud.HasValue ? inmueble.Latitud.Value : (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Precio", inmueble.Precio);
-                cmd.Parameters.AddWithValue("@Estado", 1); 
-
                 conn.Open();
                 cmd.ExecuteNonQuery();
 
@@ -99,7 +97,7 @@ public class RepositorioInmueble
         {
             var sql =
                     @$"UPDATE {nameof(Inmueble)} SET
-                        {nameof(Inmueble.IdPropietario)} =@IdPropietario,
+                        {nameof(Inmueble.IdPropietario)} = @IdPropietario,
                         {nameof(Inmueble.IdTipoDeInmueble)} = @IdTipoDeInmueble,
                         {nameof(Inmueble.IdUsoDeInmueble)} = @IdUsoDeInmueble,
                         {nameof(Inmueble.Direccion)} = @Direccion,

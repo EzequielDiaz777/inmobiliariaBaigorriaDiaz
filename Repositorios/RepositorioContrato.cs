@@ -17,8 +17,23 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"INSERT INTO contrato(IdInquilino, IdInmueble, Precio, AlquilerDesde, AlquilerHasta, AlquilerHastaOriginal, Estado) 
-				VALUES (@IdInquilino, @IdInmueble, @Precio, @AlquilerDesde, @AlquilerHasta, @AlquilerHastaOriginal, @Estado);
+				var sql =
+					@$"INSERT INTO {nameof(Contrato)}
+						({nameof(Contrato.IdInquilino)}, 
+						{nameof(Contrato.IdInmueble)}, 
+						{nameof(Contrato.Precio)}, 
+						{nameof(Contrato.AlquilerDesde)}, 
+						{nameof(Contrato.AlquilerHasta)},
+						{nameof(Contrato.AlquilerHastaOriginal)},
+						{nameof(Contrato.Estado)}) 
+					VALUES 
+					(@IdInquilino, 
+					@IdInmueble, 
+					@Precio, 
+					@AlquilerDesde, 
+					@AlquilerHasta, 
+					@AlquilerHastaOriginal, 
+					1);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -28,7 +43,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde.ToDateTime(TimeOnly.MinValue));
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta.ToDateTime(TimeOnly.MinValue));
 					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal.ToDateTime(TimeOnly.MinValue));
-					cmd.Parameters.AddWithValue("@Estado", 1);
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					Console.WriteLine(res);
@@ -44,7 +58,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"DELETE FROM contrato WHERE IdContrato = @id";
+				var sql = @$"DELETE FROM {nameof(Contrato)} WHERE {nameof(Contrato.IdContrato)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -61,7 +75,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool alta;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @$"UPDATE contrato SET {nameof(Contrato.Estado)} = 1 WHERE IdContrato = @id";
+				var sql = @$"UPDATE {nameof(Contrato)} SET {nameof(Contrato.Estado)} = 1 WHERE {nameof(Contrato.IdContrato)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -78,7 +92,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @$"UPDATE contrato SET {nameof(Contrato.Estado)} = 0 WHERE IdContrato = @id";
+				var sql = @$"UPDATE {nameof(Contrato)} SET {nameof(Contrato.Estado)} = 0 WHERE {nameof(Contrato.IdContrato)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -95,15 +109,17 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE contrato SET 
-				IdInquilino = @IdInquilino,
-				IdInmueble = @IdInmueble,
-				Precio = @Precio,
-				AlquilerDesde = @AlquilerDesde,
-				AlquilerHasta = @AlquilerHasta,
-				AlquilerHastaOriginal = @AlquilerHastaOriginal,
-				Estado = @Estado,
-				WHERE IdContrato = @IdContrato";
+				var sql =
+					@$"UPDATE {nameof(Contrato)} SET 
+						{nameof(Contrato.IdInquilino)} = @IdInquilino,
+						{nameof(Contrato.IdInmueble)} = @IdInmueble,
+						{nameof(Contrato.Precio)} = @Precio,
+						{nameof(Contrato.AlquilerDesde)} = @AlquilerDesde,
+						{nameof(Contrato.AlquilerHasta)} = @AlquilerHasta,
+						{nameof(Contrato.AlquilerHastaOriginal)} = @AlquilerHastaOriginal,
+						{nameof(Contrato.Estado)} = @Estado,
+					WHERE 
+						{nameof(Contrato.IdContrato)} = @IdContrato";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdContrato", contrato.IdContrato);
@@ -126,26 +142,28 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = new List<Contrato>();
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				string sql = @$"SELECT 
-								{nameof(Contrato.IdContrato)}, 
-								{nameof(Contrato.IdInmueble)}, 
-								{nameof(Contrato.Precio)},
-								{nameof(Contrato.IdInquilino)}, 
+				string sql =
+							@$"SELECT 
+								c.{nameof(Contrato.IdContrato)}, 
+								c.{nameof(Contrato.Precio)}, 
 								{nameof(Contrato.AlquilerDesde)}, 
 								{nameof(Contrato.AlquilerHasta)},
 								{nameof(Contrato.AlquilerHastaOriginal)},
-								{nameof(Contrato.Estado)}
-							FROM contrato;";
+								c.{nameof(Contrato.Estado)},
+								inq.{nameof(Inquilino.Nombre)},
+								inq.{nameof(Inquilino.Apellido)},
+								inm.{nameof(Inmueble.Direccion)}
+							FROM {nameof(Contrato)} AS c
+							INNER JOIN {nameof(Inquilino)} AS inq
+							ON c.{nameof(Contrato.IdInquilino)} = inq.{nameof(Inquilino.IdInquilino)}
+							INNER JOIN {nameof(Inmueble)} AS inm
+							ON c.{nameof(Contrato.IdInmueble)} = inm.{nameof(Inmueble.IdInmueble)}";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
 					using (MySqlDataReader reader = cmd.ExecuteReader())
 						while (reader.Read())
 						{
-							int IdInmueble = reader.GetInt32("IdInmueble");
-							int IdInquilino = reader.GetInt32("IdInquilino");
-							var inmueble = rInm.ObtenerInmueblePorID(IdInmueble);
-							var inquilino = rInq.ObtenerInquilinoPorID(IdInquilino);
 							res.Add(new Contrato
 							{
 								IdContrato = reader.GetInt32("IdContrato"),
@@ -154,8 +172,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
 								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
 								Estado = reader.GetBoolean("Estado"),
-								Inmueble = inmueble,
-								Inquilino = inquilino
+								Inquilino = new Inquilino()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido"),
+								},
+								Inmueble = new Inmueble()
+								{
+									Direccion = reader.GetString("Direccion")
+								}
 							});
 						}
 					conn.Close();
@@ -167,54 +192,59 @@ namespace inmobiliariaBaigorriaDiaz.Models
 		public Contrato ObtenerContratoById(int id)
 		{
 			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
-			using MySqlConnection conn = mySqlConnection;
-			var sql = @$"SELECT {nameof(Contrato.IdContrato)},
-							c.{nameof(Contrato.IdInmueble)},
-							c.{nameof(Contrato.IdInquilino)},
-							c.{nameof(Contrato.Precio)},
-							{nameof(Contrato.AlquilerDesde)}, 
-							{nameof(Contrato.AlquilerHasta)}, 
-							{nameof(Contrato.AlquilerHastaOriginal)}, 
-							c.{nameof(Contrato.Estado)},
-							i.Nombre, i.Apellido, 
-							inm.Direccion 
-						FROM contrato AS c 
-						INNER JOIN inquilino AS i ON c.IdInquilino = i.IdInquilino 
-						INNER JOIN inmueble AS inm ON c.IdInmueble = inm.IdInmueble  
-						WHERE IdContrato = @Id;";
-			Contrato contrato = new Contrato();
-			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				cmd.Parameters.AddWithValue("@id", id);
-				conn.Open();
-				using (MySqlDataReader reader = cmd.ExecuteReader())
+				string sql =
+							@$"SELECT 
+								c.{nameof(Contrato.IdContrato)}, 
+								c.{nameof(Contrato.Precio)}, 
+								{nameof(Contrato.AlquilerDesde)}, 
+								{nameof(Contrato.AlquilerHasta)},
+								{nameof(Contrato.AlquilerHastaOriginal)},
+								c.{nameof(Contrato.Estado)},
+								inq.{nameof(Inquilino.Nombre)},
+								inq.{nameof(Inquilino.Apellido)},
+								inm.{nameof(Inmueble.Direccion)}
+							FROM {nameof(Contrato)} AS c
+							INNER JOIN {nameof(Inquilino)} AS inq
+							ON c.{nameof(Contrato.IdInquilino)} = inq.{nameof(Inquilino.IdInquilino)}
+							INNER JOIN {nameof(Inmueble)} AS inm
+							ON c.{nameof(Contrato.IdInmueble)} = inm.{nameof(Inmueble.IdInmueble)}
+							WHERE c.{nameof(Contrato.IdContrato)} = @id";
+				Contrato contrato = new Contrato();
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
-					if (reader.Read())
+					cmd.Parameters.AddWithValue("@id", id);
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
 					{
-						contrato = new Contrato
+						if (reader.Read())
 						{
-							IdContrato = reader.GetInt32("IdContrato"),
-							IdInquilino = reader.GetInt32("IdInquilino"),
-							IdInmueble = reader.GetInt32("IdInmueble"),
-							AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
-							AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
-							AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
-							Inmueble = new Inmueble
+							contrato = new Contrato
 							{
-								Direccion = reader.GetString("Direccion"),
-							},
-							Inquilino = new Inquilino
-							{
-								Nombre = reader.GetString("Nombre"),
-								Apellido = reader.GetString("Apellido"),
-							}
-						};
+								IdContrato = reader.GetInt32("IdContrato"),
+								Precio = reader.GetDecimal("Precio"),
+								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
+								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
+								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
+								Estado = reader.GetBoolean("Estado"),
+								Inquilino = new Inquilino()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido"),
+								},
+								Inmueble = new Inmueble()
+								{
+									Direccion = reader.GetString("Direccion")
+								}
+							};
+						}
 					}
+					conn.Close();
 				}
-				conn.Close();
+				Console.WriteLine(contrato.Inquilino.Apellido);
+				return contrato;
 			}
-			Console.WriteLine(contrato.Inquilino.Apellido);
-			return contrato;
 		}
 	}
 }

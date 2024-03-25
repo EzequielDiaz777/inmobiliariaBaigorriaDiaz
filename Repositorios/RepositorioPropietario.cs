@@ -2,10 +2,11 @@ using MySql.Data.MySqlClient;
 
 namespace inmobiliariaBaigorriaDiaz.Models
 {
+
 	public class RepositorioPropietario
 	{
-		protected readonly string connectionString;
 
+		protected readonly string connectionString;
 		public RepositorioPropietario()
 		{
 			connectionString = "Server=localhost;User=root;Password=;Database=inmobiliariabaigorriadiaz;SslMode=none";
@@ -16,8 +17,21 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"INSERT INTO propietario(Nombre, Apellido, Telefono, Email, DNI, Estado)
-				VALUES(@Nombre, @Apellido, @Telefono, @Email, @DNI, @Estado);
+				var sql =
+						@$"INSERT INTO {nameof(Propietario)}
+							({nameof(Propietario.Nombre)},
+							{nameof(Propietario.Apellido)},
+							{nameof(Propietario.Telefono)},
+							{nameof(Propietario.Email)},
+							{nameof(Propietario.DNI)},
+							{nameof(Propietario.Estado)})
+						VALUES
+							(@Nombre, 
+							@Apellido, 
+							@Telefono, 
+							@Email, 
+							@DNI, 
+							1);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -26,7 +40,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(propietario.Email) ? "" : propietario.Email);
 					cmd.Parameters.AddWithValue("@Telefono", string.IsNullOrEmpty(propietario.Telefono) ? "" : propietario.Telefono);
 					cmd.Parameters.AddWithValue("@DNI", propietario.DNI);
-					cmd.Parameters.AddWithValue("@Estado", propietario.Estado);
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					propietario.IdPropietario = res;
@@ -41,7 +54,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE propietario SET Estado = 1 WHERE IdPropietario = @id";
+				var sql = @$"UPDATE {nameof(Propietario)} SET {nameof(Propietario.Estado)} = 1 WHERE {nameof(Propietario.IdPropietario)} = @$id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -58,7 +71,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"DELETE FROM propietario WHERE IdPropietario = @id";
+				var sql = @$"DELETE FROM {nameof(Propietario)} WHERE {nameof(Propietario.IdPropietario)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -75,7 +88,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE propietario SET Estado = 0 WHERE IdPropietario = @id";
+				var sql = @$"UPDATE {nameof(Propietario)} SET {nameof(Propietario.Estado)} = 0 WHERE {nameof(Propietario.IdPropietario)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -92,14 +105,14 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			int res;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE propietario SET 
-							Nombre = @Nombre, 
-							Apellido = @Apellido, 
-							Telefono = @Telefono, 
-							Email = @Email, 
-							DNI = @DNI,
-							Estado = @Estado
-							WHERE IdPropietario = @IdPropietario;";
+				var sql = @$"UPDATE {nameof(Propietario)} SET 
+							{nameof(Propietario.Nombre)} = @Nombre, 
+							{nameof(Propietario.Apellido)} = @Apellido, 
+							{nameof(Propietario.Telefono)} = @Telefono, 
+							{nameof(Propietario.Email)} = @Email, 
+							{nameof(Propietario.DNI)} = @DNI,
+							{nameof(Propietario.Estado)} = @Estado
+							WHERE {nameof(Propietario.IdPropietario)} = @IdPropietario";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdPropietario", propietario.IdPropietario);
@@ -113,8 +126,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
 				}
+				return res;
 			}
-			return res;
 		}
 
 		public List<Propietario> ObtenerPropietarios()
@@ -123,14 +136,14 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
 				var sql = @$"SELECT 
-				{nameof(Propietario.IdPropietario)}, 
-				{nameof(Propietario.Nombre)}, 
-				{nameof(Propietario.Apellido)}, 
-				{nameof(Propietario.Telefono)}, 
-				{nameof(Propietario.Email)}, 
-				{nameof(Propietario.DNI)}, 
-				{nameof(Propietario.Estado)}
-				FROM propietario";
+						{nameof(Propietario.IdPropietario)}, 
+						{nameof(Propietario.Nombre)}, 
+						{nameof(Propietario.Apellido)}, 
+						{nameof(Propietario.Telefono)}, 
+						{nameof(Propietario.Email)}, 
+						{nameof(Propietario.DNI)}, 
+						{nameof(Propietario.Estado)} 
+					FROM {nameof(Propietario)}";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -161,15 +174,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
 			using MySqlConnection conn = mySqlConnection;
 			var sql = @$"SELECT 
-				{nameof(Propietario.IdPropietario)}, 
-				{nameof(Propietario.Nombre)}, 
-				{nameof(Propietario.Apellido)}, 
-				{nameof(Propietario.Telefono)}, 
-				{nameof(Propietario.Email)}, 
-				{nameof(Propietario.DNI)}, 
-				{nameof(Propietario.Estado)}
-				FROM propietario 
-				WHERE IdPropietario = @id";
+						{nameof(Propietario.IdPropietario)}, 
+						{nameof(Propietario.Nombre)}, 
+						{nameof(Propietario.Apellido)}, 
+						{nameof(Propietario.Telefono)}, 
+						{nameof(Propietario.Email)}, 
+						{nameof(Propietario.DNI)}, 
+						{nameof(Propietario.Estado)} 
+					FROM {nameof(Propietario)} 
+					WHERE {nameof(Propietario.IdPropietario)} = @id";
 			Propietario propietario = new Propietario();
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{
