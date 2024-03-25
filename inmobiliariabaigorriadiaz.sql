@@ -77,17 +77,6 @@ CREATE TABLE `inquilino` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `inquilino`
---
-
-INSERT INTO `inquilino` (`IdInquilino`, `Nombre`, `Apellido`, `Telefono`, `Email`, `DNI`, `Estado`) VALUES
-(2, 'Jorge Ezequiel', 'Diaz', '1132185230', 'diazezequiel777@gmail.com', '34229421', 0),
-(3, 'Dora Nelida', 'Orsomarso', '1163213910', 'doranel50@hotmail.com', '12600842', 0),
-(4, 'Beatriz', 'Hernando', '1154891382', 'beahernando@gmail.com', '5919535', 0);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `pago`
 --
 
@@ -115,18 +104,6 @@ CREATE TABLE `propietario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `propietario`
---
-
-INSERT INTO `propietario` (`IdPropietario`, `Nombre`, `Apellido`, `Telefono`, `Email`, `DNI`, `Estado`) VALUES
-(2, 'Beatriz', 'Hernando', '1154891383', 'beahernando@gmail.com', '5919535', 0),
-(3, 'Federico Ivan', 'Cruceño', '2657312733', 'fedeicru@gmail.com', '37716731', 0),
-(4, 'Monica Patricia', 'Baigorria', '2657322453', 'patitobaigorria@gmail.com', '27013989', 0),
-(5, 'Dora Nelida', 'Orsomarso', '1163213910', 'doranel50@hotmail.com', '12600842', 0);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `tipodeinmueble`
 --
 
@@ -143,8 +120,7 @@ CREATE TABLE `tipodeinmueble` (
 INSERT INTO `tipodeinmueble` (`IdTipoDeInmueble`, `Nombre`, `Estado`) VALUES
 (1, 'Casa amplia', 0),
 (2, 'Casa chica', 1),
-(3, 'Casa quinta', 1),
-(4, 'Casa quinto', 0);
+(3, 'Casa quinta', 1);
 
 -- --------------------------------------------------------
 
@@ -166,8 +142,7 @@ INSERT INTO `usodeinmueble` (`IdUsoDeInmueble`, `Nombre`, `Estado`) VALUES
 (1, 'Residencial', 1),
 (2, 'Comercial', 1),
 (3, 'Evento', 1),
-(4, 'Otro', 1),
-(5, 'tururur', 0);
+(4, 'Otro', 1);
 
 --
 -- Índices para tablas volcadas
