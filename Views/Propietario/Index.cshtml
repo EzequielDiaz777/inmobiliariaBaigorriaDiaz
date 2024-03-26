@@ -22,6 +22,9 @@
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
                 Opciones
             </th>
         </tr>
@@ -39,7 +42,13 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
-                
+                <td>
+                    @if(item.Estado){
+                        @Html.Label("Alta")
+                    } else {
+                        @Html.Label("Baja")   
+                    }
+                </td>
                 <td>
                     <span class="button-column">
                         <a href="@Url.Action("Edit", new { id = item.IdPropietario })" title="Editar"> <i

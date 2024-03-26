@@ -1,9 +1,4 @@
 using inmobiliariaBaigorriaDiaz.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
@@ -19,7 +14,10 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             ViewBag.Id = TempData["Id"];
             ViewBag.entidad = "inmueble";
-            return View(repoI.ObtenerInmuebles());
+            var inmuebles = repoI.ObtenerInmuebles();
+            Console.WriteLine(inmuebles[0].Duenio.Nombre);
+            Console.WriteLine(inmuebles[0].Duenio.Apellido);
+            return View(inmuebles);
         }
 
         // GET: Inmueble/Details/5
@@ -53,7 +51,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                repoI.Alta(inmueble);
+                repoI.AltaFisica(inmueble);
                 TempData["Id"] = inmueble.IdInmueble;
                 return RedirectToAction(nameof(Index));
 
@@ -84,22 +82,20 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 Inmueble? inmuebleBD = repoI.ObtenerInmueblePorID(id);
                 if(inmuebleBD != null){
-                    inmuebleBD.Tipo = inmueble.Tipo;
+                    inmuebleBD.IdTipoDeInmueble= inmueble.IdTipoDeInmueble;
+                    inmuebleBD.IdUsoDeInmueble = inmueble.IdUsoDeInmueble;
+                    inmuebleBD.IdPropietario = inmueble.IdPropietario;
                     inmuebleBD.Direccion = inmueble.Direccion;
                     inmuebleBD.Ambientes = inmueble.Ambientes;
                     inmuebleBD.Superficie = inmueble.Superficie;
                     inmuebleBD.Longitud = inmueble.Longitud;
                     inmuebleBD.Latitud = inmueble.Latitud;
                     inmuebleBD.Precio = inmueble.Precio;
-                    inmuebleBD.Uso = inmueble.Uso;
-                    inmuebleBD.Estado = inmueble.Estado;
-                    inmuebleBD.Duenio = inmueble.Duenio;
                     repoI.ModificarInmueble(inmuebleBD);
                     return RedirectToAction(nameof(Index));
                 } else {
                     return RedirectToAction(nameof(Index));
                 }
-            
             }
             catch (Exception ex)
             {
@@ -122,7 +118,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                repoI.EliminarInmueble(id);
+                repoI.BajaLogica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

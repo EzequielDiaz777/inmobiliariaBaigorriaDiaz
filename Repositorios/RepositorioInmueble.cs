@@ -141,10 +141,11 @@ public class RepositorioInmueble
                         {nameof(Inmueble.Superficie)} = @Superficie,
                         {nameof(Inmueble.Longitud)} = @Longitud,
                         {nameof(Inmueble.Latitud)} = @Latitud,
-                        {nameof(Inmueble.Precio)} = @Precio,
-                    WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble";
+                        {nameof(Inmueble.Precio)} = @Precio
+                    WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble;";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
+                cmd.Parameters.AddWithValue("@IdInmueble", inmueble.IdInmueble);
                 cmd.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                 cmd.Parameters.AddWithValue("@IdTipoDeInmueble", inmueble.IdTipoDeInmueble);
                 cmd.Parameters.AddWithValue("@IdUsoDeInmueble", inmueble.IdUsoDeInmueble);
@@ -164,7 +165,6 @@ public class RepositorioInmueble
     public List<Inmueble> ObtenerInmuebles()
     {
         List<Inmueble> inmuebles = new List<Inmueble>();
-
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql =
@@ -236,26 +236,54 @@ public class RepositorioInmueble
         {
             var sql =
                         @$"SELECT 
+                        i.IdInmueble, 
+                        i.IdTipoDeInmueble, 
+                        i.IdUsoDeInmueble, 
+                        i.IdPropietario, 
+                        i.Direccion, 
+                        i.Ambientes, 
+                        i.Superficie,
+                        i.Longitud, 
+                        i.Latitud, 
+                        i.Precio, 
+                        i.Estado, 
+                        u.Nombre, 
+                        t.Nombre, 
+                        p.Nombre, 
+                        p.Apellido
+                        FROM Inmueble AS i 
+                        INNER JOIN Propietario AS p 
+                        ON i.IdPropietario = p.IdPropietario
+                        INNER JOIN TipoDeInmueble AS t
+                        ON i.IdTipoDeInmueble = t.IdTipoDeInmueble
+                        INNER JOIN UsoDeInmueble AS u
+                        ON i.IdUsoDeInmueble = u.IdUsoDeInmueble
+                        WHERE i.IdInmueble = @Id;
+                        ";
+                        /*@$"SELECT 
                             i.{nameof(Inmueble.IdInmueble)},
+                            i.{nameof(Inmueble.IdTipoDeInmueble)},
+                            i.{nameof(Inmueble.IdUsoDeInmueble)},
+                            i.{nameof(Inmueble.IdPropietario)},
                             i.{nameof(Inmueble.Direccion)},
                             i.{nameof(Inmueble.Ambientes)},
                             i.{nameof(Inmueble.Superficie)},
                             i.{nameof(Inmueble.Longitud)},
                             i.{nameof(Inmueble.Latitud)},
                             i.{nameof(Inmueble.Precio)},
-                            u.{nameof(UsoDeInmueble.Nombre)},
                             i.{nameof(Inmueble.Estado)},
-                            t.{nameof(TipoDeInmueble.Nombre)} AS TipoDeInmuebleNombre,
-                            p.{nameof(Propietario.Nombre)} AS PropietarioNombre,
-                            p.{nameof(Propietario.Apellido)} AS PropietarioApellido
-                        FROM inmueble AS i 
-                        INNER JOIN propietario AS p 
-                        ON i.IdPropietario= p.IdPropietario
-                        INNER JOIN tipodeinmueble AS t
-                        ON i.IdTipoDeInmueble= t.IdTipoDeInmueble
-                        INNER JOIN usodeinmueble AS u
-                        ON i.IdUsoDeInmueble= u.IdUsoDeInmueble
-                        WHERE i.IdInmueble = @Id;";
+                            u.{nameof(UsoDeInmueble.Nombre)},
+                            t.{nameof(TipoDeInmueble.Nombre)},
+                            p.{nameof(Propietario.Nombre)},
+                            p.{nameof(Propietario.Apellido)}
+                        FROM {nameof(Inmueble)} AS i 
+                        INNER JOIN {nameof(Propietario)} AS p 
+                        ON i.{nameof(Inmueble.IdPropietario)} = p.{nameof(Propietario.IdPropietario)}
+                        INNER JOIN {nameof(TipoDeInmueble)} AS t
+                        ON i.{nameof(Inmueble.IdTipoDeInmueble)} = t.{nameof(TipoDeInmueble.IdTipoDeInmueble)}
+                        INNER JOIN {nameof(UsoDeInmueble)} AS u
+                        ON i.{nameof(Inmueble.IdUsoDeInmueble)} = u.{nameof(UsoDeInmueble.IdUsoDeInmueble)}
+                        WHERE i.{nameof(Inmueble.IdInmueble)} = @Id;";*/
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@id", id);
@@ -280,12 +308,12 @@ public class RepositorioInmueble
                         res.Estado = reader.GetBoolean("Estado");
                         res.Tipo = new TipoDeInmueble
                         {
-                            Nombre = reader.GetString("TipoDeInmuebleNombre"),
+                            Nombre = reader.GetString("Nombre"),
                         };
                         res.Duenio = new Propietario
                         {
-                            Nombre = reader.GetString("PropietarioNombre"),
-                            Apellido = reader.GetString("PropietarioApellido"),
+                            Nombre = reader.GetString("Nombre"),
+                            Apellido = reader.GetString("Apellido"),
                         };
                     }
 
@@ -297,7 +325,7 @@ public class RepositorioInmueble
         {
             throw new Exception("No se encontró ningún Inmueble con el ID especificado.");
         }
-
+        
         return res;
     }
 
@@ -317,9 +345,9 @@ public class RepositorioInmueble
                         i.{nameof(Inmueble.Precio)},
                         u.{nameof(UsoDeInmueble.Nombre)},
                         i.{nameof(Inmueble.Estado)},
-                        t.{nameof(TipoDeInmueble.Nombre)} AS TipoDeInmuebleNombre,
-                        p.{nameof(Propietario.Nombre)} AS PropietarioNombre,
-                        p.{nameof(Propietario.Apellido)} AS PropietarioApellido
+                        t.{nameof(TipoDeInmueble.Nombre)},
+                        p.{nameof(Propietario.Nombre)},
+                        p.{nameof(Propietario.Apellido)}
                     FROM {nameof(Inmueble)} i 
                     INNER JOIN {nameof(Propietario)} p 
                     ON i.{nameof(Inmueble.IdPropietario)} = p.{nameof(Propietario.IdPropietario)}
@@ -353,12 +381,12 @@ public class RepositorioInmueble
                             Estado = reader.GetBoolean("Estado"),
                             Tipo = new TipoDeInmueble
                             {
-                                Nombre = reader.GetString("TipoDeInmuebleNombre"),
+                                Nombre = reader.GetString("Nombre"),
                             },
                             Duenio = new Propietario
                             {
-                                Nombre = reader.GetString("PropietarioNombre"),
-                                Apellido = reader.GetString("PropietarioApellido"),
+                                Nombre = reader.GetString("Nombre"),
+                                Apellido = reader.GetString("Apellido"),
                             }
                         };
                         inmuebles.Add(inmueble);

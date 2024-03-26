@@ -5,6 +5,7 @@
 }
 
 <h1>Actualizar</h1>
+
 <h4>Inmueble</h4>
 <hr />
 <div class="row">
@@ -12,17 +13,21 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="control-label">Tipo de inmueble</label>
-                <select class="form-select" name="IdTipoDeInmueble">
+                <label asp-for="IdInmueble" class="control-label"></label>
+                <input asp-for="IdInmueble" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="IdTipoDeInmueble" class="control-label">Seleccione un tipo de inmueble</label>
+                <select asp-for="IdTipoDeInmueble" class="form-select" name="IdTipoDeInmueble">
                     @foreach (var item in ViewBag.TiposDeInmuebles)
                     {
-                        @if (ViewBag.NombreDelTipoDeInmuebleS == item.Nombre)
+                        @if (@Model.Tipo.Nombre == item.Nombre)
                         {
-                            <option selected value="@item.IdTipoDeInmueble">@(item.Nombre)</option>
+                            <option selected value="@item.IdTipoDeInmueble">@item.Nombre</option>
                         }
                         else
                         {
-                            <option value="@item.IdTipoDeInmueble">@(item.Nombre)</option>
+                            <option value="@item.IdTipoDeInmueble">@item.Nombre</option>
                         }
                     }
                 </select>
@@ -63,31 +68,42 @@
                 <select asp-for="IdUsoDeInmueble" class="form-select">
                     @foreach (var item in ViewBag.UsosDeInmuebles)
                     {
-                        <option selected value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
+                        @if (@Model.Uso.Nombre == item.Nombre)
+                        {
+                            <option selected value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
+                        }
+                        else
+                        {
+                            <option value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
+                        }
                     }
                 </select>
                 <span asp-validation-for="IdUsoDeInmueble" class="text-danger"></span>
             </div>
-
             <div class="form-group">
-                <label asp-for="IdPropietario" class="control-label">Seleccione un Propietario</label>
-                <select asp-for="IdPropietario" class="form-select">
+                <label asp-for="IdPropietario" class="control-label">Nombre del propietario</label>
+                <select asp-for="IdPropietario" class="form-select" name="IdPropietario">
                     @foreach (var item in ViewBag.Propietarios)
                     {
-
-                        <option selected value="@item.IdPropietario">@(item.ToString())</option>
-                        
+                        @if (@Model.Duenio.Nombre == item.Nombre)
+                        {
+                            <option selected value="@item.IdPropietario">@item.Nombre @item.Apellido</option>
+                        }
+                        else
+                        {
+                            <option value="@item.IdPropietario">@(item.Nombre) @(item.Apellido)</option>
+                        }
                     }
                 </select>
                 <span asp-validation-for="IdPropietario" class="text-danger"></span>
             </div>
             <br>
             <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar" style="margin-right: 30px;"/>
-                <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmueble")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
+                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar" style="margin-right: 30px;" />
+                <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmueble")'"
+                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
                     Lista</button>
             </div>
         </form>
     </div>
 </div>
-

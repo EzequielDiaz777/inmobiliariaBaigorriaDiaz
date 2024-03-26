@@ -22,6 +22,9 @@
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
                 Opciones
             </th>
         </tr>
@@ -39,7 +42,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
-                
+                <td>
+                    @if (item.Estado)
+                    {
+                        @Html.Label("Alta")
+                    }
+                    else
+                    {
+                        @Html.Label("Baja")
+                    }
+                </td>
                 <td>
                     <a href="@Url.Action("Edit", new { id = item.IdInquilino })" title="Editar"> <i
                             class="fas fa-edit custom-color"></i></a>

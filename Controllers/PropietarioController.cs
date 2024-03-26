@@ -97,7 +97,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                rp.BajaFisica(id);
+                rp.BajaLogica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

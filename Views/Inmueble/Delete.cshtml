@@ -64,14 +64,17 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Uso.Nombre)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Estado)
         </dt>
-        <dd class = "col-sm-10">
-            @if(Model.Estado == false){
+        <dd class="col-sm-10">
+            @if (!Model.Estado)
+            {
                 <span>No Disponible</span>
-            }else{
-                 <span>Disponible</span>
+            }
+            else
+            {
+                <span>Disponible</span>
             }
         </dd>
         <dt class = "col-sm-2">

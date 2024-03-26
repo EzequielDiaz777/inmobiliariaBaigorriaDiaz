@@ -17,6 +17,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Required]
         public string DNI { get; set; } = "";
         [Required]
+        [Display(Name = "Estado del propietario")]
         public bool Estado { get; set; }
         public override string ToString()
         {

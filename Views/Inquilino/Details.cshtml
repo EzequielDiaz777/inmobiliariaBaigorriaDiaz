@@ -31,33 +31,42 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Telefono)
         </dt>
-        @if (Model.Telefono.Equals(""))
-        {
-            <dd class="col-sm-10">
-                No declarado
-            </dd>
-        }
-        else
-        {
-            <dd class="col-sm-10">
+        <dd class="col-sm-10">
+            @if (Model.Telefono != null)
+            {
                 @Html.DisplayFor(model => model.Telefono)
-            </dd>
-        }
+            }
+            else
+            {
+                <text>No declarado</text>
+            }
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        @if (Model.Email.Equals(""))
-        {
-            <dd class="col-sm-10">
-                No declarado
-            </dd>
-        }
-        else
-        {
-            <dd class="col-sm-10">
+        <dd class="col-sm-10">
+            @if(Model.Email != null)
+            {
                 @Html.DisplayFor(model => model.Email)
-            </dd>
-        }
+            }
+            else
+            {
+                <text>No declarado</text>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Estado)
+            {
+                @Html.Label("Alta")
+            }
+            else
+            {
+                @Html.Label("Baja")
+            }
+        </dd>
     </dl>
 </div>
 <div>

@@ -28,6 +28,7 @@ public class Inmueble
     public UsoDeInmueble Uso { get; set; } = new UsoDeInmueble();
 
     [Required]
+    [Display(Name = "Dirección")]
     public string Direccion { get; set; } = "";
 
     [Required]
@@ -44,6 +45,7 @@ public class Inmueble
     public decimal Precio { get; set; }
     
     [Required]
+    [Display(Name = "Estado del inmueble")]
     public bool Estado { get; set;}
 
     [Display(Name = "Dueño")]

@@ -5,9 +5,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 {
     public class ContratoController : Controller
     {
-        private RepositorioContrato rc = new RepositorioContrato();
-        private RepositorioInquilino rinq = new RepositorioInquilino();
-        private RepositorioInmueble rinm = new RepositorioInmueble();
+        private RepositorioContrato repoC = new RepositorioContrato();
+        private RepositorioInquilino repoInq = new RepositorioInquilino();
+        private RepositorioInmueble repoInm = new RepositorioInmueble();
 
         // GET: Contrato
         [HttpGet]
@@ -15,7 +15,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             ViewBag.Id = TempData["Id"];
             ViewBag.entidad = "contrato";
-            return View(rc.ObtenerContratos());
+            return View(repoC.ObtenerContratos());
         }
 
         // GET: Contrato/Details/5
@@ -23,15 +23,15 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Details(int id)
         {
             ViewBag.Id = TempData["Id"];
-            return View(rc.ObtenerContratoById(id));
+            return View(repoC.ObtenerContratoById(id));
         }
 
         // GET: Contrato/Create
         [HttpGet]
         public ActionResult Create()
         {
-            ViewBag.Inmuebles = rinm.ObtenerInmuebles();
-            ViewBag.Inquilinos = rinq.ObtenerInquilinos();
+            ViewBag.Inmuebles = repoInm.ObtenerInmuebles();
+            ViewBag.Inquilinos = repoInq.ObtenerInquilinos();
             return View();
         }
 
@@ -42,7 +42,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                rc.AltaFisica(contrato);
+                repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
                 return RedirectToAction(nameof(Index));
             }
@@ -56,21 +56,31 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            ViewBag.Inmuebles = rinm.ObtenerInmuebles();
-            ViewBag.Inquilinos = rinq.ObtenerInquilinos();
-            return View(rc.ObtenerContratoById(id));
+            ViewBag.Inmuebles = repoInm.ObtenerInmuebles();
+            ViewBag.Inquilinos = repoInq.ObtenerInquilinos();
+            return View(repoC.ObtenerContratoById(id));
         }
 
         // POST: Contrato/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Contrato contrato)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
+                Contrato? contratoBD = repoC.ObtenerContratoById(id);
+                if (contratoBD != null){
+                    contratoBD.IdInquilino = contrato.IdInquilino;
+                    contratoBD.IdInmueble = contrato.IdInmueble;
+                    contratoBD.Precio = contrato.Precio;
+                    contratoBD.AlquilerDesde = contrato.AlquilerDesde;
+                    contratoBD.AlquilerHasta = contrato.AlquilerHasta;
+                    contratoBD.AlquilerHastaOriginal = contrato.AlquilerHastaOriginal;
+                    repoC.ModificarContrato(contratoBD);
+                    return RedirectToAction(nameof(Index));
+                } else {
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch
             {
@@ -82,7 +92,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            return View(rc.ObtenerContratoById(id));
+            return View(repoC.ObtenerContratoById(id));
         }
 
         // POST: Contrato/Delete/5
@@ -92,7 +102,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                rc.BajaLogica(id);
+                repoC.BajaLogica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

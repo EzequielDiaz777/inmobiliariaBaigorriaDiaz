@@ -51,7 +51,6 @@
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                
                 @if(!item.Estado){
                     <span>No Disponible</span>
                 }else{
@@ -59,7 +58,7 @@
                 }
             </td>
             <td>
-                @item.Duenio?.ToString()
+                @item.Duenio.ToString()
             </td>
             <td>
                 <span class="button-column">

@@ -46,7 +46,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 
 					cmd.CommandText = "SELECT LAST_INSERT_ID()";
 					res = Convert.ToInt32(cmd.ExecuteScalar());
-					
+
 					contrato.IdContrato = res;
 					conn.Close();
 				}
@@ -88,6 +88,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					alta = cmd.ExecuteNonQuery() != 0;
 					conn.Close();
 				}
+				if (!alta)
+				{
+					throw new InvalidOperationException($"No se encontró ningún contrato con el ID {id} para dar de alta.");
+				}
 			}
 			return alta;
 		}
@@ -105,6 +109,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					baja = cmd.ExecuteNonQuery() != 0;
 					conn.Close();
 				}
+				if (!baja)
+				{
+					throw new InvalidOperationException($"No se encontró ningún contrato con el ID {id} para dar de baja.");
+				}
 			}
 			return baja;
 		}
@@ -121,8 +129,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Contrato.Precio)} = @Precio,
 						{nameof(Contrato.AlquilerDesde)} = @AlquilerDesde,
 						{nameof(Contrato.AlquilerHasta)} = @AlquilerHasta,
-						{nameof(Contrato.AlquilerHastaOriginal)} = @AlquilerHastaOriginal,
-						{nameof(Contrato.Estado)} = @Estado,
+						{nameof(Contrato.AlquilerHastaOriginal)} = @AlquilerHastaOriginal
 					WHERE 
 						{nameof(Contrato.IdContrato)} = @IdContrato";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -130,10 +137,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@IdContrato", contrato.IdContrato);
 					cmd.Parameters.AddWithValue("@IdInquilino", contrato.IdInquilino);
 					cmd.Parameters.AddWithValue("@IdInmueble", contrato.IdInmueble);
+					cmd.Parameters.AddWithValue("@Precio", contrato.Precio);
 					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde);
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta);
 					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal);
-					cmd.Parameters.AddWithValue("@Estado", contrato.Estado);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
@@ -233,12 +240,12 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
 								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
 								Estado = reader.GetBoolean("Estado"),
-								Inquilino = new Inquilino()
+								Inquilino = new Inquilino
 								{
 									Nombre = reader.GetString("Nombre"),
 									Apellido = reader.GetString("Apellido"),
 								},
-								Inmueble = new Inmueble()
+								Inmueble = new Inmueble
 								{
 									Direccion = reader.GetString("Direccion")
 								}
