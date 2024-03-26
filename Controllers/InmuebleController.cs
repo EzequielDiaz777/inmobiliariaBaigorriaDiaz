@@ -23,6 +23,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // GET: Inmueble/Details/5
         public ActionResult Details(int id)
         {
+            var inmueble = repoI.ObtenerInmueblePorID(id);
+            Console.WriteLine(inmueble.Duenio.Nombre);
+            Console.WriteLine(inmueble.Duenio.Apellido);
             return View(repoI.ObtenerInmueblePorID(id));
         }
 

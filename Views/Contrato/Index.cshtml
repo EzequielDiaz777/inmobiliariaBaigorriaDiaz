@@ -22,15 +22,6 @@
                 Domicilio del Inmueble
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                Fecha de Inicio del Contrato
-            </th>
-            <th>
-                Fecha de Fin del Contrato
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
             <th>
@@ -46,22 +37,20 @@
                     @Html.DisplayFor(modelItem => item.IdContrato)
                 </td>
                 <td>
-                    @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
+                    @(item.Inquilino.ToString())
                 </td>
                 <td>
                     @(item.Inmueble.Direccion)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Precio)
-                </td>
-                <td>
-                    @(item.AlquilerDesde.ToString("dd/MM/yyyy"))
-                </td>
-                <td>
-                    @(item.AlquilerHasta.ToString("dd/MM/yyyy"))
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado)
+                    @if (!item.Estado)
+                    {
+                        <span>No</span>
+                    }
+                    else
+                    {
+                        <span>Si</span>
+                    }
                 </td>
                 <td>
                     <span class="button-column">
