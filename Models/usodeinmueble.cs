@@ -9,6 +9,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 		[Required]
 		public string Nombre { get; set; } = "";
 		[Required]
+		[Display(Name = "Disponible")]
 		public bool Estado {get; set;} = true;
 	}
 }

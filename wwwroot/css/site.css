@@ -1,5 +1,45 @@
+.custom-table {
+  border: 2px solid #000000;
+  /*Colordelborde*/
+  border-collapse: separate;
+  border-radius: 10px;
+  box-shadow: 0px 0px 30px rgb(17, 0, 255);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #0eb2b8 !important;
+}
+
+.ascending::after {
+  content: "▲"; /* Triángulo hacia arriba */
+  color: rgb(255, 255, 255); /* Color del triángulo */
+  margin-left: 5px; /* Espacio entre el texto y el triángulo */
+}
+.descending::after {
+  content: "▼"; /* Triángulo hacia abajo */
+  color: rgb(255, 255, 255); /* Color del triángulo */
+  margin-left: 5px; /* Espacio entre el texto y el triángulo */
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ddd; /* Bordes de celdas */
+  padding: 8px; /* Espacio interior de las celdas */
+}
+
+.custom-table th {
+  color: white;
+  background-color: #0eb2b8; /* Color de fondo para las celdas del encabezado */
+}
+
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -8,17 +48,16 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 .button-column {
-    white-space: nowrap; /* Evita que los botones se envuelvan a la siguiente línea */
+  white-space: nowrap; /* Evita que los botones se envuelvan a la siguiente línea */
 }
 
 body {
@@ -41,7 +80,8 @@ th {
   background-color: green;
 }
 
-dl.row dt, dl.row dd {
+dl.row dt,
+dl.row dd {
   border-top: 1px solid #dee2e6;
   padding-top: 10px;
 }

@@ -4,46 +4,84 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Alta</h1>
+<h1 class="text-center"><b>ALTA DE PROPIETARIO</b></h1>
 
-<h4>Propietario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="DNI" class="control-label"></label>
-                <input asp-for="DNI" class="form-control" />
-                <span asp-validation-for="DNI" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Apellido" class="control-label"></label>
-                <input asp-for="Apellido" class="form-control" />
-                <span asp-validation-for="Apellido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Telefono" class="control-label"></label>
-                <input asp-for="Telefono" class="form-control" />
-                <span asp-validation-for="Telefono" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <br>
-            <div class="form-group">
-                <input type="submit" value="Dar de Alta" class="btn btn-primary btn-guardar" style="margin-right: 30px;"/>
-                <button type="button" onclick="window.location.href='@Url.Action("Index", "Propietario")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
-                    Lista</button>
-            </div>
-        </form>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Create" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="DNI" class="control-label">DNI</label>
+                    <div class="input-group">
+                        <input asp-for="DNI" class="form-control" required />
+                        <span class="input-group-text">
+                            <i class="fa fa-check text-success d-none"></i>
+                            <i class="fa fa-times text-danger d-none"></i>
+                        </span>
+                        <div class="invalid-feedback">Por favor ingrese un DNI válido.</div>
+                    </div>
+                    <span asp-validation-for="DNI" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Apellido" class="control-label">Apellido</label>
+                    <div class="input-group">
+                        <input asp-for="Apellido" class="form-control" required />
+                        <span class="input-group-text">
+                            <i class="fa fa-check text-success d-none"></i>
+                            <i class="fa fa-times text-danger d-none"></i>
+                        </span>
+                        <div class="invalid-feedback">Por favor ingrese un Apellido válido.</div>
+                    </div>
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Nombre" class="control-label">Nombre</label>
+                    <div class="input-group">
+                        <input asp-for="Nombre" class="form-control" required />
+                        <span class="input-group-text">
+                            <i class="fa fa-check text-success d-none"></i>
+                            <i class="fa fa-times text-danger d-none"></i>
+                        </span>
+                        <div class="invalid-feedback">Por favor ingrese un Nombre válido.</div>
+                    </div>
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Telefono" class="control-label">Teléfono</label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label">Email</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group text-center mt-2">
+                    <button type="submit" class="btn btn-primary mr-2">Dar de Alta</button>
+                    <a href="@Url.Action("Index", "Propietario")" class="btn btn-outline-warning">Volver a la Lista</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
+@section Scripts {
+    <script>
+        // Validar los campos y mostrar los iconos de verificación
+        $(document).ready(function () {
+            $('.input-group input').on('input', function () {
+                var inputGroup = $(this).closest('.input-group');
+                var iconCheck = inputGroup.find('.fa-check');
+                var iconTimes = inputGroup.find('.fa-times');
+                if ($(this).val().trim() !== '') {
+                    iconCheck.removeClass('d-none');
+                    iconTimes.addClass('d-none');
+                } else {
+                    iconCheck.addClass('d-none');
+                    iconTimes.removeClass('d-none');
+                }
+            });
+        });
+    </script>
+}
