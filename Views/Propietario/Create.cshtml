@@ -4,64 +4,68 @@
     ViewData["Title"] = "Create";
 }
 
-<h1 class="text-center"><b>ALTA DE PROPIETARIO</b></h1>
-
-<div class="container">
+<div class="container mt-3">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form asp-action="Create" class="needs-validation" novalidate>
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="DNI" class="control-label">DNI</label>
-                    <div class="input-group">
-                        <input asp-for="DNI" class="form-control" required />
-                        <span class="input-group-text">
-                            <i class="fa fa-check text-success d-none"></i>
-                            <i class="fa fa-times text-danger d-none"></i>
-                        </span>
-                        <div class="invalid-feedback">Por favor ingrese un DNI válido.</div>
-                    </div>
-                    <span asp-validation-for="DNI" class="text-danger"></span>
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>ALTA DE PROPIETARIO</b></h1>
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="DNI" class="control-label">DNI</label>
+                            <div class="input-group">
+                                <input asp-for="DNI" class="form-control" required />
+                                <span class="input-group-text">
+                                    <i class="fa fa-check text-success d-none"></i>
+                                    <i class="fa fa-times text-danger d-none"></i>
+                                </span>
+                                <div class="invalid-feedback">Por favor ingrese un DNI válido.</div>
+                            </div>
+                            <span asp-validation-for="DNI" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Apellido" class="control-label">Apellido</label>
+                            <div class="input-group">
+                                <input asp-for="Apellido" class="form-control" required />
+                                <span class="input-group-text">
+                                    <i class="fa fa-check text-success d-none"></i>
+                                    <i class="fa fa-times text-danger d-none"></i>
+                                </span>
+                                <div class="invalid-feedback">Por favor ingrese un Apellido válido.</div>
+                            </div>
+                            <span asp-validation-for="Apellido" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Nombre" class="control-label">Nombre</label>
+                            <div class="input-group">
+                                <input asp-for="Nombre" class="form-control" required />
+                                <span class="input-group-text">
+                                    <i class="fa fa-check text-success d-none"></i>
+                                    <i class="fa fa-times text-danger d-none"></i>
+                                </span>
+                                <div class="invalid-feedback">Por favor ingrese un Nombre válido.</div>
+                            </div>
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Telefono" class="control-label">Teléfono</label>
+                            <input asp-for="Telefono" class="form-control" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group text-center mt-2">
+                            <button type="submit" class="btn btn-primary mr-2">Dar de Alta</button>
+                            <a href="@Url.Action("Index", "Propietario")" class="btn btn-outline-warning">Volver a la
+                                Lista</a>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Apellido" class="control-label">Apellido</label>
-                    <div class="input-group">
-                        <input asp-for="Apellido" class="form-control" required />
-                        <span class="input-group-text">
-                            <i class="fa fa-check text-success d-none"></i>
-                            <i class="fa fa-times text-danger d-none"></i>
-                        </span>
-                        <div class="invalid-feedback">Por favor ingrese un Apellido válido.</div>
-                    </div>
-                    <span asp-validation-for="Apellido" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Nombre" class="control-label">Nombre</label>
-                    <div class="input-group">
-                        <input asp-for="Nombre" class="form-control" required />
-                        <span class="input-group-text">
-                            <i class="fa fa-check text-success d-none"></i>
-                            <i class="fa fa-times text-danger d-none"></i>
-                        </span>
-                        <div class="invalid-feedback">Por favor ingrese un Nombre válido.</div>
-                    </div>
-                    <span asp-validation-for="Nombre" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Telefono" class="control-label">Teléfono</label>
-                    <input asp-for="Telefono" class="form-control" />
-                    <span asp-validation-for="Telefono" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Email" class="control-label">Email</label>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-group text-center mt-2">
-                    <button type="submit" class="btn btn-primary mr-2">Dar de Alta</button>
-                    <a href="@Url.Action("Index", "Propietario")" class="btn btn-outline-warning">Volver a la Lista</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

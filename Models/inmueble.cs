@@ -10,7 +10,7 @@ namespace inmobiliariaBaigorriaDiaz.Models;
 public class Inmueble
 {
     [Key]
-    [Display(Name = "Nº")]
+    [Display(Name = "Nº de Inmueble")]
     public int IdInmueble { get; set; }
 
     [Required]

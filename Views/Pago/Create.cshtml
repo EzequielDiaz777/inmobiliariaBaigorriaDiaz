@@ -4,43 +4,66 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Alta</h1>
-
-<h4>Pago</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label class="control-label">Contrato</label>
-                <select class="form-select" name="IdContrato">
-                    <option value="0">Seleccione un contrato</option>
-                    @foreach (var item in (IList<inmobiliariaBaigorriaDiaz.Models.Contrato>)ViewBag.Contratos)
-                    {
-                        <option value="@item.IdContrato">@(item.IdContrato)</option>
-                    }
-                </select>
-                <span asp-validation-for="IdContrato" class="text-danger"></span>
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>ALTA DE PAGO</b></h1>
+                    <form asp-action="Create" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="IdContrato" class="control-label">Contrato</label>
+                            <select asp-for="IdContrato" class="form-select" name="IdContrato">
+                                <option value="0">Seleccione un contrato</option>
+                                @foreach (var item in ViewBag.Contratos)
+                                {
+                                    <option value="@item.IdContrato">@(item.IdContrato)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="IdContrato" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Monto" class="control-label"></label>
+                            <input asp-for="Monto" class="form-control" />
+                            <span asp-validation-for="Monto" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Fecha" class="control-label">Fecha del pago: </label>
+                            <br>
+                            <input name="Fecha" type="date" class="form-control">
+                            <span asp-validation-for="Fecha" class="text-danger"></span>
+                            <br>
+                            <div class="form-group text-center mt-2">
+                                <input type="submit" value="Dar de Alta" class="btn btn-primary btn-guardar"
+                                    style="margin-right: 30px;" />
+                                <button type="button" onclick="window.location.href='@Url.Action("Index", "Pago")'"
+                                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;">
+                                    Volver a la Lista</button>
+                            </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Monto" class="control-label"></label>
-                <input asp-for="Monto" class="form-control" />
-                <span asp-validation-for="Monto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Fecha" class="control-label">Fecha del pago: </label>
-                <br>
-                <input name="Fecha" type="date" class="form-control">
-                <span asp-validation-for="Fecha" class="text-danger"></span>
-            <br>
-            <div class="form-group">
-                <input type="submit" value="Dar de Alta" class="btn btn-primary btn-guardar" style="margin-right: 30px;"/>
-                <button type="button" onclick="window.location.href='@Url.Action("Index", "Pago")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
-                    Lista</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-
+@section Scripts {
+    <script>
+        // Validar los campos y mostrar los iconos de verificación
+        $(document).ready(function () {
+            $('.input-group input').on('input', function () {
+                var inputGroup = $(this).closest('.input-group');
+                var iconCheck = inputGroup.find('.fa-check');
+                var iconTimes = inputGroup.find('.fa-times');
+                if ($(this).val().trim() !== '') {
+                    iconCheck.removeClass('d-none');
+                    iconTimes.addClass('d-none');
+                } else {
+                    iconCheck.addClass('d-none');
+                    iconTimes.removeClass('d-none');
+                }
+            });
+        });
+    </script>
+}

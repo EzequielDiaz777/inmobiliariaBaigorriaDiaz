@@ -10,21 +10,21 @@ namespace inmobiliariaBaigorriaDiaz.Models;
 public class Pago
 {
     [Key]
-    [Display(Name = "NumeroDePago")]
+    [Display(Name = "Número de pago")]
     public int NumeroDePago { get; set; }
 
-    [Display(Name = "Id")]
+    [Display(Name = "Número de contrato")]
     public int IdContrato { get; set; }
 
     [ForeignKey(nameof(IdContrato))]
     public Contrato Contrato { get; set; } = new Contrato();
 
     [Required]
-    [Display(Name = "Monto")]
+    [Display(Name = "Monto del pago")]
     public decimal Monto { get; set; }
 
     [Required]
-    [Display(Name = "Fecha")]
+    [Display(Name = "Fecha de pago")]
     public DateOnly Fecha { get; set; }
 }  
     

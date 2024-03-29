@@ -19,7 +19,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					@$"INSERT INTO {nameof(Pago)}
 						({nameof(Pago.IdContrato)},  
 						{nameof(Pago.Monto)}, 
-						{nameof(Pago.Fecha)}
+						{nameof(Pago.Fecha)})
 					VALUES 
 						(@IdContrato, 
 						@Monto, 
@@ -158,12 +158,9 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							res.Add(new Pago
 							{
 								NumeroDePago = reader.GetInt32("NumeroDePago"),
+								IdContrato = reader.GetInt32("IdContrato"),
 								Monto = reader.GetDecimal("Monto"),
 								Fecha = DateOnly.FromDateTime(reader.GetDateTime("Fecha")),
-								Contrato = new Contrato()
-								{
-									IdContrato = reader.GetInt32("IdContrato")
-								}
 							});
 						}
 					conn.Close();
@@ -182,11 +179,11 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								{nameof(Pago.NumeroDePago)}, 
 								{nameof(Pago.Monto)}, 
 								{nameof(Pago.Fecha)}, 
-								cont.{nameof(Contrato.IdContrato)},
-							FROM {nameof(Pago)}
+								cont.{nameof(Contrato.IdContrato)}
+							FROM {nameof(Pago)} AS p
 							INNER JOIN {nameof(Contrato)} AS cont
-							ON {nameof(Pago.IdContrato)} = cont.{nameof(Pago.IdContrato)}
-							WHERE {nameof(Pago.NumeroDePago)} = @id";
+							ON p.{nameof(Pago.IdContrato)} = cont.{nameof(Pago.IdContrato)}
+							WHERE p.{nameof(Pago.NumeroDePago)} = @id";
 				Pago pago = new Pago();
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -199,6 +196,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							pago = new Pago
 							{
 								NumeroDePago = reader.GetInt32("NumeroDePago"),
+								IdContrato = reader.GetInt32("IdContrato"),
 								Monto = reader.GetDecimal("Monto"),
 								Fecha = DateOnly.FromDateTime(reader.GetDateTime("Fecha")),	
 							};
