@@ -1,0 +1,56 @@
+@model inmobiliariaBaigorriaDiaz.Models.Pago
+
+@{
+    ViewData["Title"] = "Edit";
+    string fecha = Model.Fecha.ToString("dd-MM-yyyy");
+}
+
+<h1>Actualizar</h1>
+ 
+<h4>Pago</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NumeroDePago" class="control-label"></label>
+                <input asp-for="NumeroDePago" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="IdContrato" class="control-label">Seleccione un contrato</label>
+                <select asp-for="IdContrato" class="form-select">
+                    @foreach (var item in ViewBag.Contratos)
+                        @if (@Model.IdContrato == item.IdContrato)
+                        {
+                            <option selected value="@item.IdContrato"> @item.IdContrato</option>
+                        } 
+                        else 
+                        {
+                            <option value="@item.IdContrato"> @item.IdContrato</option>
+                        }
+                    
+                </select>
+                <span asp-validation-for="IdContrato" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Monto" class="control-label"></label>
+                <input asp-for="Monto" class="form-control" />
+                <span asp-validation-for="Monto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" type="date" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar" style="margin-right: 30px;"/>
+                <button type="button" onclick="window.location.href='@Url.Action("Index", "Pago")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
+                    Lista</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+

@@ -1,0 +1,64 @@
+@model IEnumerable<inmobiliariaBaigorriaDiaz.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="text-center"><u>Lista de Pagos</u></h1>
+
+<p>
+    <button class="btn btn-primary" onclick="window.location.href='@Url.Action("Create")'">Alta</button>
+</p>
+<table class="table table-striped table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumeroDePago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdContrato)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Monto)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                Opciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr class="centered-row">
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroDePago)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdContrato)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Monto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                
+                <td>
+                    <span class="button-column">
+                        <a href="@Url.Action("Edit", new { id = item.NumeroDePago })" title="Editar"> <i
+                                class="fas fa-edit custom-color"></i></a>
+                        |
+                        <a href="@Url.Action("Details", new { id = item.NumeroDePago })" title="Detalles"> <i
+                                class="fas fa-info-circle"></i></a>
+                        |
+                        <a href="@Url.Action("Delete", new { id = item.NumeroDePago })" title="Eliminar"> <i
+                                class="fas fa-trash-alt text-danger"></i></a>
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
