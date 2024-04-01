@@ -4,89 +4,99 @@
     ViewData["Title"] = "Eliminar";
 }
 
-<h2>Eliminar</h2>
-
-<h6>Está seguro que quiere eliminar un Inmueble?</h6>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdInmueble)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdInmueble)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Direccion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Direccion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Tipo.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Tipo.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ambientes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ambientes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Superficie)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Superficie)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Longitud)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Longitud)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Latitud)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Latitud)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Uso.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Uso.Nombre)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd class="col-sm-10">
-            @if (!Model.Estado)
-            {
-                <span>No Disponible</span>
-            }
-            else
-            {
-                <span>Disponible</span>
-            }
-        </dd>
-        <dt class = "col-sm-2">
-            <span>Dueño</span>
-        </dt>
-        <dd class = "col-sm-10">
-            @(Model.Duenio?.ToString())
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="submit" value="Baja" class="btn btn-danger" style="margin-right: 30px;" />
-        <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmueble")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la Lista</button>
-    </form>
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>BAJA DEL INMUEBLE</b></h1>
+                    <h2 class="text-center">¿Está seguro que desea dar de baja al siguiente inmueble?</h2>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.IdInmueble)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.IdInmueble)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Direccion)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Direccion)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Tipo.Nombre)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Tipo.Nombre)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Ambientes)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Ambientes)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Superficie)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Superficie)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Longitud)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Longitud)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Latitud)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Latitud)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Precio)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Precio)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Uso.Nombre)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Uso.Nombre)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Estado)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (!Model.Estado)
+                            {
+                                <span>No Disponible</span>
+                            }
+                            else
+                            {
+                                <span>Disponible</span>
+                            }
+                        </dd>
+                        <dt class="col-sm-4">
+                            <span>Dueño</span>
+                        </dt>
+                        <dd class="col-sm-8">
+                            @(Model.Duenio?.ToString())
+                        </dd>
+                        <dd class="col-sm-12"></dd>
+                    </dl>
+                    <div class="text-center">
+                        <form asp-action="Delete">
+                            <input type="submit" value="Baja" class="btn btn-danger" style="margin-right: 30px;" />
+                            <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmueble")'"
+                                class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la Lista</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

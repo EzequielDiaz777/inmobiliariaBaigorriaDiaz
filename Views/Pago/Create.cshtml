@@ -29,17 +29,27 @@
                             <span asp-validation-for="Monto" class="text-danger"></span>
                         </div>
                         <div class="form-group">
+                            <label asp-for="MesDePago" class="control-label"></label>
+                            <select asp-for="MesDePago" class="form-select" name="MesDePago">
+                                <option value="0">Seleccione un mes de pago</option>
+                                @foreach (var item in ViewBag.Meses)
+                                {
+                                    <option value="@item">@(item)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="MesDePago" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
                             <label asp-for="Fecha" class="control-label">Fecha del pago: </label>
                             <br>
                             <input name="Fecha" type="date" class="form-control">
                             <span asp-validation-for="Fecha" class="text-danger"></span>
-                            <br>
                             <div class="form-group text-center mt-2">
-                                <input type="submit" value="Dar de Alta" class="btn btn-primary btn-guardar"
-                                    style="margin-right: 30px;" />
-                                <button type="button" onclick="window.location.href='@Url.Action("Index", "Pago")'"
-                                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;">
-                                    Volver a la Lista</button>
+                                <button type="submit" class="btn btn-primary">Alta</button>
+                                <a href="@Url.Action("Index", "Pago")"
+                                    class="m-2 p-2 btn btn-outline-warning">Volver
+                                    a la
+                                    Lista</a>
                             </div>
                     </form>
                 </div>

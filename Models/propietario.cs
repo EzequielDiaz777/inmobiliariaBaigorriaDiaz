@@ -9,7 +9,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Required]
         public string Nombre { get; set; } = "";
         [Required]
-        [Display(Name = "Apellido del dueño")]
         public string Apellido { get; set; } = "";
         [Display(Name = "Teléfono")]
         public string? Telefono { get; set; }

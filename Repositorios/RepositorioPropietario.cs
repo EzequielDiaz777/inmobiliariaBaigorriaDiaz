@@ -110,8 +110,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							{nameof(Propietario.Apellido)} = @Apellido, 
 							{nameof(Propietario.Telefono)} = @Telefono, 
 							{nameof(Propietario.Email)} = @Email, 
-							{nameof(Propietario.DNI)} = @DNI,
-							{nameof(Propietario.Estado)} = @Estado
+							{nameof(Propietario.DNI)} = @DNI
 							WHERE {nameof(Propietario.IdPropietario)} = @IdPropietario";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -121,7 +120,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(propietario.Email) ? "" : propietario.Email);
 					cmd.Parameters.AddWithValue("@Telefono", string.IsNullOrEmpty(propietario.Telefono) ? "" : propietario.Telefono);
 					cmd.Parameters.AddWithValue("@DNI", propietario.DNI);
-					cmd.Parameters.AddWithValue("@Estado", propietario.Estado);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();

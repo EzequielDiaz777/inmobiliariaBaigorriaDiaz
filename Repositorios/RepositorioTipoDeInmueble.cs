@@ -16,8 +16,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"INSERT INTO tipodeinmueble(Nombre, Estado) VALUES (@Nombre, 1);
-				SELECT LAST_INSERT_ID()";
+				var sql = @$"INSERT INTO {nameof(TipoDeInmueble)}({nameof(TipoDeInmueble.Nombre)}, {nameof(TipoDeInmueble.Estado)}) VALUES (@Nombre, 1);
+				SELECT LAST_INSERT_ID();";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@Nombre", tipoDeInmueble.Nombre);
@@ -35,7 +35,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE tipodeinmueble SET Estado = 1 FROM tipodeinmueble WHERE IdTipoDeInmueble = @id";
+				var sql = @$"UPDATE {nameof(TipoDeInmueble)} SET {nameof(TipoDeInmueble.Estado)} = 1 WHERE {nameof(TipoDeInmueble.IdTipoDeInmueble)} = @id;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -52,9 +52,9 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE tipodeinmueble SET 
-                            Estado = 0 
-                            WHERE IdTipoDeInmueble = @id";
+				var sql = @$"UPDATE {nameof(TipoDeInmueble)} SET 
+                            {nameof(TipoDeInmueble.Estado)} = 0 
+                            WHERE {nameof(TipoDeInmueble.IdTipoDeInmueble)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -71,16 +71,14 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			int res;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @"UPDATE tipodeinmueble SET 
-                            IdTipoDeInmueble = @IdTipoDeInmueble,
-							Nombre = @Nombre,
-                            Estado = @Estado
-							WHERE IdTipoDeInmueble = @IdTipoDeInmueble;";
+				var sql = @$"UPDATE {nameof(TipoDeInmueble)} SET 
+                            {nameof(TipoDeInmueble.IdTipoDeInmueble)} = @IdTipoDeInmueble,
+							{nameof(TipoDeInmueble.Nombre)} = @Nombre
+							WHERE {nameof(TipoDeInmueble.IdTipoDeInmueble)} = @IdTipoDeInmueble;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdTipoDeInmueble", tipoDeInmueble.IdTipoDeInmueble);
 					cmd.Parameters.AddWithValue("@Nombre", tipoDeInmueble.Nombre);
-					cmd.Parameters.AddWithValue("@Estado", tipoDeInmueble.Estado);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
@@ -97,7 +95,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				var sql = @$"SELECT 
 						{nameof(TipoDeInmueble.IdTipoDeInmueble)}, 
 						{nameof(TipoDeInmueble.Nombre)},
-						{nameof(TipoDeInmueble.Estado)}
+						{nameof(TipoDeInmueble.Estado)}				
 					FROM {nameof(TipoDeInmueble)}";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -128,8 +126,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							{nameof(TipoDeInmueble.IdTipoDeInmueble)}, 
 							{nameof(TipoDeInmueble.Nombre)}, 
 							{nameof(TipoDeInmueble.Estado)}
-						FROM tipodeinmueble 
-						WHERE IdTipoDeInmueble = @id";
+						FROM {nameof(TipoDeInmueble)} 
+						WHERE {nameof(TipoDeInmueble.IdTipoDeInmueble)} = @id";
 			TipoDeInmueble tipoDeInmueble = new TipoDeInmueble();
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{

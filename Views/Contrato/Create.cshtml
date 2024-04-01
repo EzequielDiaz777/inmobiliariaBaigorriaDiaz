@@ -54,14 +54,11 @@
                             <input name="AlquilerHasta" type="date" class="form-control">
                             <span asp-validation-for="AlquilerHasta" class="text-danger"></span>
                         </div>
-                        <br>
                         <div class="form-group text-center mt-2">
-                            <input type="submit" value="Dar de Alta" class="btn btn-primary btn-guardar"
-                                style="margin-right: 30px;" />
-                            <button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'"
-                                class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a
-                                la
-                                Lista</button>
+                            <button type="submit" class="btn btn-primary">Alta</button>
+                            <a href="@Url.Action("Index", "Contrato")" class="m-2 p-2 btn btn-outline-warning">Volver
+                                a la
+                                Lista</a>
                         </div>
                     </form>
                 </div>

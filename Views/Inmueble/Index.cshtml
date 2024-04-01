@@ -24,10 +24,10 @@
                 @Html.DisplayNameFor(model => model.Tipo.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Precio)
+                @Html.DisplayNameFor(model => model.Uso.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Duenio.Apellido)
+                @Html.DisplayNameFor(model => model.Duenio)
             </th>
             <th class="no-ordenable">
                 Opciones
@@ -50,7 +50,7 @@
                         @Html.DisplayFor(model => item.Tipo.Nombre)
                     </td>
                     <td>
-                        @Html.DisplayFor(model => item.Precio)
+                        @Html.DisplayFor(model => item.Uso.Nombre)
                     </td>
                     <td>
                         @Html.DisplayFor(model => item.Duenio.Apellido)

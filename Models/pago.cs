@@ -18,7 +18,8 @@ public class Pago
 
     [ForeignKey(nameof(IdContrato))]
     public Contrato Contrato { get; set; } = new Contrato();
-
+    [Display(Name = "Mes de pago")]
+    public string MesDePago { get; set; } = "";
     [Required]
     [Display(Name = "Monto del pago")]
     public decimal Monto { get; set; }
@@ -26,5 +27,8 @@ public class Pago
     [Required]
     [Display(Name = "Fecha de pago")]
     public DateOnly Fecha { get; set; }
+    [Required]
+    [Display(Name = "Estado de pago")]
+    public bool Estado { get; set; }
 }  
     

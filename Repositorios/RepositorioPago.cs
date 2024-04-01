@@ -19,15 +19,20 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					@$"INSERT INTO {nameof(Pago)}
 						({nameof(Pago.IdContrato)},  
 						{nameof(Pago.Monto)}, 
-						{nameof(Pago.Fecha)})
+						{nameof(Pago.MesDePago)},
+						{nameof(Pago.Fecha)},
+						{nameof(Pago.Estado)})
 					VALUES 
 						(@IdContrato, 
 						@Monto, 
-						@Fecha);
+						@MesDePago,
+						@Fecha,
+						1);
 					SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdContrato", pago.IdContrato);
+					cmd.Parameters.AddWithValue("@MesDePago", pago.MesDePago);
 					cmd.Parameters.AddWithValue("@Monto", pago.Monto);
 					cmd.Parameters.AddWithValue("@Fecha", pago.Fecha.ToDateTime(TimeOnly.MinValue));
 					conn.Open();
@@ -69,8 +74,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool alta;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @$"UPDATE {nameof(Pago)} 
-				WHERE {nameof(Pago.NumeroDePago)} = @id";
+				var sql = @$"UPDATE {nameof(Pago)} SET {nameof(Pago.Estado)} = 1 WHERE {nameof(Pago.NumeroDePago)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
@@ -91,18 +95,13 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @$"UPDATE {nameof(Pago)} 
-				WHERE {nameof(Pago.NumeroDePago)} = @id";
+				var sql = @$"UPDATE {nameof(Pago)} SET {nameof(Pago.Estado)} = 0 WHERE {nameof(Pago.NumeroDePago)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);
 					conn.Open();
 					baja = cmd.ExecuteNonQuery() != 0;
 					conn.Close();
-				}
-				if (!baja)
-				{
-					throw new InvalidOperationException($"No se encontró ningún pago con el ID {id} para dar de baja.");
 				}
 			}
 			return baja;
@@ -115,21 +114,18 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			{
 				var sql =
 					@$"UPDATE {nameof(Pago)} SET 
-						{nameof(Pago.IdContrato)} = @IdContrato,
-						{nameof(Pago.Monto)} = @Monto,
-						{nameof(Pago.Fecha)} = @Fecha
+						{nameof(Pago.MesDePago)} = @MesDePago
 					WHERE 
 						{nameof(Pago.NumeroDePago)} = @NumeroDePago";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
+					cmd.Parameters.AddWithValue("@MesDePago", pago.MesDePago);
 					cmd.Parameters.AddWithValue("@NumeroDePago", pago.NumeroDePago);
-					cmd.Parameters.AddWithValue("@IdContrato", pago.IdContrato);
-					cmd.Parameters.AddWithValue("@Monto", pago.Monto);
-					cmd.Parameters.AddWithValue("@Fecha", pago.Fecha);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
 				}
+				Console.WriteLine(res);
 				return res;
 			}
 		}
@@ -142,8 +138,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				string sql =
 							@$"SELECT 
 								{nameof(Pago.NumeroDePago)}, 
+								{nameof(Pago.MesDePago)},
 								{nameof(Pago.Monto)}, 
 								{nameof(Pago.Fecha)},
+								pag.{nameof(Pago.Estado)},
 								cont.{nameof(Contrato.IdContrato)}
 							FROM {nameof(Pago)} AS pag
 							INNER JOIN {nameof(Contrato)} AS cont
@@ -159,8 +157,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							{
 								NumeroDePago = reader.GetInt32("NumeroDePago"),
 								IdContrato = reader.GetInt32("IdContrato"),
+								MesDePago = reader.GetString("MesDePago"),
 								Monto = reader.GetDecimal("Monto"),
 								Fecha = DateOnly.FromDateTime(reader.GetDateTime("Fecha")),
+								Estado = reader.GetBoolean("Estado"),
 							});
 						}
 					conn.Close();
@@ -177,8 +177,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				string sql =
 							@$"SELECT 
 								{nameof(Pago.NumeroDePago)}, 
+								{nameof(Pago.MesDePago)},
 								{nameof(Pago.Monto)}, 
 								{nameof(Pago.Fecha)}, 
+								p.{nameof(Pago.Estado)},
 								cont.{nameof(Contrato.IdContrato)}
 							FROM {nameof(Pago)} AS p
 							INNER JOIN {nameof(Contrato)} AS cont
@@ -197,8 +199,10 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							{
 								NumeroDePago = reader.GetInt32("NumeroDePago"),
 								IdContrato = reader.GetInt32("IdContrato"),
+								MesDePago = reader.GetString("MesDePago"),
 								Monto = reader.GetDecimal("Monto"),
-								Fecha = DateOnly.FromDateTime(reader.GetDateTime("Fecha")),	
+								Fecha = DateOnly.FromDateTime(reader.GetDateTime("Fecha")),
+								Estado = reader.GetBoolean("Estado"),
 							};
 						}
 					}

@@ -17,7 +17,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
 				var sql = @$"INSERT INTO {nameof(UsoDeInmueble)}({nameof(UsoDeInmueble.Nombre)}, {nameof(UsoDeInmueble.Estado)}) VALUES (@Nombre, 1);
-				SELECT LAST_INSERT_ID()";
+				SELECT LAST_INSERT_ID();";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@Nombre", UsoDeInmueble.Nombre);
@@ -73,14 +73,12 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			{
 				var sql = @$"UPDATE {nameof(UsoDeInmueble)} SET 
                             {nameof(UsoDeInmueble.IdUsoDeInmueble)} = @IdUsoDeInmueble,
-							{nameof(UsoDeInmueble.Nombre)} = @Nombre,
-                            {nameof(UsoDeInmueble.Estado)} = @Estado
+							{nameof(UsoDeInmueble.Nombre)} = @Nombre
 							WHERE {nameof(UsoDeInmueble.IdUsoDeInmueble)} = @IdUsoDeInmueble;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdUsoDeInmueble", UsoDeInmueble.IdUsoDeInmueble);
 					cmd.Parameters.AddWithValue("@Nombre", UsoDeInmueble.Nombre);
-					cmd.Parameters.AddWithValue("@Estado", UsoDeInmueble.Estado);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();

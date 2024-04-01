@@ -12,23 +12,22 @@
                     <h1 class="text-center"><b>DETALLE DEL TIPO DE INMUEBLE</b></h1>
                     <hr />
                     <dl class="row">
-                        <dt class="col-sm-2">
+                        <dt class="col-sm-4">
                             @Html.DisplayNameFor(model => model.IdTipoDeInmueble)
                         </dt>
-                        <dd class="col-sm-10 text-center">
+                        <dd class="col-sm-8">
                             @Html.DisplayFor(model => model.IdTipoDeInmueble)
                         </dd>
-                        <dt class="col-sm-5">
+                        <dt class="col-sm-4">
                             @Html.DisplayNameFor(model => model.Nombre)
                         </dt>
-                        <dd class="col-sm-4 text-center">
+                        <dd class="col-sm-8">
                             @Html.DisplayFor(model => model.Nombre)
                         </dd>
-                        <dt class="col-sm-3"></dt>
-                        <dt class="col-sm-3">
+                        <dt class="col-sm-4">
                             @Html.DisplayNameFor(model => model.Estado)
                         </dt>
-                        <dd class="col-sm-8 text-center">
+                        <dd class="col-sm-8">
                             @if (Model.Estado)
                             {
                                 @Html.Label("Si")
@@ -38,7 +37,6 @@
                                 @Html.Label("No")
                             }
                         </dd>
-                        <dd class="col-sm-1"></dd>
                         <dt class="col-sm-12"></dt>
                     </dl>
                     <div class="text-center mt-3">

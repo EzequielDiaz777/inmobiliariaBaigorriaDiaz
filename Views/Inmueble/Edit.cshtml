@@ -4,106 +4,117 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Actualizar</h1>
-
-<h4>Inmueble</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdInmueble" class="control-label"></label>
-                <input asp-for="IdInmueble" class="form-control" readonly />
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>ACTUALIZACIÓN DEL INMUEBLE</b></h1>
+                    <hr />
+                    <dl class="row">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="IdInmueble" class="control-label"></label>
+                                <input asp-for="IdInmueble" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="IdTipoDeInmueble" class="control-label">Seleccione un tipo de
+                                    inmueble</label>
+                                <select asp-for="IdTipoDeInmueble" class="form-select" name="IdTipoDeInmueble">
+                                    @foreach (var item in ViewBag.TiposDeInmuebles)
+                                    {
+                                        @if (@Model.Tipo.Nombre == item.Nombre)
+                                        {
+                                            <option selected value="@item.IdTipoDeInmueble">@item.Nombre</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.IdTipoDeInmueble">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdTipoDeInmueble" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Direccion" class="control-label"></label>
+                                <input asp-for="Direccion" class="form-control" />
+                                <span asp-validation-for="Direccion" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Ambientes" class="control-label"></label>
+                                <input asp-for="Ambientes" class="form-control" />
+                                <span asp-validation-for="Ambientes" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Superficie" class="control-label"></label>
+                                <input asp-for="Superficie" class="form-control" />
+                                <span asp-validation-for="Superficie" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Longitud" class="control-label"></label>
+                                <input asp-for="Longitud" class="form-control" />
+                                <span asp-validation-for="Longitud" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Latitud" class="control-label"></label>
+                                <input asp-for="Latitud" class="form-control" />
+                                <span asp-validation-for="Latitud" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Precio" class="control-label"></label>
+                                <input asp-for="Precio" class="form-control" />
+                                <span asp-validation-for="Precio" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="IdUsoDeInmueble" class="control-label">Seleccione un Uso de
+                                    Inmueble</label>
+                                <select asp-for="IdUsoDeInmueble" class="form-select">
+                                    @foreach (var item in ViewBag.UsosDeInmuebles)
+                                    {
+                                        @if (@Model.Uso.Nombre == item.Nombre)
+                                        {
+                                            <option selected value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdUsoDeInmueble" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="IdPropietario" class="control-label">Nombre del propietario</label>
+                                <select asp-for="IdPropietario" class="form-select" name="IdPropietario">
+                                    @foreach (var item in ViewBag.Propietarios)
+                                    {
+                                        @if (@Model.Duenio.Nombre == item.Nombre)
+                                        {
+                                            <option selected value="@item.IdPropietario">@item.Nombre @item.Apellido</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.IdPropietario">@(item.Nombre) @(item.Apellido)</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdPropietario" class="text-danger"></span>
+                            </div>
+                            <br>
+                            <div class="form-group text-center">
+                                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar"
+                                    style="margin-right: 30px;" />
+                                <button type="button"
+                                    onclick="window.location.href='@Url.Action("Index", "Inmueble")'"
+                                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;">
+                                    Volver a la
+                                    Lista</button>
+                            </div>
+                        </form>
+                    </dl>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="IdTipoDeInmueble" class="control-label">Seleccione un tipo de inmueble</label>
-                <select asp-for="IdTipoDeInmueble" class="form-select" name="IdTipoDeInmueble">
-                    @foreach (var item in ViewBag.TiposDeInmuebles)
-                    {
-                        @if (@Model.Tipo.Nombre == item.Nombre)
-                        {
-                            <option selected value="@item.IdTipoDeInmueble">@item.Nombre</option>
-                        }
-                        else
-                        {
-                            <option value="@item.IdTipoDeInmueble">@item.Nombre</option>
-                        }
-                    }
-                </select>
-                <span asp-validation-for="IdTipoDeInmueble" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Direccion" class="control-label"></label>
-                <input asp-for="Direccion" class="form-control" />
-                <span asp-validation-for="Direccion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Ambientes" class="control-label"></label>
-                <input asp-for="Ambientes" class="form-control" />
-                <span asp-validation-for="Ambientes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Superficie" class="control-label"></label>
-                <input asp-for="Superficie" class="form-control" />
-                <span asp-validation-for="Superficie" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Longitud" class="control-label"></label>
-                <input asp-for="Longitud" class="form-control" />
-                <span asp-validation-for="Longitud" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Latitud" class="control-label"></label>
-                <input asp-for="Latitud" class="form-control" />
-                <span asp-validation-for="Latitud" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdUsoDeInmueble" class="control-label">Seleccione un Uso de Inmueble</label>
-                <select asp-for="IdUsoDeInmueble" class="form-select">
-                    @foreach (var item in ViewBag.UsosDeInmuebles)
-                    {
-                        @if (@Model.Uso.Nombre == item.Nombre)
-                        {
-                            <option selected value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
-                        }
-                        else
-                        {
-                            <option value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
-                        }
-                    }
-                </select>
-                <span asp-validation-for="IdUsoDeInmueble" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdPropietario" class="control-label">Nombre del propietario</label>
-                <select asp-for="IdPropietario" class="form-select" name="IdPropietario">
-                    @foreach (var item in ViewBag.Propietarios)
-                    {
-                        @if (@Model.Duenio.Nombre == item.Nombre)
-                        {
-                            <option selected value="@item.IdPropietario">@item.Nombre @item.Apellido</option>
-                        }
-                        else
-                        {
-                            <option value="@item.IdPropietario">@(item.Nombre) @(item.Apellido)</option>
-                        }
-                    }
-                </select>
-                <span asp-validation-for="IdPropietario" class="text-danger"></span>
-            </div>
-            <br>
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar" style="margin-right: 30px;" />
-                <button type="button" onclick="window.location.href='@Url.Action("Index", "Inmueble")'"
-                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
-                    Lista</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>

@@ -31,6 +31,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Create()
         {
             ViewBag.Contratos = repoCont.ObtenerContratos();
+            string[] meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+            ViewBag.Meses = meses;
             return View();
         }
 
@@ -56,6 +58,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Contratos = repoCont.ObtenerContratos();
+            string[] meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+            ViewBag.Meses = meses;
             return View(repoP.ObtenerPagoById(id));
         }
 
@@ -66,11 +70,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                Pago? pagoBD = repoP.ObtenerPagoById(id);
+                Pago pagoBD = repoP.ObtenerPagoById(id);
                 if (pagoBD != null){
-                    pagoBD.IdContrato = pago.IdContrato;
-                    pagoBD.Monto = pago.Monto;
-                    pagoBD.Fecha = pago.Fecha;
+                    pagoBD.MesDePago = pago.MesDePago;
                     repoP.ModificarPago(pagoBD);
                     return RedirectToAction(nameof(Index));
                 } else {
@@ -93,7 +95,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // POST: Pago/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Contrato contrato)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {

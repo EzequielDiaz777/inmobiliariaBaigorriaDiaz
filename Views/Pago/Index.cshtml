@@ -22,7 +22,10 @@
                 @Html.DisplayNameFor(model => model.Monto)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Fecha)
+                @Html.DisplayNameFor(model => model.MesDePago)
+            </th>
+            <th class="no-ordenable">
+                @Html.DisplayNameFor(model => model.Estado)
             </th>
             <th class="no-ordenable">
                 Opciones
@@ -43,7 +46,17 @@
                     @Html.DisplayFor(modelItem => item.Monto)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Fecha)
+                    @Html.DisplayFor(modelItem => item.MesDePago)
+                </td>
+                <td>
+                    @if (item.Estado)
+                    {
+                        <span>Abonado</span>
+                    }
+                    else
+                    {
+                        <span>Anulado</span>
+                    }
                 </td>
                 <td>
                     <span class="button-column">

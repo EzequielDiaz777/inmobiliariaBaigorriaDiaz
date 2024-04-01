@@ -98,7 +98,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // POST: Contrato/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Contrato contrato)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {

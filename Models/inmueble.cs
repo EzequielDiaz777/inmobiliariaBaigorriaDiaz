@@ -23,7 +23,7 @@ public class Inmueble
     [Required]
     [Display(Name = "Uso")]
     public int IdUsoDeInmueble { get; set; }
-    
+
     [ForeignKey(nameof(IdUsoDeInmueble))]
     public UsoDeInmueble Uso { get; set; } = new UsoDeInmueble();
 
@@ -43,15 +43,16 @@ public class Inmueble
 
     [Required]
     public decimal Precio { get; set; }
-    
+
     [Required]
     [Display(Name = "Estado del inmueble")]
-    public bool Estado { get; set;}
+    public bool Estado { get; set; }
 
     [Display(Name = "Dueño")]
     public int IdPropietario { get; set; }
 
     [ForeignKey(nameof(IdPropietario))]
+    [Display(Name = "Propietario")]
     public Propietario Duenio { get; set; } = new Propietario();
 
 }

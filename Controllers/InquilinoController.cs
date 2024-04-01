@@ -93,12 +93,12 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // POST: Inquilino/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, Inquilino inquilino)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
                 // TODO: Add Delete logic here
-                ri.BajaFisica(id);
+                ri.BajaLogica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

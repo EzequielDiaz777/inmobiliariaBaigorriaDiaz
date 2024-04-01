@@ -5,56 +5,70 @@
     string fecha = Model.AlquilerDesde.ToString("dd-MM-yyyy");
 }
 
-<h1>Actualizar</h1>
-
-<h4>Contrato</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdInquilino" class="control-label">Seleccione el inquilino:</label>
-                <select asp-for="IdInquilino" class="form-select">
-                    @foreach (var item in ViewBag.Inquilinos)
-                        @if (@Model.Inquilino.IdInquilino == item.IdInquilino)
-                        {
-                            <option selected value="@item.IdInquilino"> @item.ToString()</option>
-                        }
-                        else
-                        {
-                            <option value="@item.IdInquilino"> @item.ToString()</option>
-                        }
-                </select>
-                <span asp-validation-for="IdInquilino" class="text-danger"></span>
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>ACTUALIZACIÓN DEL CONTRATO</b></h1>
+                    <hr />
+                    <dl class="row">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="IdContrato" class="control-label"></label>
+                                <input asp-for="IdContrato" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="IdInquilino" class="control-label">Seleccione el inquilino:</label>
+                                <select asp-for="IdInquilino" class="form-select">
+                                    @foreach (var item in ViewBag.Inquilinos)
+                                        @if (@Model.Inquilino.IdInquilino == item.IdInquilino)
+                                        {
+                                            <option selected value="@item.IdInquilino"> @item.ToString()</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.IdInquilino"> @item.ToString()</option>
+                                        }
+                                </select>
+                                <span asp-validation-for="IdInquilino" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="IdInmueble" class="control-label">Seleccione la dirección del
+                                    inmueble</label>
+                                <select asp-for="IdInmueble" class="form-select">
+                                    @foreach (var item in ViewBag.Inmuebles)
+                                        @if (@Model.Inmueble.Direccion == item.Direccion)
+                                        {
+                                            <option selected value="@item.IdInmueble"> @item.Direccion</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.IdInmueble"> @item.Direccion</option>
+                                        }
+                                    }
+                                </select>
+                                <span asp-validation-for="IdInmueble" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Precio" class="control-label"></label>
+                                <input asp-for="Precio" class="form-control" />
+                                <span asp-validation-for="Precio" class="text-danger"></span>
+                            </div>
+                            <br>
+                            <div class="form-group text-center">
+                                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar"
+                                    style="margin-right: 30px;" />
+                                <button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'"
+                                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;">
+                                    Volver a la
+                                    Lista</button>
+                            </div>
+                        </form>
+                    </dl>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="IdInmueble" class="control-label">Seleccione la dirección del inmueble</label>
-                <select asp-for="IdInmueble" class="form-select">
-                    @foreach (var item in ViewBag.Inmuebles)
-                    @if(@Model.Inmueble.Direccion == item.Direccion)
-                        {
-                            <option selected value="@item.IdInmueble"> @item.Direccion</option>
-                        } else {
-                            <option value="@item.IdInmueble"> @item.Direccion</option>
-                        }
-                    }
-                </select>
-                <span asp-validation-for="IdInmueble" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <br>
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar" style="margin-right: 30px;"/>
-                <button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'" class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
-                    Lista</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
-

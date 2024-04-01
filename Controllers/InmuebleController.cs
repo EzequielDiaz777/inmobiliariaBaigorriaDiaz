@@ -14,18 +14,12 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             ViewBag.Id = TempData["Id"];
             ViewBag.entidad = "inmueble";
-            var inmuebles = repoI.ObtenerInmuebles();
-            Console.WriteLine(inmuebles[0].Duenio.Nombre);
-            Console.WriteLine(inmuebles[0].Duenio.Apellido);
-            return View(inmuebles);
+            return View(repoI.ObtenerInmuebles());
         }
 
         // GET: Inmueble/Details/5
         public ActionResult Details(int id)
-        {
-            var inmueble = repoI.ObtenerInmueblePorID(id);
-            Console.WriteLine(inmueble.Duenio.Nombre);
-            Console.WriteLine(inmueble.Duenio.Apellido);
+        {;
             return View(repoI.ObtenerInmueblePorID(id));
         }
 
