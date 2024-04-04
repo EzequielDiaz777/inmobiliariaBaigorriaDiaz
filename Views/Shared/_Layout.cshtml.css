@@ -11,7 +11,8 @@ a {
   color: #0077cc;
 }
 .navbar-custom {
-  margin-left: 150px; /* Ajusta el valor según lo desees */
+  display: flex;
+  justify-content: center;
 }
 
 .btn-primary {
