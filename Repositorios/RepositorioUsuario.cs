@@ -14,39 +14,44 @@ namespace inmobiliariaBaigorriaDiaz.Models
 
 		public int AltaFisica(Usuario usuario)
 		{
+			Console.WriteLine("Estoy en alta");
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
 				var sql =
 						@$"INSERT INTO {nameof(Usuario)}
-							({nameof(Usuario.Nombre)},
+						(
+							{nameof(Usuario.Nombre)},
 							{nameof(Usuario.Apellido)},
 							{nameof(Usuario.Email)},
 							{nameof(Usuario.Clave)},
-							{nameof(Usuario.Rol)}),
-							{nameof(Usuario.AvatarUrl)})
-						VALUES
-							(@Nombre, 
+							{nameof(Usuario.Rol)},
+							{nameof(Usuario.AvatarURL)},
+							{nameof(Usuario.Estado)}
+						) VALUES (
+							@Nombre, 
 							@Apellido, 
 							@Email, 
 							@Clave,
 							@Rol,
-							@AvatarUrl);
+							@AvatarURL,
+							1);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
 					cmd.Parameters.AddWithValue("@Apellido", usuario.Apellido);
-					cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(usuario.Email) ? "" : usuario.Email);
+					cmd.Parameters.AddWithValue("@Email", usuario.Email);
 					cmd.Parameters.AddWithValue("@Clave", usuario.Clave);
 					cmd.Parameters.AddWithValue("@Rol", usuario.Rol);
-					cmd.Parameters.AddWithValue("@AvatarUrl", string.IsNullOrEmpty(usuario.AvatarUrl) ? "" : usuario.AvatarUrl);
+					cmd.Parameters.AddWithValue("@AvatarURL", string.IsNullOrEmpty(usuario.AvatarURL) ? (object)DBNull.Value : usuario.AvatarURL);
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					usuario.IdUsuario = res;
 					conn.Close();
 				}
 			}
+			Console.WriteLine("Sali de alta");
 			return res;
 		}
 
@@ -112,20 +117,20 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							{nameof(Usuario.Email)} = @Email, 
 							{nameof(Usuario.Clave)} = @Clave,
 							{nameof(Usuario.Rol)} = @Rol,
-							{nameof(Usuario.AvatarUrl)} = @AvatarUrl
+							{nameof(Usuario.AvatarURL)} = @AvatarURL
 							WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
 					cmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
 					cmd.Parameters.AddWithValue("@Apellido", usuario.Apellido);
-					cmd.Parameters.AddWithValue("@Email", string.IsNullOrEmpty(usuario.Email) ? "" : usuario.Email);
+					cmd.Parameters.AddWithValue("@Email", usuario.Email);
 					cmd.Parameters.AddWithValue("@Clave", usuario.Clave);
 					cmd.Parameters.AddWithValue("@Rol", usuario.Rol);
-					cmd.Parameters.AddWithValue("@AvatarUrl", string.IsNullOrEmpty(usuario.AvatarUrl) ? "" : usuario.AvatarUrl);
-					
+					cmd.Parameters.AddWithValue("@AvatarURL", string.IsNullOrEmpty(usuario.AvatarURL) ? (object)DBNull.Value : usuario.AvatarURL);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
+					Console.WriteLine(usuario.IdUsuario);
 					conn.Close();
 				}
 				return res;
@@ -138,14 +143,14 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
 				var sql = @$"SELECT 
-						{nameof(Usuario.IdUsuario)}, 
+						{nameof(Usuario.IdUsuario)},
 						{nameof(Usuario.Nombre)}, 
 						{nameof(Usuario.Apellido)}, 
-						{nameof(Propietario.Telefono)}, 
 						{nameof(Usuario.Email)},
 						{nameof(Usuario.Clave)}, 
 						{nameof(Usuario.Rol)},
-						{nameof(Usuario.AvatarUrl)} 
+						{nameof(Usuario.AvatarURL)},
+						{nameof(Usuario.Estado)}
 					FROM {nameof(Usuario)}";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -159,10 +164,11 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								IdUsuario = reader.GetInt32("IdUsuario"),
 								Nombre = reader.GetString("Nombre"),
 								Apellido = reader.GetString("Apellido"),
-								Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
+								Email = reader.GetString("Email"),
 								Clave = reader.GetString("Clave"),
-								Rol = reader.GetString("Rol"),
-								AvatarUrl = reader["AvatarUrl"] != DBNull.Value ? reader.GetString("AvatarUrl") : ""
+								Rol = reader.GetInt32("Rol"),
+								AvatarURL = reader["AvatarURL"] != DBNull.Value ? reader.GetString("AvatarURL") : "",
+								Estado = reader.GetBoolean("Estado")
 							});
 						}
 					}
@@ -183,7 +189,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Usuario.Email)}, 
 						{nameof(Usuario.Clave)}, 
 						{nameof(Usuario.Rol)},
-						{nameof(Usuario.AvatarUrl)} 
+						{nameof(Usuario.AvatarURL)},
+						{nameof(Usuario.Estado)}
 					FROM {nameof(Usuario)} 
 					WHERE {nameof(Usuario.IdUsuario)} = @id";
 			Usuario usuario = new Usuario();
@@ -202,8 +209,50 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							Apellido = reader.GetString("Apellido"),
 							Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
 							Clave = reader.GetString("Clave"),
-							Rol = reader.GetString("Rol"),
-							AvatarUrl = reader["AvatarUrl"] != DBNull.Value ? reader.GetString("AvatarUrl") : ""
+							Rol = reader.GetInt32("Rol"),
+							Estado = reader.GetBoolean("Estado"),
+						};
+					}
+				}
+				conn.Close();
+			}
+			return usuario;
+		}
+
+		public Usuario ObtenerUsuarioPorEmail(string Email)
+		{
+			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
+			using MySqlConnection conn = mySqlConnection;
+			var sql = @$"SELECT 
+						{nameof(Usuario.IdUsuario)}, 
+						{nameof(Usuario.Nombre)}, 
+						{nameof(Usuario.Apellido)}, 
+						{nameof(Usuario.Email)}, 
+						{nameof(Usuario.Clave)}, 
+						{nameof(Usuario.Rol)},
+						{nameof(Usuario.AvatarURL)},
+						{nameof(Usuario.Estado)}
+					FROM {nameof(Usuario)} 
+					WHERE {nameof(Usuario.Email)} = @Email";
+			Usuario usuario = new Usuario();
+			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+			{
+				cmd.Parameters.AddWithValue("@Email", Email);
+				conn.Open();
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						usuario = new Usuario
+						{
+							IdUsuario = reader.GetInt32("IdUsuario"),
+							Nombre = reader.GetString("Nombre"),
+							Apellido = reader.GetString("Apellido"),
+							Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
+							Clave = reader.GetString("Clave"),
+							Rol = reader.GetInt32("Rol"),
+							AvatarURL = reader.GetString("AvatarURL"),
+							Estado = reader.GetBoolean("Estado"),
 						};
 					}
 				}

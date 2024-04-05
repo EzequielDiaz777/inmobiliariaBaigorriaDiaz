@@ -2,7 +2,7 @@ using MySql.Data.MySqlClient;
 
 namespace inmobiliariaBaigorriaDiaz.Models
 {
-	public class RepositorioContrato
+	public class RepositorioContrato 
 	{
 		protected readonly string connectionString;
 		public RepositorioContrato()
@@ -40,7 +40,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@Precio", contrato.Precio);
 					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde.ToDateTime(TimeOnly.MinValue));
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta.ToDateTime(TimeOnly.MinValue));
-					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal.ToDateTime(TimeOnly.MinValue));
+					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHasta.ToDateTime(TimeOnly.MinValue));
 					conn.Open();
 					cmd.ExecuteNonQuery();
 
@@ -127,9 +127,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Contrato.IdInquilino)} = @IdInquilino,
 						{nameof(Contrato.IdInmueble)} = @IdInmueble,
 						{nameof(Contrato.Precio)} = @Precio,
-						{nameof(Contrato.AlquilerDesde)} = @AlquilerDesde,
 						{nameof(Contrato.AlquilerHasta)} = @AlquilerHasta,
-						{nameof(Contrato.AlquilerHastaOriginal)} = @AlquilerHastaOriginal
 					WHERE 
 						{nameof(Contrato.IdContrato)} = @IdContrato";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -138,9 +136,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@IdInquilino", contrato.IdInquilino);
 					cmd.Parameters.AddWithValue("@IdInmueble", contrato.IdInmueble);
 					cmd.Parameters.AddWithValue("@Precio", contrato.Precio);
-					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde);
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta);
-					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal);
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
@@ -210,6 +206,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							@$"SELECT 
 								c.{nameof(Contrato.IdContrato)}, 
 								c.{nameof(Contrato.Precio)}, 
+								c.{nameof(Contrato.IdInquilino)},
+								c.{nameof(Contrato.IdInmueble)},
 								{nameof(Contrato.AlquilerDesde)}, 
 								{nameof(Contrato.AlquilerHasta)},
 								{nameof(Contrato.AlquilerHastaOriginal)},
@@ -242,19 +240,20 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								Estado = reader.GetBoolean("Estado"),
 								Inquilino = new Inquilino
 								{
+									IdInquilino = reader.GetInt32("IdInquilino"),
 									Nombre = reader.GetString("Nombre"),
 									Apellido = reader.GetString("Apellido"),
 								},
 								Inmueble = new Inmueble
 								{
-									Direccion = reader.GetString("Direccion")
+									IdInmueble = reader.GetInt32("IdInmueble"),
+									Direccion = reader.GetString("Direccion"),
 								}
 							};
 						}
 					}
 					conn.Close();
 				}
-				Console.WriteLine(contrato.Inquilino.Apellido);
 				return contrato;
 			}
 		}

@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using inmobiliariaBaigorriaDiaz.controllers;
-using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 
@@ -13,15 +10,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Usuario/Login";
         options.LogoutPath = "/Usuario/Logout";
         options.AccessDeniedPath = "/Home";
-    })
+    });
 
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
 });
 
 var app = builder.Build();
-
-
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

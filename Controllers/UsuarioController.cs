@@ -13,14 +13,14 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             ViewBag.Id = TempData["Id"];
             ViewBag.entidad = "usuario";
-            return View(rp.ObtenerUsuarios());
+            return View(ru.ObtenerUsuarios());
         }
 
         // GET: Usuario/Details/5
         [HttpGet]
         public ActionResult Details(int id)
         {
-            return View(rp.ObtenerUsuarioPorID(id));
+            return View(ru.ObtenerUsuarioPorID(id));
         }
 
         // GET: Usuario/Create
@@ -36,7 +36,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                rp.AltaFisica(usuario);
+                ru.AltaFisica(usuario);
                 TempData["Id"] = usuario.IdUsuario;
                 return RedirectToAction(nameof(Index));
             }
@@ -50,7 +50,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            return View(rp.ObtenerUsuarioPorID(id));
+            return View(ru.ObtenerUsuarioPorID(id));
         }
 
         // POST: Usuario/Edit/5
@@ -63,13 +63,11 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 Usuario u = ru.ObtenerUsuarioPorID(id);
                 if (u != null)
                 {
-                
                     u.Nombre = usuario.Nombre;
                     u.Apellido = usuario.Apellido;
                     u.Email = usuario.Email;
                     u.Clave = usuario.Clave;
                     u.Rol = usuario.Rol;
-                    u.AvatarUrl = usuario.AvatarUrl;
                     ru.Modificacion(u);
                     return RedirectToAction("Index");
                 }
@@ -89,7 +87,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            return View(rp.ObtenerUsuarioPorID(id));
+            return View(ru.ObtenerUsuarioPorID(id));
         }
 
         // POST: Usuario/Delete/5
@@ -98,7 +96,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                rp.BajaLogica(id);
+                ru.BajaLogica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

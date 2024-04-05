@@ -5,7 +5,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
     public enum enRoles
     {
         Administrador = 1,
-
         Empleado = 2,
     }
 
@@ -13,7 +12,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
     {
         [Key]
         [Display(Name = "Código")]
-        public int Id { get; set; }
+        public int IdUsuario { get; set; }
 
         [Required]
         public string Nombre { get; set; } = "";
@@ -26,16 +25,18 @@ namespace inmobiliariaBaigorriaDiaz.Models
 
         [Required, DataType(DataType.Password)]
         public string Clave { get; set; } = "";
-        
-        public string AvatarUrl { get; set; } = "";
-        [NotMapped]
 
+        public string AvatarURL { get; set; } = "";
         public int Rol { get; set; }
-        [NotMapped]
-
         public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
+        [Required]
+        public bool Estado {get; set;}
+        public IFormFile? AvatarFile { get; set; }
 
-        public IFormFile AvatarFile { get; set; }
+        public override string ToString()
+        {
+            return $"{Apellido} {Nombre}";
+        }
 
         public static IDictionary<int, string> ObtenerRoles()
         {

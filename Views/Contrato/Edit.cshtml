@@ -39,7 +39,7 @@
                                     inmueble</label>
                                 <select asp-for="IdInmueble" class="form-select">
                                     @foreach (var item in ViewBag.Inmuebles)
-                                        @if (@Model.Inmueble.Direccion == item.Direccion)
+                                        @if (@Model.Inmueble.IdInmueble == item.IdInmueble)
                                         {
                                             <option selected value="@item.IdInmueble"> @item.Direccion</option>
                                         }
@@ -55,6 +55,11 @@
                                 <label asp-for="Precio" class="control-label"></label>
                                 <input asp-for="Precio" class="form-control" />
                                 <span asp-validation-for="Precio" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="AlquilerHasta" class="control-label"></label>
+                                <input asp-for="AlquilerHasta" class="form-control" />
+                                <span asp-validation-for="AlquilerHasta" class="text-danger"></span>
                             </div>
                             <br>
                             <div class="form-group text-center">
