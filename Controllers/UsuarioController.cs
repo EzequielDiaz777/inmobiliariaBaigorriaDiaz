@@ -1,4 +1,5 @@
 using inmobiliariaBaigorriaDiaz.Models;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
@@ -27,6 +28,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Create()
         {
+            ViewBag.Roles = Usuario.ObtenerRoles();
             return View();
         }
 
@@ -34,9 +36,21 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpPost]
         public ActionResult Create(Usuario usuario)
         {
+            if(!ModelState.IsValid){
+                return View();
+            }
             try
             {
-                ru.AltaFisica(usuario);
+                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                    password: usuario.Clave,
+                    salt: System.Text.Encoding.ASCII.GetBytes("inmobiliariaBaigorriaDiaz"),
+                    prf: KeyDerivationPrf.HMACSHA1,
+                    iterationCount: 10000,
+                    numBytesRequested: 256 / 8
+                ));
+                usuario.Clave = hashed;
+                var nbreRnd = Guid.NewGuid();
+                int res = ru.AltaFisica(usuario);
                 TempData["Id"] = usuario.IdUsuario;
                 return RedirectToAction(nameof(Index));
             }
@@ -103,6 +117,12 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 return View();
             }
+        }
+
+        // GET: /Usuarios/Login
+        public ActionResult LoginModal()
+        {
+            return PartialView("_LoginModal", new LoginView());
         }
     }
 }

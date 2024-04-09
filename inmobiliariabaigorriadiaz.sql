@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-04-2024 a las 07:26:33
+-- Tiempo de generación: 06-04-2024 a las 00:01:02
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -131,6 +131,23 @@ CREATE TABLE `usodeinmueble` (
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `IdUsuario` int(11) NOT NULL,
+  `Nombre` varchar(50) NOT NULL,
+  `Apellido` varchar(30) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Clave` varchar(255) NOT NULL,
+  `Rol` int(11) NOT NULL,
+  `AvatarURL` varchar(50) DEFAULT NULL,
+  `Estado` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Índices para tablas volcadas
 --
@@ -184,6 +201,12 @@ ALTER TABLE `usodeinmueble`
   ADD PRIMARY KEY (`IdUsoDeInmueble`);
 
 --
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`IdUsuario`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -228,6 +251,12 @@ ALTER TABLE `tipodeinmueble`
 --
 ALTER TABLE `usodeinmueble`
   MODIFY `IdUsoDeInmueble` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas

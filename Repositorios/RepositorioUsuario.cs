@@ -219,7 +219,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			return usuario;
 		}
 
-		public Usuario ObtenerUsuarioPorEmail(string Email)
+		public Usuario? ObtenerUsuarioPorEmail(string Email)
 		{
 			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
 			using MySqlConnection conn = mySqlConnection;
@@ -228,13 +228,12 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Usuario.Nombre)}, 
 						{nameof(Usuario.Apellido)}, 
 						{nameof(Usuario.Email)}, 
-						{nameof(Usuario.Clave)}, 
 						{nameof(Usuario.Rol)},
 						{nameof(Usuario.AvatarURL)},
 						{nameof(Usuario.Estado)}
 					FROM {nameof(Usuario)} 
 					WHERE {nameof(Usuario.Email)} = @Email";
-			Usuario usuario = new Usuario();
+			Usuario? usuario = null;
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{
 				cmd.Parameters.AddWithValue("@Email", Email);
@@ -248,10 +247,9 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							IdUsuario = reader.GetInt32("IdUsuario"),
 							Nombre = reader.GetString("Nombre"),
 							Apellido = reader.GetString("Apellido"),
-							Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
-							Clave = reader.GetString("Clave"),
+							Email = reader.GetString("Email"),
 							Rol = reader.GetInt32("Rol"),
-							AvatarURL = reader.GetString("AvatarURL"),
+							AvatarURL = reader["AvatarURL"] != DBNull.Value ? reader.GetString("AvatarURL") : "",
 							Estado = reader.GetBoolean("Estado"),
 						};
 					}

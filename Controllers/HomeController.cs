@@ -1,13 +1,80 @@
+using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IConfiguration _configuration;
+        private RepositorioUsuario repositorio = new RepositorioUsuario();
+
+        public HomeController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         // GET: Home
         public ActionResult Index()
         {
             return View();
+        }
+
+        public ActionResult Login(string returnUrl)
+        {
+            TempData["returnUrl"] = returnUrl;
+            return View("Login");
+        }
+
+        // POST: Home/Login/
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginView login)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View();
+                }
+                else
+                {
+                    Usuario? usuario = repositorio.ObtenerUsuarioPorEmail(login.Email);
+                    if(usuario == null){
+                        ModelState.AddModelError("", "El usuario o la contraseña son incorrectos");
+                        return View();
+                    }
+                    var claims = new List<Claim>{
+                        new Claim(ClaimTypes.Name, usuario.Email),
+                        new Claim(ClaimTypes.Role, usuario.RolNombre),
+                    };
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity)
+                        );
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View();
+            }
+        }
+
+        // GET: /salir
+        [Route("salir", Name = "logout")]
+        public async Task<ActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Home/Details/5
