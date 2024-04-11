@@ -123,5 +123,13 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 return View();
             }
         }
+
+        [HttpGet]
+        public IActionResult Buscar(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            var inmueblesDisponibles = repoI.ObtenerInmueblesDisponibles(fechaDesde, fechaHasta);
+            bool hayResultados = inmueblesDisponibles.Count > 0;
+            return View(Tuple.Create(inmueblesDisponibles, hayResultados));
+        }
     }
 }

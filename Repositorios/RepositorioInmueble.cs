@@ -374,4 +374,82 @@ public class RepositorioInmueble
     }
 
 
+    public List<Inmueble> ObtenerInmueblesDisponibles(DateTime fechaDesde, DateTime fechaHasta)
+    {
+        List<Inmueble> inmueblesDisponibles = new List<Inmueble>();
+
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql = @$"SELECT 
+                            i.{nameof(Inmueble.IdInmueble)},
+                            i.{nameof(Inmueble.Direccion)},
+                            i.{nameof(Inmueble.Ambientes)},
+                            i.{nameof(Inmueble.Superficie)},
+                            i.{nameof(Inmueble.Longitud)},
+                            i.{nameof(Inmueble.Latitud)},
+                            i.{nameof(Inmueble.Precio)},
+                            u.{nameof(UsoDeInmueble.Nombre)} AS UsoDeInmuebleNombre,
+                            i.{nameof(Inmueble.Estado)},
+                            t.{nameof(TipoDeInmueble.Nombre)} AS TipoDeInmuebleNombre,
+                            p.{nameof(Propietario.Nombre)} AS PropietarioNombre,
+                            p.{nameof(Propietario.Apellido)} AS PropietarioApellido
+                        FROM {nameof(Inmueble)} i 
+                        INNER JOIN {nameof(Propietario)} p 
+                        ON i.{nameof(Inmueble.IdPropietario)} = p.{nameof(Propietario.IdPropietario)}
+                        INNER JOIN {nameof(TipoDeInmueble)} t
+                        ON i.{nameof(Inmueble.IdTipoDeInmueble)} = t.{nameof(TipoDeInmueble.IdTipoDeInmueble)}
+                        INNER JOIN {nameof(UsoDeInmueble)} u
+                        ON i.{nameof(Inmueble.IdUsoDeInmueble)} = u.{nameof(UsoDeInmueble.IdUsoDeInmueble)}
+                        WHERE NOT EXISTS (
+                        SELECT 1 FROM {nameof(Contrato)} c
+                        WHERE c.{nameof(Contrato.IdInmueble)} = i.{nameof(Inmueble.IdInmueble)}
+                        AND c.{nameof(Contrato.Estado)} = 1
+                        AND i.{nameof(Inmueble.Estado)} = 1
+                        AND ((c.{nameof(Contrato.AlquilerDesde)} <= @fechaHasta AND c.{nameof(Contrato.AlquilerHasta)} >= @fechaDesde) OR
+                                (c.{nameof(Contrato.AlquilerHastaOriginal)} <= @fechaHasta AND c.{nameof(Contrato.AlquilerHastaOriginal)} >= @fechaDesde)));";
+
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@fechaDesde", fechaDesde);
+                cmd.Parameters.AddWithValue("@fechaHasta", fechaHasta);
+
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var inmueble = new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32("IdInmueble"),
+                            Direccion = reader.GetString("Direccion"),
+                            Ambientes = reader.GetInt32("Ambientes"),
+                            Superficie = reader.GetDecimal("Superficie"),
+                            Longitud = reader.IsDBNull(reader.GetOrdinal("Longitud")) ? (decimal?)null : reader.GetDecimal("Longitud"),
+                            Latitud = reader.IsDBNull(reader.GetOrdinal("Latitud")) ? (decimal?)null : reader.GetDecimal("Latitud"),
+                            Precio = reader.GetDecimal("Precio"),
+                            Uso = new UsoDeInmueble
+                            {
+                                Nombre = reader.GetString("UsoDeInmuebleNombre"),
+                            },
+                            Estado = reader.GetBoolean("Estado"),
+                            Tipo = new TipoDeInmueble
+                            {
+                                Nombre = reader.GetString("TipoDeInmuebleNombre"),
+                            },
+                            Duenio = new Propietario
+                            {
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido"),
+                            }
+                        };
+                        inmueblesDisponibles.Add(inmueble);
+                    }
+                }
+                conn.Close();
+            }
+        }
+
+        return inmueblesDisponibles;
+    }
+     
 }

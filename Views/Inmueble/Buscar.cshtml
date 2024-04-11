@@ -1,0 +1,129 @@
+@model Tuple<List<Inmueble>, bool>
+
+<h1 class="text-center"><b>DISPONIBILIDAD </b></h1>
+<br>
+
+<form asp-action="Buscar" method="post">
+    <label for="fechaDesde">Fecha desde:</label>
+    <input type="date" id="fechaDesde" name="fechaDesde" required>
+    <label for="fechaHasta">Fecha hasta:</label>
+    <input type="date" id="fechaHasta" name="fechaHasta" required>
+    <button type="submit">Buscar</button>
+</form>
+
+<h2>Inmuebles disponibles:</h2>
+@if (!Model.Item2)
+{
+    <h2>No se encontraron inmuebles disponibles para el rango de fechas seleccionado.</h2>
+}
+else
+{
+
+<table class="table table-striped table-hover table-bordered custom-table">
+    <thead>
+        <tr>
+            <th>
+                Nº de Inmueble
+            </th>
+            <th>
+                Dirección
+            </th>
+            <th>
+                Tipo de Inmueble
+            </th>
+            <th>
+                Uso del Inmueble
+            </th>
+            <th>
+                Dueño
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        
+   
+    <ul>
+        @foreach (var inmueble in Model.Item1)
+        {
+             @if (inmueble.Estado)
+            {
+                <tr class="centered-row">
+                    <td>
+                        @Html.DisplayFor(model => inmueble.IdInmueble)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => inmueble.Direccion)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => inmueble.Tipo.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => inmueble.Uso.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => inmueble.Duenio.Apellido)
+                    </td>
+                    
+                </tr>
+            }
+            
+        }
+    </ul>
+
+        
+    </tbody>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#searchInput').on('input', function () {
+                var searchText = $(this).val().toLowerCase();
+                $('.table tbody tr').each(function () {
+                    var rowData = $(this).text().toLowerCase();
+                    if (rowData.indexOf(searchText) === -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            });
+
+            $('th').click(function () {
+                if (!$(this).hasClass('no-ordenable')) {
+                    var table = $(this).parents('table').eq(0);
+                    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+                    this.asc = !this.asc;
+                    if (!this.asc) { rows = rows.reverse(); }
+                    for (var i = 0; i < rows.length; i++) { table.append(rows[i]); }
+
+                    // Remover todas las clases de ordenación de las columnas
+                    $('th').removeClass('ascending descending');
+
+                    // Remover todos los triángulos de las columnas
+                    $('.sort-icon').remove();
+
+                    // Agregar triángulo al lado del encabezado de la columna clicada
+                    $(this).append('<span class="sort-icon">' + (this.asc ? '▲' : '▼') + '</span>');
+                }
+            });
+
+            // Remover triángulos cuando se colapsa el menú de navegación
+            $('.navbar-toggler').click(function () {
+                $('.sort-icon').remove();
+            });
+
+            function comparer(index) {
+                return function (a, b) {
+                    var valA = getCellValue(a, index), valB = getCellValue(b, index);
+                    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+                };
+            }
+
+            function getCellValue(row, index) {
+                return $(row).children('td').eq(index).text();
+            }
+        });
+    </script>
+</table>
+}
