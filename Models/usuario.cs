@@ -26,11 +26,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Required, DataType(DataType.Password)]
         public string Clave { get; set; } = "";
 
-        public string AvatarURL { get; set; } = "";
-        public int Rol { get; set; }
-        public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
+        public string? AvatarURL { get; set; } = "";
+        
         [Required]
+        public int Rol { get; set; }
+        
+        public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
+        
         public bool Estado {get; set;}
+        
         public IFormFile? AvatarFile { get; set; }
 
         public override string ToString()

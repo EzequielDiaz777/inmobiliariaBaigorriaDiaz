@@ -1,6 +1,8 @@
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -34,28 +36,54 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // POST: Usuario/Create
         [HttpPost]
-        public ActionResult Create(Usuario usuario)
+        public async Task<ActionResult> CreateUsuario(Usuario usuario, IFormFile avatarFile)
         {
-            if(!ModelState.IsValid){
-                return View();
-            }
             try
             {
-                string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: usuario.Clave,
-                    salt: System.Text.Encoding.ASCII.GetBytes("inmobiliariaBaigorriaDiaz"),
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 10000,
-                    numBytesRequested: 256 / 8
-                ));
-                usuario.Clave = hashed;
-                var nbreRnd = Guid.NewGuid();
-                int res = ru.AltaFisica(usuario);
-                TempData["Id"] = usuario.IdUsuario;
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: usuario.Clave,
+                        salt: System.Text.Encoding.ASCII.GetBytes("inmobiliariaBaigorriaDiaz"),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 10000,
+                        numBytesRequested: 256 / 8
+                    ));
+                    usuario.Clave = hashed;
+                    var nbreRnd = Guid.NewGuid();
+                    ru.AltaFisica(usuario);
+                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "update");
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    // Renombrar el archivo y obtener su nueva ruta
+                    var avatarFileName = $"avatar_{usuario.IdUsuario}{Path.GetExtension(avatarFile.FileName)}";
+                    var avatarFilePath = Path.Combine(directoryPath, avatarFileName);
+
+                    // Guardar el archivo en el directorio 'update'
+                    using (var stream = new FileStream(avatarFilePath, FileMode.Create))
+                    {
+                        await avatarFile.CopyToAsync(stream);
+                    }
+
+                    // Guardar la ruta de la imagen en la propiedad AvatarURL del usuario
+                    usuario.AvatarURL = avatarFilePath;
+                    Console.WriteLine(avatarFilePath);
+                    Console.WriteLine(usuario.AvatarURL);
+                    ru.Modificacion(usuario);
+                    TempData["Id"] = usuario.IdUsuario;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return View(usuario);
+                }
             }
             catch
             {
+                Console.WriteLine("Error");
                 return View();
             }
         }

@@ -23,6 +23,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
+            <th>
+                Avatar
+            </th>
             <th class="no-ordenable">
                 Opciones
             </th>
@@ -43,6 +46,17 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.AvatarURL))
+                        {
+                            <img src="@Url.Content(item.AvatarURL)" alt="Avatar" class="avatar-thumbnail" />
+                        }
+                        else
+                        {
+                            <span>No hay imagen disponible</span>
+                        }
+                    </td>
+
                     <td>
                         <span class="button-column">
                             <a href="@Url.Action("Edit", new { id = item.IdUsuario })" title="Editar"> <i

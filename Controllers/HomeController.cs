@@ -11,13 +11,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IConfiguration _configuration;
         private RepositorioUsuario repositorio = new RepositorioUsuario();
-
-        public HomeController(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         // GET: Home
         public ActionResult Index()
         {
@@ -45,12 +39,20 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 else
                 {
                     Usuario? usuario = repositorio.ObtenerUsuarioPorEmail(login.Email);
-                    if(usuario == null){
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: login.Clave,
+                        salt: System.Text.Encoding.ASCII.GetBytes("inmobiliariaBaigorriaDiaz"),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 10000,
+                        numBytesRequested: 256 / 8
+                    ));
+                    if (usuario == null || usuario.Clave != hashed){
                         ModelState.AddModelError("", "El usuario o la contraseña son incorrectos");
                         return View();
-                    }
+                    }                    
                     var claims = new List<Claim>{
-                        new Claim(ClaimTypes.Name, usuario.Email),
+                        new Claim(ClaimTypes.Name, usuario.ToString()),
+                        new Claim(ClaimTypes.Email, usuario.Email),
                         new Claim(ClaimTypes.Role, usuario.RolNombre),
                     };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -67,8 +69,26 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 return View();
             }
         }
+        [HttpGet("Perfil")]
+        public ActionResult Perfil()
+        {
+            // Obtener el nombre de usuario del usuario actualmente autenticado
+            string nombreUsuario = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
 
-        // GET: /salir
+            // Luego, puedes usar este nombre de usuario para obtener los datos del usuario desde el repositorio
+            Usuario usuario = repositorio.ObtenerUsuarioPorEmail(nombreUsuario);
+
+            if (usuario == null)
+            {
+                // Manejar el caso en que no se encuentre el usuario
+                return NotFound();
+            }
+
+            // Pasar el modelo de usuario a la vista para mostrar sus datos
+            return View(usuario);
+        }
+
+        // GET: /salir  
         [Route("salir", Name = "logout")]
         public async Task<ActionResult> Logout()
         {

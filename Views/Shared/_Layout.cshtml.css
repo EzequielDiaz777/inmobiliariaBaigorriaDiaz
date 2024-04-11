@@ -15,6 +15,12 @@ a {
   justify-content: center;
 }
 
+.avatar-thumbnail {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;

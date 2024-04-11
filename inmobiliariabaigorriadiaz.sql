@@ -144,7 +144,7 @@ CREATE TABLE `usuario` (
   `Email` varchar(100) NOT NULL,
   `Clave` varchar(255) NOT NULL,
   `Rol` int(11) NOT NULL,
-  `AvatarURL` varchar(50) DEFAULT NULL,
+  `AvatarURL` varchar(255) DEFAULT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

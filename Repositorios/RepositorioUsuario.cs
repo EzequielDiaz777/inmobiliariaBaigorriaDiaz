@@ -14,7 +14,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 
 		public int AltaFisica(Usuario usuario)
 		{
-			Console.WriteLine("Estoy en alta");
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
@@ -228,6 +227,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Usuario.Nombre)}, 
 						{nameof(Usuario.Apellido)}, 
 						{nameof(Usuario.Email)}, 
+						{nameof(Usuario.Clave)},
 						{nameof(Usuario.Rol)},
 						{nameof(Usuario.AvatarURL)},
 						{nameof(Usuario.Estado)}
@@ -248,6 +248,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							Nombre = reader.GetString("Nombre"),
 							Apellido = reader.GetString("Apellido"),
 							Email = reader.GetString("Email"),
+							Clave = reader.GetString("Clave"),
 							Rol = reader.GetInt32("Rol"),
 							AvatarURL = reader["AvatarURL"] != DBNull.Value ? reader.GetString("AvatarURL") : "",
 							Estado = reader.GetBoolean("Estado"),
