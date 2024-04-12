@@ -1,14 +1,22 @@
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
     public class UsuarioController : Controller
     {
+        private readonly IWebHostEnvironment environment;
         private RepositorioUsuario ru = new RepositorioUsuario();
+
+        public UsuarioController(IWebHostEnvironment environment)
+        {
+            this.environment = environment;
+        }
+
 
         // GET: Usuario
         [HttpGet]
@@ -36,12 +44,28 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // POST: Usuario/Create
         [HttpPost]
-        public async Task<ActionResult> CreateUsuario(Usuario usuario, IFormFile avatarFile)
+        public async Task<ActionResult> Create(Usuario usuario, IFormFile avatarFile)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    if (avatarFile != null)
+                    {
+                        string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+                        var extension = Path.GetExtension(avatarFile.FileName).ToLower();
+                        if (!allowedExtensions.Contains(extension))
+                        {
+                            ModelState.AddModelError("AvatarFile", "Solo se permiten archivos de imagen (JPG, JPEG, PNG, GIF).");
+                            return View(usuario);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("AvatarFile", "Debe seleccionar un archivo.");
+                        return View(usuario);
+                    }
+
                     string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                         password: usuario.Clave,
                         salt: System.Text.Encoding.ASCII.GetBytes("inmobiliariaBaigorriaDiaz"),
@@ -52,7 +76,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     usuario.Clave = hashed;
                     var nbreRnd = Guid.NewGuid();
                     ru.AltaFisica(usuario);
-                    var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "update");
+
+                    var directoryPath = Path.Combine(environment.WebRootPath, "update");
                     if (!Directory.Exists(directoryPath))
                     {
                         Directory.CreateDirectory(directoryPath);
@@ -68,10 +93,12 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                         await avatarFile.CopyToAsync(stream);
                     }
 
-                    // Guardar la ruta de la imagen en la propiedad AvatarURL del usuario
-                    usuario.AvatarURL = avatarFilePath;
-                    Console.WriteLine(avatarFilePath);
-                    Console.WriteLine(usuario.AvatarURL);
+                    // Redimensionar la imagen antes de guardarla
+                    var resizedImagePath = ResizeImage(avatarFilePath, 50, 50);
+
+                    // Actualizar la ruta de la imagen redimensionada en la propiedad AvatarURL del usuario
+                    usuario.AvatarURL = resizedImagePath;
+
                     ru.Modificacion(usuario);
                     TempData["Id"] = usuario.IdUsuario;
                     return RedirectToAction(nameof(Index));
@@ -81,10 +108,21 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     return View(usuario);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("Error");
+                Console.WriteLine($"Error: {ex.Message}");
                 return View();
+            }
+        }
+
+        private string ResizeImage(string imagePath, int width, int height)
+        {
+            using (var image = Image.Load(imagePath))
+            {
+                image.Mutate(x => x.Resize(width, height));
+                var resizedImagePath = Path.Combine(environment.WebRootPath, "update", Path.GetFileName(imagePath));
+                image.Save(resizedImagePath);
+                return Path.Combine("/update", Path.GetFileName(imagePath));
             }
         }
 

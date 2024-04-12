@@ -73,6 +73,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     contratoBD.IdInquilino = contrato.IdInquilino;
                     contratoBD.IdInmueble = contrato.IdInmueble;
                     contratoBD.Precio = contrato.Precio;
+                    contratoBD.AlquilerDesde = contrato.AlquilerDesde;
                     contratoBD.AlquilerHasta = contrato.AlquilerHasta;
                     repoC.ModificarContrato(contratoBD);
                     return RedirectToAction(nameof(Index));

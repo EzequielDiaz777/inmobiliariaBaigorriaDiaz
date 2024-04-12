@@ -38,7 +38,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 }
                 else
                 {
-                    Usuario? usuario = repositorio.ObtenerUsuarioPorEmail(login.Email);
+                    var usuario = repositorio.ObtenerUsuarioPorEmail(login.Email);
                     string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                         password: login.Clave,
                         salt: System.Text.Encoding.ASCII.GetBytes("inmobiliariaBaigorriaDiaz"),
@@ -73,10 +73,10 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Perfil()
         {
             // Obtener el nombre de usuario del usuario actualmente autenticado
-            string nombreUsuario = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            var nombreUsuario = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
             // Luego, puedes usar este nombre de usuario para obtener los datos del usuario desde el repositorio
-            Usuario usuario = repositorio.ObtenerUsuarioPorEmail(nombreUsuario);
+            Usuario? usuario = repositorio.ObtenerUsuarioPorEmail(nombreUsuario);
 
             if (usuario == null)
             {
