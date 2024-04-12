@@ -54,9 +54,13 @@
                             |
                             <a href="@Url.Action("Details", new { id = item.IdTipoDeInmueble })" title="Detalles"> <i
                                     class="fas fa-info-circle"></i></a>
-                            |
-                            <a href="@Url.Action("Delete", new { id = item.IdTipoDeInmueble })" title="Eliminar"> <i
-                                    class="fas fa-trash-alt text-danger"></i></a>
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <span class="button-icon">
+                                    | <a href="@Url.Action("Delete", new { id = item.IdTipoDeInmueble })" title="Eliminar"> <i
+                                            class="fas fa-trash-alt text-danger"></i></a>
+                                </span>
+                            }
                         </span>
                     </td>
                 </tr>

@@ -1,5 +1,7 @@
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -95,6 +97,21 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 return View();
             }
+        }
+
+        public IActionResult NoAutorizado()
+        {
+            return View(); // Puedes redirigir a una vista específica para mostrar un mensaje de error o realizar alguna acción.
+        }
+
+        // Filtro de acción para redirigir si el usuario no está autenticado
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                context.Result = RedirectToAction("Index", "Home"); // Redirige al Index del controlador Home
+            }
+            base.OnActionExecuting(context);
         }
     }
 }

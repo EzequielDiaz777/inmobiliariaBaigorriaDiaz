@@ -2,6 +2,9 @@ using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -18,6 +21,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Usuario
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Index()
         {
             ViewBag.Id = TempData["Id"];
@@ -27,6 +31,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Usuario/Details/5
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Details(int id)
         {
             return View(ru.ObtenerUsuarioPorID(id));
@@ -34,6 +39,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Usuario/Create
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.Roles = Usuario.ObtenerRoles();
@@ -130,10 +136,25 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             }
         }
 
+        private bool mismoUsuario(int id)
+        {
+            // Obtener el ID del usuario autenticado
+            var usuarioId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
+
+            // Verificar si el usuario autenticado coincide con el ID del perfil solicitado
+            return usuarioId != id;
+        }
+
         // GET: Usuario/EditPerfil/5
         [HttpGet]
         public ActionResult EditPerfil(int id)
         {
+
+            if (mismoUsuario(id))
+            {
+                return RedirectToAction("Perfil", "Home");
+            }
+
             ViewBag.Roles = Usuario.ObtenerRoles();
             return View(ru.ObtenerUsuarioPorID(id));
         }
@@ -179,6 +200,10 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult EditAvatar(int id)
         {
+            if (mismoUsuario(id))
+            {
+                return RedirectToAction("Perfil", "Home");
+            }
             return View(ru.ObtenerUsuarioPorID(id));
         }
 
@@ -219,8 +244,12 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Usuario/EditClave/5
         [HttpGet]
-        public ActionResult EditClaveEmpleado()
+        public ActionResult EditClaveEmpleado(int id)
         {
+            if (mismoUsuario(id))
+            {
+                return RedirectToAction("Perfil", "Home");
+            }
             return View();
         }
 
@@ -245,7 +274,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     {
                         Console.WriteLine("Clave vieja: " + usuario.Clave);
                         Console.WriteLine("Clave nueva: " + Usuario.hashearClave(claveVieja));
-                        Console.WriteLine("Claves iguales: " +usuario.Clave == Usuario.hashearClave(claveVieja));
+                        Console.WriteLine("Claves iguales: " + usuario.Clave == Usuario.hashearClave(claveVieja));
                         ModelState.AddModelError("", "La clave vieja ingresada es incorrecta.");
                         return View();
                     }
@@ -268,6 +297,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult EditClaveAdministrador(int id)
         {
             return View();
@@ -293,6 +323,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Usuario/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View(ru.ObtenerUsuarioPorID(id));
@@ -317,6 +348,21 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult LoginModal()
         {
             return PartialView("_LoginModal", new LoginView());
+        }
+
+        public IActionResult NoAutorizado()
+        {
+            return View(); // Puedes redirigir a una vista específica para mostrar un mensaje de error o realizar alguna acción.
+        }
+
+        // Filtro de acción para redirigir si el usuario no está autenticado
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                context.Result = RedirectToAction("Index", "Home"); // Redirige al Index del controlador Home
+            }
+            base.OnActionExecuting(context);
         }
     }
 }

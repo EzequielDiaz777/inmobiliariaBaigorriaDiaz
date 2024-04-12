@@ -64,6 +64,5 @@ namespace inmobiliariaBaigorriaDiaz.Models
                     ));
             return hashed;
         }
-
     }
 }

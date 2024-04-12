@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,7 +8,6 @@
     <title>@ViewData["Title"] - Inmobiliaria Baigorria-Diaz</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="~/inmobiliariaBaigorriaDiaz.styles.css" asp-append-version="true" />
 </head>
@@ -32,7 +32,6 @@
                 }
                 else
                 {
-                    
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">
@@ -66,19 +65,47 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Pago" asp-action="Index">
                                 <i class="fas fa-money-bill-wave"></i> Pagos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Usuario" asp-action="Index">
-                                <i class="fas fa-users"></i> Usuarios</a>
-                        </li>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Usuario" asp-action="Index">
+                                    <i class="fas fa-users"></i> Usuarios
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Inmueble" asp-action="Buscar">
                                 <i class="fas fa-search"></i> Buscar un Inmueble</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Perfil"> Bienvenido @User.Identity.Name</a>
+                            <div class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    var avatarUrl = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
+                                    if (!string.IsNullOrEmpty(avatarUrl))
+                                    {
+                                        <img src="@avatarUrl" alt="Avatar del usuario" class="rounded-circle"
+                                            style="width: 30px; height: 30px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/guest.jpg" alt="Avatar predeterminado" class="rounded-circle"
+                                            style="width: 30px; height: 30px;" />
+                                    }
+                                    <span class="ml-2">Bienvenido @User.Identity.Name</span>
+                                }
+                            </div>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="EditPerfil">Editar perfil</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="EditAvatar">Cambiar Avatar</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="EditClaveEmpleado">Cambiar contraseña</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="@Url.Action("Logout", "Home")">Desloguearme</a>
+                            </div>
                         </li>
                     </ul>
-                }
+                }<span class="ml-2">Bienvenido @User.Identity.Name</span>
             </div>
         </nav>
     </header>

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
@@ -52,6 +51,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     }                    
                     var claims = new List<Claim>{
                         new Claim(ClaimTypes.Name, usuario.ToString()),
+                        new Claim(ClaimTypes.PrimarySid, usuario.IdUsuario.ToString()),
+                        new Claim(ClaimTypes.UserData, usuario.AvatarURL ?? ""),
                         new Claim(ClaimTypes.Email, usuario.Email),
                         new Claim(ClaimTypes.Role, usuario.RolNombre),
                     };

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-04-2024 a las 00:01:02
+-- Tiempo de generación: 12-04-2024 a las 20:39:27
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -54,8 +54,8 @@ CREATE TABLE `inmueble` (
   `Direccion` varchar(50) NOT NULL,
   `Ambientes` int(11) NOT NULL,
   `Superficie` decimal(6,2) NOT NULL,
-  `Latitud` decimal(6,4) DEFAULT NULL,
-  `Longitud` decimal(6,4) DEFAULT NULL,
+  `Latitud` decimal(6,2) DEFAULT NULL,
+  `Longitud` decimal(6,2) DEFAULT NULL,
   `Precio` decimal(10,2) NOT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -119,6 +119,16 @@ CREATE TABLE `tipodeinmueble` (
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `tipodeinmueble`
+--
+
+INSERT INTO `tipodeinmueble` (`IdTipoDeInmueble`, `Nombre`, `Estado`) VALUES
+(1, 'Local', 1),
+(2, 'Depósito', 1),
+(3, 'Casa', 1),
+(4, 'Departamento', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -130,6 +140,14 @@ CREATE TABLE `usodeinmueble` (
   `Nombre` varchar(50) NOT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usodeinmueble`
+--
+
+INSERT INTO `usodeinmueble` (`IdUsoDeInmueble`, `Nombre`, `Estado`) VALUES
+(1, 'Comercial', 1),
+(2, 'Residencial', 1);
 
 -- --------------------------------------------------------
 
@@ -147,6 +165,13 @@ CREATE TABLE `usuario` (
   `AvatarURL` varchar(255) DEFAULT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`IdUsuario`, `Nombre`, `Apellido`, `Email`, `Clave`, `Rol`, `AvatarURL`, `Estado`) VALUES
+(2, 'Mariano Gabriel', 'Luzza Bonilla', 'mluzza@gmail.com', '0yfrpBchLivjClVd/2wG7Qr77e1cxpygpcbnKhVZ1Vc=', 1, '/update\\avatar_2.jpg', 1);
 
 --
 -- Índices para tablas volcadas
@@ -244,19 +269,19 @@ ALTER TABLE `propietario`
 -- AUTO_INCREMENT de la tabla `tipodeinmueble`
 --
 ALTER TABLE `tipodeinmueble`
-  MODIFY `IdTipoDeInmueble` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IdTipoDeInmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usodeinmueble`
 --
 ALTER TABLE `usodeinmueble`
-  MODIFY `IdUsoDeInmueble` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IdUsoDeInmueble` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
