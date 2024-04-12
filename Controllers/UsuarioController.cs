@@ -46,6 +46,63 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View();
         }
 
+        // GET: Usuario/EditAdministrador/5
+        [HttpGet]
+        [Authorize(Roles = "Administrador")]
+        public ActionResult EditAdministrador(int id)
+        {
+            ViewBag.Roles = Usuario.ObtenerRoles();
+            return View(ru.ObtenerUsuarioPorID(id));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditAdministrador(int id, Usuario usuario, IFormFile? avatarFile)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Usuario? u = ru.ObtenerUsuarioPorID(id);
+                    if (u != null)
+                    {
+                        u.Nombre = usuario.Nombre;
+                        u.Apellido = usuario.Apellido;
+                        u.Email = usuario.Email;
+                        u.Rol = usuario.Rol;
+                        if (avatarFile != null)
+                        {
+                            var resizedImagePath = await ProcesarAvatarAsync(u, avatarFile);
+                            if (resizedImagePath == null)
+                            {
+                                return View(usuario); // Retorna la vista con errores de validación si la extensión del archivo no es válida
+                            }
+
+                            // Actualizar la URL del avatar en la base de datos
+                            u.AvatarURL = resizedImagePath;
+                        }
+                        u.Clave = Usuario.hashearClave(usuario.Clave);
+                        ru.Modificacion(u);
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        ViewBag.Roles = Usuario.ObtenerRoles();
+                        return View(ru.ObtenerUsuarioPorID(id));
+                    }
+                }
+                else
+                {
+                    ViewBag.Roles = Usuario.ObtenerRoles();
+                    return View(ru.ObtenerUsuarioPorID(id));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+                return RedirectToAction("EditAdministrador", new { id = id });
+            }
+        }
+
         private async Task<string?> ProcesarAvatarAsync(Usuario usuario, IFormFile avatarFile)
         {
             string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".jfif", ".bmp" };
@@ -232,6 +289,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 else
                 {
                     // Si no se proporciona un archivo, simplemente redirige a la página de índice
+                    usuario.AvatarURL = "";
+                    ru.Modificacion(usuario);
                     return RedirectToAction(nameof(Index));
                 }
             }

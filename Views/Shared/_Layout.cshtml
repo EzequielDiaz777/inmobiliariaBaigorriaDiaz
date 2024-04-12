@@ -69,43 +69,56 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Usuario" asp-action="Index">
-                                    <i class="fas fa-users"></i> Usuarios
-                                </a>
+                                    <i class="fas fa-users"></i> Usuarios</a>
                             </li>
                         }
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Inmueble" asp-action="Buscar">
                                 <i class="fas fa-search"></i> Buscar un Inmueble</a>
                         </li>
-                        <li class="nav-item">
-                            <div class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    var avatarUrl = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
-                                    if (!string.IsNullOrEmpty(avatarUrl))
+                        <li class="nav-item dropdown">
+                            <div class="dropdown">
+                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdownMenuLink"
+                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @if (User.Identity.IsAuthenticated)
                                     {
-                                        <img src="@avatarUrl" alt="Avatar del usuario" class="rounded-circle"
-                                            style="width: 30px; height: 30px;" />
+                                        var avatarUrl = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
+                                        if (!string.IsNullOrEmpty(avatarUrl))
+                                        {
+                                            <img src="@avatarUrl" alt="Avatar del usuario" class="rounded-circle"
+                                                style="width: 30px; height: 30px;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/guest.jpg" alt="Avatar predeterminado" class="rounded-circle"
+                                                style="width: 30px; height: 30px;" />
+                                        }
+                                        <span class="ml-2">Bienvenido @User.Identity.Name</span>
                                     }
-                                    else
-                                    {
-                                        <img src="~/guest.jpg" alt="Avatar predeterminado" class="rounded-circle"
-                                            style="width: 30px; height: 30px;" />
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+                                    aria-labelledby="navbarDropdownMenuLink">
+                                    @{
+                                        // Obtener el valor de la Claim PrimarySid
+                                        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid);
+                                        var userId = userIdClaim?.Value;
                                     }
-                                    <span class="ml-2">Bienvenido @User.Identity.Name</span>
-                                }
-                            </div>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="EditPerfil">Editar perfil</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="EditAvatar">Cambiar Avatar</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="Usuario" asp-action="EditClaveEmpleado">Cambiar contraseña</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="@Url.Action("Logout", "Home")">Desloguearme</a>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Usuario"
+                                            asp-action="EditPerfil" asp-route-id="@userId">Editar perfil</a>
+                                    </li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Usuario"
+                                            asp-action="EditAvatar" asp-route-id="@userId">Cambiar Avatar</a>
+                                    </li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Usuario"
+                                            asp-action="EditClaveEmpleado" asp-route-id="@userId">Cambiar
+                                            contraseña</a></li>
+                                    <div class="dropdown-divider"></div>
+                                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Home")">Desloguearme</a></li>
+                                </ul>
                             </div>
                         </li>
                     </ul>
-                }<span class="ml-2">Bienvenido @User.Identity.Name</span>
+                }
             </div>
         </nav>
     </header>
