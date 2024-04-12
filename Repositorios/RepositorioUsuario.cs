@@ -208,6 +208,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							Apellido = reader.GetString("Apellido"),
 							Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
 							Clave = reader.GetString("Clave"),
+							AvatarURL = reader["AvatarURL"] != DBNull.Value ? reader.GetString("AvatarURL") : "",
 							Rol = reader.GetInt32("Rol"),
 							Estado = reader.GetBoolean("Estado"),
 						};

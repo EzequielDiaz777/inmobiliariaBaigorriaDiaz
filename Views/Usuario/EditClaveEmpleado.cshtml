@@ -1,0 +1,45 @@
+@model inmobiliariaBaigorriaDiaz.Models.Usuario
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>ACTUALIZACIÓN DE CLAVE</b></h1>
+                    <hr />
+                    <dl class="row">
+                        <form asp-action="EditClaveEmpleado" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label class="control-label">Ingrese su clave vieja:</label>
+                                <input name="ClaveVieja" type="password" class="form-control" />
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label class="control-label">Ingrese su clave nueva:</label>
+                                <input name="NuevaClave" type="password" class="form-control" />
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label class="control-label">Repita su clave nueva:</label>
+                                <input name="ConfirmarNuevaClave" type="password" class="form-control" />
+                            </div>
+                            <br>
+                            <div class="form-group text-center">
+                                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar"
+                                    style="margin-right: 30px;" />
+                                <button type="button" onclick="window.location.href='@Url.Action("Index", "Usuario")'"
+                                    class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;">
+                                    Volver a la Lista</button>
+                            </div>
+                        </form>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

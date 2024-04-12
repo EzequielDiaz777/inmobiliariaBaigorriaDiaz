@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace inmobiliariaBaigorriaDiaz.Models
 {
@@ -30,7 +31,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
         
         [Required]
         public int Rol { get; set; }
-        
+        [Display(Name = "Rol")]
         public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
         
         public bool Estado {get; set;}
@@ -45,12 +46,23 @@ namespace inmobiliariaBaigorriaDiaz.Models
         public static IDictionary<int, string> ObtenerRoles()
         {
             SortedDictionary<int, string> roles = new SortedDictionary<int, string>();
-            Type tipoEnumRol = typeof(enRoles);
+            Type? tipoEnumRol = typeof(enRoles);
             foreach (var valor in Enum.GetValues(tipoEnumRol))
             {
                 roles.Add((int)valor, Enum.GetName(tipoEnumRol, valor));
             }
             return roles;
+        }
+
+        public static string hashearClave(string clave){
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: clave,
+                        salt: System.Text.Encoding.ASCII.GetBytes("inmobiliariaBaigorriaDiaz"),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 10000,
+                        numBytesRequested: 256 / 8
+                    ));
+            return hashed;
         }
 
     }
