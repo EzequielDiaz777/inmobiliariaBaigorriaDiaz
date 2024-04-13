@@ -12,7 +12,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
     public class Usuario
     {
         [Key]
-        [Display(Name = "Código")]
+        [Display(Name = "Código de usuario")]
         public int IdUsuario { get; set; }
 
         [Required]
@@ -24,8 +24,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Required]
         public string Email { get; set; } = "";
 
-        [Required, DataType(DataType.Password)]
-        public string Clave { get; set; } = "";
+        [DataType(DataType.Password)]
+        public string? Clave { get; set; } = "";
 
         public string? AvatarURL { get; set; } = "";
         

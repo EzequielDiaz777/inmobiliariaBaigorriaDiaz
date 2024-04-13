@@ -4,71 +4,71 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Usuario</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdUsuario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdUsuario)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Clave)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Clave)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AvatarURL)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AvatarURL)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rol)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rol)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RolNombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RolNombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>BAJA DEL USUARIO</b></h1>
+                    <h2 class="text-center">¿Está seguro que desea dar de baja al siguiente usuario?</h2>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.IdUsuario)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.IdUsuario)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Apellido)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Apellido)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Nombre)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Nombre)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Email)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Email)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.RolNombre)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.RolNombre)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Estado)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Estado)
+                            {
+                                @Html.Label("Alta")
+                            }
+                            else
+                            {
+                                @Html.Label("Baja")
+                            }
+                        </dd>
+                        <dd class="col-sm-12"></dd>
+                    </dl>
+                    <div class="text-center">
+                        <form asp-action="Delete">
+                            <input type="submit" value="Baja" class="btn btn-danger" style="margin-right: 30px;" />
+                            <button type="button" onclick="window.location.href='@Url.Action("Index", "Usuario")'"
+                                class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a
+                                la
+                                Lista</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

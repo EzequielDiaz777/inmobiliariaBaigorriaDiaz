@@ -60,7 +60,30 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
+                {
+                    // Itera sobre cada par clave-valor en ModelState
+                    foreach (var entry in ModelState)
+                    {
+                        // Obtiene el nombre de la propiedad
+                        var propertyName = entry.Key;
+
+                        // Obtiene la colección de errores para la propiedad actual
+                        var errors = entry.Value.Errors;
+
+                        // Itera sobre los errores en la colección
+                        foreach (var error in errors)
+                        {
+                            // Accede a la descripción del error
+                            var errorMessage = error.ErrorMessage;
+
+                            // Haz lo que necesites con el mensaje de error
+                            Console.WriteLine($"Error en la propiedad '{propertyName}': {errorMessage}");
+                        }
+                    }
+                    return View();
+                }
+                else
                 {
                     Usuario? u = ru.ObtenerUsuarioPorID(id);
                     if (u != null)
@@ -69,31 +92,33 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                         u.Apellido = usuario.Apellido;
                         u.Email = usuario.Email;
                         u.Rol = usuario.Rol;
+                        if (usuario.Clave != null)
+                        {
+                            u.Clave = Usuario.hashearClave(usuario.Clave);
+                        }
+                        Console.WriteLine("Edit Administrador archivo: " + (avatarFile == null));
                         if (avatarFile != null)
                         {
                             var resizedImagePath = await ProcesarAvatarAsync(u, avatarFile);
                             if (resizedImagePath == null)
                             {
+                                Console.WriteLine("ResizedImagePath es null");
                                 return View(usuario); // Retorna la vista con errores de validación si la extensión del archivo no es válida
                             }
-
                             // Actualizar la URL del avatar en la base de datos
                             u.AvatarURL = resizedImagePath;
+                            Console.WriteLine("Edit Administrador URL: " + u.AvatarURL);
                         }
-                        u.Clave = Usuario.hashearClave(usuario.Clave);
                         ru.Modificacion(u);
-                        return RedirectToAction("Index");
+                        Console.WriteLine("Edit Administrador: Edición exitosa, redirigiendo al Index");
+                        return RedirectToAction("Index"); // Redirige al Index después de una edición exitosa
+
                     }
                     else
                     {
                         ViewBag.Roles = Usuario.ObtenerRoles();
                         return View(ru.ObtenerUsuarioPorID(id));
                     }
-                }
-                else
-                {
-                    ViewBag.Roles = Usuario.ObtenerRoles();
-                    return View(ru.ObtenerUsuarioPorID(id));
                 }
             }
             catch (Exception ex)
@@ -230,7 +255,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                         u.Nombre = usuario.Nombre;
                         u.Apellido = usuario.Apellido;
                         u.Email = usuario.Email;
-                        u.Rol = usuario.Rol;
                         ru.Modificacion(u);
                         return RedirectToAction("Index");
                     }

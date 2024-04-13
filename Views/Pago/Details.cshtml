@@ -42,6 +42,19 @@
                         <dd class="col-sm-8">
                             @Html.DisplayFor(model => model.Fecha)
                         </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Estado)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Estado)
+                            {
+                                <span>Abonado</span>
+                            }
+                            else
+                            {
+                                <span>Anulado</span>
+                            }
+                        </dd>
                         <dd class="col-sm-12"></dd>
                     </dl>
                     <div class="text-center mt-3"> <!-- Agrega margen superior aquí -->

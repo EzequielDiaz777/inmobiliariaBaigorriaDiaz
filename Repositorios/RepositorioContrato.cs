@@ -127,7 +127,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Contrato.IdInquilino)} = @IdInquilino,
 						{nameof(Contrato.IdInmueble)} = @IdInmueble,
 						{nameof(Contrato.Precio)} = @Precio,
-						{nameof(Contrato.AlquilerHasta)} = @AlquilerHasta,
+						{nameof(Contrato.AlquilerDesde)} = @AlquilerDesde,
+						{nameof(Contrato.AlquilerHasta)} = @AlquilerHasta
 					WHERE 
 						{nameof(Contrato.IdContrato)} = @IdContrato";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -136,7 +137,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@IdInquilino", contrato.IdInquilino);
 					cmd.Parameters.AddWithValue("@IdInmueble", contrato.IdInmueble);
 					cmd.Parameters.AddWithValue("@Precio", contrato.Precio);
-					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta);
+					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde.ToDateTime(TimeOnly.MinValue));
+					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta.ToDateTime(TimeOnly.MinValue));
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
@@ -233,6 +235,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							contrato = new Contrato
 							{
 								IdContrato = reader.GetInt32("IdContrato"),
+								IdInmueble = reader.GetInt32("IdInmueble"),
+								IdInquilino = reader.GetInt32("IdInquilino"),
 								Precio = reader.GetDecimal("Precio"),
 								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
 								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
