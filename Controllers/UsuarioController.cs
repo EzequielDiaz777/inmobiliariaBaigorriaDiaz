@@ -96,21 +96,17 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                         {
                             u.Clave = Usuario.hashearClave(usuario.Clave);
                         }
-                        Console.WriteLine("Edit Administrador archivo: " + (avatarFile == null));
                         if (avatarFile != null)
                         {
                             var resizedImagePath = await ProcesarAvatarAsync(u, avatarFile);
                             if (resizedImagePath == null)
                             {
-                                Console.WriteLine("ResizedImagePath es null");
                                 return View(usuario); // Retorna la vista con errores de validación si la extensión del archivo no es válida
                             }
                             // Actualizar la URL del avatar en la base de datos
                             u.AvatarURL = resizedImagePath;
-                            Console.WriteLine("Edit Administrador URL: " + u.AvatarURL);
                         }
                         ru.Modificacion(u);
-                        Console.WriteLine("Edit Administrador: Edición exitosa, redirigiendo al Index");
                         return RedirectToAction("Index"); // Redirige al Index después de una edición exitosa
 
                     }

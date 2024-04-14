@@ -25,6 +25,11 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View(repoI.ObtenerInmueblePorID(id));
         }
 
+        public ActionResult Buscador(){
+            
+            return View();
+        }
+
         // GET: Inmueble/Create
         public ActionResult Create()
         {
@@ -126,13 +131,34 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             }
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public IActionResult Buscar(DateTime fechaDesde, DateTime fechaHasta)
         {
+            ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
+            ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
             var inmueblesDisponibles = repoI.ObtenerInmueblesDisponibles(fechaDesde, fechaHasta);
             bool hayResultados = inmueblesDisponibles.Count > 0;
             return View(Tuple.Create(inmueblesDisponibles, hayResultados));
+        }*/
+
+        [HttpGet]
+        public ActionResult Buscar()
+        {
+            ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
+            ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
+            return View();
         }
+
+        // POST: /Buscar
+        [HttpPost]
+        public IActionResult Buscar(int IdUsoDeInmueble, int IdTipoDeInmueble, int ambientes, decimal precioDesde, decimal precioHasta, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            var inmueblesEncontrados = repoI.BuscarInmuebles(IdUsoDeInmueble, IdTipoDeInmueble, ambientes, precioDesde, precioHasta, fechaDesde, fechaHasta);
+            Console.WriteLine("RESULTADO" + inmueblesEncontrados.Count);
+            // Devuelve los resultados directamente a la vista utilizando el método View()
+            return Json(inmueblesEncontrados);
+        }
+
 
         public IActionResult NoAutorizado()
         {

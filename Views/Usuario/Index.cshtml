@@ -23,7 +23,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th>
+            <th class="no-ordenable">
                 Avatar
             </th>
             <th class="no-ordenable">
@@ -49,14 +49,13 @@
                     <td>
                         @if (!string.IsNullOrEmpty(item.AvatarURL))
                         {
-                            <img src="@Url.Content(item.AvatarURL)" alt="Avatar" class="avatar-thumbnail" />
-                        }
+                            <img src="@Url.Content(item.AvatarURL)?cache=@DateTime.Now.Ticks" alt="Avatar"
+                                class="avatar-thumbnail" />                        }
                         else
                         {
                             <span>No hay imagen disponible</span>
                         }
                     </td>
-
                     <td>
                         <span class="button-column">
                             <a href="@Url.Action("EditAdministrador", new { id = item.IdUsuario })" title="Editar"> <i

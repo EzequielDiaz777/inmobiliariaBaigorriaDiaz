@@ -33,6 +33,7 @@
                                 <label class="control-label">Rol</label>
                                 <select class="form-control" name="Rol">
                                     @foreach (var kvp in (IDictionary<int, string>)ViewBag.Roles)
+                                    {
                                         @if(kvp.Key == Model.Rol){
                                             <option selected value="@kvp.Key">@kvp.Value</option>
                                         }
