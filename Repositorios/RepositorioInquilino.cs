@@ -206,5 +206,45 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 			return inquilino;
 		}
+
+		public Inquilino ObtenerInquilinoPorDNI(int dni)
+		{
+			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
+			using MySqlConnection conn = mySqlConnection;
+			var sql = @$"SELECT 
+						{nameof(Inquilino.IdInquilino)}, 
+						{nameof(Inquilino.Nombre)}, 
+						{nameof(Inquilino.Apellido)}, 
+						{nameof(Inquilino.Telefono)}, 
+						{nameof(Inquilino.Email)}, 
+						{nameof(Inquilino.DNI)}, 
+						{nameof(Inquilino.Estado)} 
+					FROM {nameof(Inquilino)} 
+					WHERE {nameof(Inquilino.IdInquilino)} = @dni";
+			Inquilino inquilino = new Inquilino();
+			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+			{
+				cmd.Parameters.AddWithValue("@dni", dni);
+				conn.Open();
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						inquilino = new Inquilino
+						{
+							IdInquilino = reader.GetInt32("IdInquilino"),
+							Nombre = reader.GetString("Nombre"),
+							Apellido = reader.GetString("Apellido"),
+							Telefono = reader["Telefono"] != DBNull.Value ? reader.GetString("Telefono") : "",
+							Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
+							DNI = reader.GetString("DNI"),
+							Estado = reader.GetBoolean("Estado")
+						};
+					}
+				}
+				conn.Close();
+			}
+			return inquilino;
+		}
 	}
 }

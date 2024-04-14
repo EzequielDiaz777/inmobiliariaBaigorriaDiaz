@@ -45,6 +45,14 @@
     <button type="submit">Buscar</button>
 </form>
 
+<form id="BuscarInquilino">
+    <label for="dni">Ingrese el DNI del inquilino:</label>
+    <input type="number" name="dni" id="dni">
+    <button type="submit">Buscar</button>
+</form>
+
+<div id="resultadoInquilino"></div>
+
 <h2>Inmuebles disponibles:</h2>
 <table id="tablaResultados" class="table table-striped table-hover table-bordered custom-table">
     <thead>
@@ -63,9 +71,29 @@
 </table>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(document).ready(function () {
+        $('#formBuscarInquilino').submit(function (event) {
+            event.preventDefault(); // Evitar que se recargue la página
+
+            var dni = $('#dni').val();
+
+            $.ajax({
+                url: '@Url.Action("BuscarInquilino", "Inmueble")',
+                type: 'GET',
+                data: { dni: dni },
+                success: function (response) {
+                    if (response.success) {
+                        console.log()
+                        $('#resultadoInquilino').text('Inquilino encontrado: ' + response.inquilino.apellido + ', ' + response.inquilino.nombre);
+                    } else {
+                        $('#resultadoInquilino').text('El inquilino no se encuentra en el sistema');
+                    }
+                }
+            });
+        });
+
+
         $('#formBuscar').submit(function (event) {
             event.preventDefault(); // Evitar que se recargue la página
 
@@ -97,20 +125,52 @@
                         // Columna con botones para editar, detalles y eliminar
                         row += '<td>';
                         row += '<span class="button-column">';
-                        row += '<a href="@Url.Action("EditAdministrador", "Inmueble")?id=' + inmueble.idInmueble + '" title="Editar"><i class="fas fa-edit custom-color"></i></a>';
+                        row += '<a href="@Url.Action("Edit", "Inmueble")?id=' + inmueble.idInmueble + '" title="Editar"><i class="fas fa-edit custom-color"></i></a>';
                         row += ' | ';
                         row += '<a href="@Url.Action("Details", "Inmueble")?id=' + inmueble.idInmueble + '" title="Detalles"><i class="fas fa-info-circle"></i></a>';
                         row += ' | ';
                         row += '<a href="@Url.Action("Delete", "Inmueble")?id=' + inmueble.idInmueble + '" title="Eliminar"><i class="fas fa-trash-alt text-danger"></i></a>';
                         row += '</span>';
                         row += '</td>';
-
                         row += '</tr>';
                         $('#tablaResultados tbody').append(row);
                     });
+
+                    // Agregar evento de ordenación a los encabezados de las columnas
+                    $('th').click(function () {
+                        if (!$(this).hasClass('no-ordenable')) {
+                            var table = $(this).closest('table');
+                            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+                            this.asc = !this.asc;
+                            if (!this.asc) { rows = rows.reverse(); }
+                            for (var i = 0; i < rows.length; i++) { table.append(rows[i]); }
+
+                            // Remover todas las clases de ordenación de las columnas
+                            $('th').removeClass('ascending descending');
+
+                            // Remover todos los triángulos de las columnas
+                            $('.sort-icon').remove();
+
+                            // Agregar triángulo al lado del encabezado de la columna clicada
+                            $(this).append('<span class="sort-icon">' + (this.asc ? '▲' : '▼') + '</span>');
+                        }
+                    });
+
                 }
             });
 
         });
     });
+    
+    function comparer(index) {
+        return function (a, b) {
+            var valA = getCellValue(a, index), valB = getCellValue(b, index);
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+        };
+    }
+
+    function getCellValue(row, index) {
+        return $(row).children('td').eq(index).text();
+    }
+
 </script>

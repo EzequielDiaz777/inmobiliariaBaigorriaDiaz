@@ -11,6 +11,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         private RepositorioInmueble repoI = new RepositorioInmueble();
         private RepositorioTipoDeInmueble repoTI = new RepositorioTipoDeInmueble();
         private RepositorioUsoDeInmueble repoUI = new RepositorioUsoDeInmueble();
+        private RepositorioInquilino repoIn = new RepositorioInquilino();
+
         // GET: Inmueble
         public ActionResult Index()
         {
@@ -154,11 +156,24 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public IActionResult Buscar(int IdUsoDeInmueble, int IdTipoDeInmueble, int ambientes, decimal precioDesde, decimal precioHasta, DateTime fechaDesde, DateTime fechaHasta)
         {
             var inmueblesEncontrados = repoI.BuscarInmuebles(IdUsoDeInmueble, IdTipoDeInmueble, ambientes, precioDesde, precioHasta, fechaDesde, fechaHasta);
-            Console.WriteLine("RESULTADO" + inmueblesEncontrados.Count);
+
             // Devuelve los resultados directamente a la vista utilizando el método View()
             return Json(inmueblesEncontrados);
         }
 
+        [HttpGet]
+        public ActionResult BuscarInquilino(int dni)
+        {
+            var inquilino = repoIn.ObtenerInquilinoPorDNI(dni);
+            if (inquilino != null)
+            {
+                return Json(new { success = true, inquilino = inquilino });
+            }
+            else
+            {
+                return Json(new { success = false });
+            }
+        }
 
         public IActionResult NoAutorizado()
         {
