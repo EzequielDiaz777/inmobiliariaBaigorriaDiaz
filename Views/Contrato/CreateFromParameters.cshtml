@@ -1,0 +1,67 @@
+@model inmobiliariaBaigorriaDiaz.Models.Contrato
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>ALTA DE INMUEBLE</b></h1>
+                    <form asp-action="CreateFromParameters" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                                <label class="control-label">Inquilino</label>
+                                <input asp-for="Inquilino.IdInquilino" type="hidden" />
+                                <input asp-for="Inquilino.Nombre" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Dirección del inmueble</label>
+                                <input asp-for="Inmueble.Direccion" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Precio del inmueble</label>
+                                <input asp-for="Precio" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Fecha de inicio de alquiler</label>
+                                <input asp-for="AlquilerDesde" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Fecha del fin de alquiler</label>
+                                <input asp-for="AlquilerHasta" class="form-control" readonly />
+                            </div>
+                        <div class="form-group text-center mt-2">
+                            <button type="submit" class="btn btn-primary">Alta</button>
+                            <a href="@Url.Action("Buscar", "Inmueble")" class="m-2 p-2 btn btn-outline-warning">Volver
+                                a la
+                                Lista</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Validar los campos y mostrar los iconos de verificación
+        $(document).ready(function () {
+            $('.input-group input').on('input', function () {
+                var inputGroup = $(this).closest('.input-group');
+                var iconCheck = inputGroup.find('.fa-check');
+                var iconTimes = inputGroup.find('.fa-times');
+                if ($(this).val().trim() !== '') {
+                    iconCheck.removeClass('d-none');
+                    iconTimes.addClass('d-none');
+                } else {
+                    iconCheck.addClass('d-none');
+                    iconTimes.removeClass('d-none');
+                }
+            });
+        });
+    </script>
+}

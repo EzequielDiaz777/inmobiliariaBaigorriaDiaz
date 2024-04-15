@@ -162,15 +162,33 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         [HttpGet]
+        public IActionResult ObtenerInmueblesPorUso(int id){
+            var inmuebles = repoI.ObtenerInmueblesPorUso(id);
+            return Json(inmuebles);
+        }
+
+        [HttpGet]
+        public IActionResult ObtenerInmueblesPorTipo(int id)
+        {
+            Console.WriteLine(id);
+            var inmuebles = repoI.ObtenerInmueblesPorTipo(id);
+            return Json(inmuebles);
+        }
+
+        [HttpGet]
         public ActionResult BuscarInquilino(int dni)
         {
             var inquilino = repoIn.ObtenerInquilinoPorDNI(dni);
             if (inquilino != null)
             {
+                // Si el inquilino se encuentra, devolvemos los datos como un objeto JSON con la propiedad "success" igual a true
+                // y los datos del inquilino en la propiedad "inquilino"
+                
                 return Json(new { success = true, inquilino = inquilino });
             }
             else
             {
+                // Si el inquilino no se encuentra, devolvemos un objeto JSON con la propiedad "success" igual a false
                 return Json(new { success = false });
             }
         }

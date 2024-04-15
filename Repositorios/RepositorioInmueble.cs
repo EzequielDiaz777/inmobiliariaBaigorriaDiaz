@@ -304,56 +304,113 @@ public class RepositorioInmueble
         return res;
     }
 
-    public List<Inmueble> ObtenerInmueblesPorPropietario(int id)
+    public List<Inmueble> ObtenerInmueblesPorUso(int id)
     {
+        Console.WriteLine(id);
         List<Inmueble> inmuebles = new List<Inmueble>();
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql =
                     @$"SELECT 
-                        i.{nameof(Inmueble.IdInmueble)},
-                        i.{nameof(Inmueble.Direccion)},
-                        i.{nameof(Inmueble.Ambientes)},
-                        i.{nameof(Inmueble.Superficie)},
-                        i.{nameof(Inmueble.Longitud)},
-                        i.{nameof(Inmueble.Latitud)},
-                        i.{nameof(Inmueble.Precio)},
-                        u.{nameof(UsoDeInmueble.Nombre)} AS UsoDeInmuebleNombre,
-                        i.{nameof(Inmueble.Estado)},
-                        t.{nameof(TipoDeInmueble.Nombre)} AS TipoDeInmuebleNombre,
-                        p.{nameof(Propietario.Nombre)} AS PropietarioNombre,
-                        p.{nameof(Propietario.Apellido)} AS PropietarioApellido
-                    FROM {nameof(Inmueble)} i 
-                    INNER JOIN {nameof(Propietario)} p 
-                    ON i.{nameof(Inmueble.IdPropietario)} = p.{nameof(Propietario.IdPropietario)}
-                    INNER JOIN {nameof(TipoDeInmueble)} t
-                    ON i.{nameof(Inmueble.IdTipoDeInmueble)} = t.{nameof(TipoDeInmueble.IdTipoDeInmueble)}
-                    INNER JOIN {nameof(UsoDeInmueble)} u
-                    ON i.{nameof(Inmueble.IdUsoDeInmueble)} = u.{nameof(UsoDeInmueble.IdUsoDeInmueble)}
-                    WHERE i.{nameof(Inmueble.IdPropietario)} = @Id;";
+                        i.IdInmueble,
+                        i.Direccion,
+                        i.Precio,
+                        u.Nombre AS UsoDeInmuebleNombre,
+                        t.Nombre AS TipoDeInmuebleNombre,
+                        p.Nombre AS PropietarioNombre,
+                        p.Apellido AS PropietarioApellido
+                    FROM inmueble i 
+                        INNER JOIN propietario p 
+                            ON i.IdPropietario = p.IdPropietario
+                        INNER JOIN tipodeinmueble t
+                            ON i.IdTipoDeInmueble = t.IdTipoDeInmueble
+                        INNER JOIN usodeinmueble u
+                            ON i.IdUsoDeInmueble = u.IdUsoDeInmueble
+                    WHERE i.IdUsoDeInmueble = @id
+                    AND i.Estado = 1
+                        AND NOT EXISTS (
+                            SELECT 1 FROM Contrato c
+                            WHERE c.IdInmueble = i.IdInmueble AND c.Estado = 1);";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.AddWithValue("@Id", id);
+                cmd.Parameters.AddWithValue("@id", id);
                 conn.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        Inmueble inmueble = new Inmueble
+                        var inmueble = new Inmueble
                         {
                             IdInmueble = reader.GetInt32("IdInmueble"),
                             Direccion = reader.GetString("Direccion"),
-                            Ambientes = reader.GetInt32("Ambientes"),
-                            Superficie = reader.GetDecimal("Superficie"),
-                            Longitud = reader.IsDBNull(reader.GetOrdinal("Longitud")) ? (decimal?)null : reader.GetDecimal("Longitud"),
-                            Latitud = reader.IsDBNull(reader.GetOrdinal("Latitud")) ? (decimal?)null : reader.GetDecimal("Latitud"),
                             Precio = reader.GetDecimal("Precio"),
                             Uso = new UsoDeInmueble
                             {
                                 Nombre = reader.GetString("UsoDeInmuebleNombre"),
                             },
-                            Estado = reader.GetBoolean("Estado"),
+                            Tipo = new TipoDeInmueble
+                            {
+                                Nombre = reader.GetString("TipoDeInmuebleNombre"),
+                            },
+                            Duenio = new Propietario
+                            {
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido"),
+                            }
+                        };
+                        inmuebles.Add(inmueble);
+                    }
+                }
+                conn.Close();
+            }
+        }
+        return inmuebles;
+    }
+
+    public List<Inmueble> ObtenerInmueblesPorTipo(int id)
+    {
+        Console.WriteLine(id);
+        List<Inmueble> inmuebles = new List<Inmueble>();
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql =
+                    @$"SELECT 
+                        i.IdInmueble,
+                        i.Direccion,
+                        i.Precio,
+                        u.Nombre AS UsoDeInmuebleNombre,
+                        t.Nombre AS TipoDeInmuebleNombre,
+                        p.Nombre AS PropietarioNombre,
+                        p.Apellido AS PropietarioApellido
+                    FROM inmueble i 
+                        INNER JOIN propietario p 
+                            ON i.IdPropietario = p.IdPropietario
+                        INNER JOIN tipodeinmueble t
+                            ON i.IdTipoDeInmueble = t.IdTipoDeInmueble
+                        INNER JOIN usodeinmueble u
+                            ON i.IdUsoDeInmueble = u.IdUsoDeInmueble
+                    WHERE i.IdTipoDeInmueble = @id
+                    AND i.Estado = 1
+                        AND NOT EXISTS (
+                            SELECT 1 FROM Contrato c
+                            WHERE c.IdInmueble = i.IdInmueble AND c.Estado = 1);";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var inmueble = new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32("IdInmueble"),
+                            Direccion = reader.GetString("Direccion"),
+                            Precio = reader.GetDecimal("Precio"),
+                            Uso = new UsoDeInmueble
+                            {
+                                Nombre = reader.GetString("UsoDeInmuebleNombre"),
+                            },
                             Tipo = new TipoDeInmueble
                             {
                                 Nombre = reader.GetString("TipoDeInmuebleNombre"),

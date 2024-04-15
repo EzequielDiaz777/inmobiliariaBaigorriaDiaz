@@ -28,22 +28,16 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View(repoC.ObtenerContratoById(id));
         }
 
-        // GET: Contrato/Create
-        [HttpGet]
-        public ActionResult Create()
-        {
-            ViewBag.Inmuebles = repoInm.ObtenerInmuebles();
-            ViewBag.Inquilinos = repoInq.ObtenerInquilinos();
-            return View();
-        }
-
-        // POST: Contrato/Create
+        // POST: Contrato/CreateFromParameters
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Contrato contrato)
+        [Route("Contrato/CreateFromParameters/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
+        public ActionResult CreateFromParameters(Contrato contrato)
         {
             try
             {
+                Console.WriteLine("Post de create");
+                Console.WriteLine(contrato.IdInquilino);
                 repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
                 return RedirectToAction(nameof(Index));
@@ -53,6 +47,36 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 return View();
             }
         }
+
+        // GET: Contrato/CreateFromParameters
+        [HttpGet]
+        [Route("Contrato/CreateFromParameters/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
+        public ActionResult CreateFromParameters(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly fechaDesde, DateOnly fechaHasta)
+        {
+            // Obtener los datos del inmueble e inquilino
+            Inmueble inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
+            Inquilino inquilino = repoInq.ObtenerInquilinoPorID(idInquilino);
+
+            // Crear el modelo de contrato y establecer sus propiedades
+            Contrato contrato = new Contrato
+            {
+                IdInquilino = idInquilino,
+                IdInmueble = idInmueble,
+                Precio = precioInmueble,
+                AlquilerDesde = fechaDesde,
+                AlquilerHasta = fechaHasta,
+                Inquilino = inquilino,
+                Inmueble = inmueble,
+                // Agregar otras propiedades necesarias,
+            };
+            Console.WriteLine("ID inmueble del contrato: " + contrato.IdInmueble);
+
+            // Devolver la vista con el modelo de contrato
+            return View(contrato);
+        }
+
+
+        //return RedirectToAction("Create", new { nombreCompleto = nombreCompleto, inmueble = inmueble, direccion = inmueble.Direccion, inquilino = inquilino, precioInmueble = precioInmueble, fechaDesde = fechaDesde, fechaHasta = fechaHasta });
 
         // GET: Contrato/Edit/5
         [HttpGet]
@@ -71,7 +95,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             try
             {
                 Contrato? contratoBD = repoC.ObtenerContratoById(id);
-                if (contratoBD != null){
+                if (contratoBD != null)
+                {
                     contratoBD.IdInquilino = contrato.IdInquilino;
                     contratoBD.IdInmueble = contrato.IdInmueble;
                     contratoBD.Precio = contrato.Precio;
@@ -79,7 +104,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     contratoBD.AlquilerHasta = contrato.AlquilerHasta;
                     repoC.ModificarContrato(contratoBD);
                     return RedirectToAction(nameof(Index));
-                } else {
+                }
+                else
+                {
                     return RedirectToAction(nameof(Index));
                 }
             }

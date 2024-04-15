@@ -207,7 +207,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			return inquilino;
 		}
 
-		public Inquilino ObtenerInquilinoPorDNI(int dni)
+		public Inquilino? ObtenerInquilinoPorDNI(int dni)
 		{
 			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
 			using MySqlConnection conn = mySqlConnection;
@@ -220,8 +220,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Inquilino.DNI)}, 
 						{nameof(Inquilino.Estado)} 
 					FROM {nameof(Inquilino)} 
-					WHERE {nameof(Inquilino.IdInquilino)} = @dni";
-			Inquilino inquilino = new Inquilino();
+					WHERE {nameof(Inquilino.DNI)} = @dni";
+			Inquilino? inquilino = null;
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{
 				cmd.Parameters.AddWithValue("@dni", dni);

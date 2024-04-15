@@ -1,7 +1,7 @@
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Newtonsoft.Json.Linq;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -45,6 +45,24 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        // POST: Inquilino/Create
+        [HttpPost]
+        public ActionResult CreateJSON([FromBody] Inquilino inquilino)
+        {
+            try
+            {
+                // Realizar las operaciones necesarias con el objeto Inquilino
+                ri.AltaFisica(inquilino);
+                TempData["Id"] = inquilino.IdInquilino;
+
+                return Json(new { success = true, message = "Inquilino creado exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
             }
         }
 
