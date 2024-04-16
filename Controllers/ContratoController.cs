@@ -2,6 +2,7 @@ using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -10,6 +11,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         private RepositorioContrato repoC = new RepositorioContrato();
         private RepositorioInquilino repoInq = new RepositorioInquilino();
         private RepositorioInmueble repoInm = new RepositorioInmueble();
+        private RepositorioRegistro rg = new RepositorioRegistro();
 
         // GET: Contrato
         [HttpGet]
@@ -28,7 +30,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View(repoC.ObtenerContratoById(id));
         }
 
-        // POST: Contrato/CreateFromParameters
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
@@ -36,10 +37,18 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                Console.WriteLine("Post de create");
-                Console.WriteLine(contrato.IdInquilino);
                 repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
+                // Crear el registro de la operación
+                var registro = new Registro{
+                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value), 
+                    IdFila = contrato.IdContrato, 
+                    NombreDeTabla = "Contrato", 
+                    TipoDeAccion = "Alta", 
+                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today)
+                };
+                Console.WriteLine(registro.IdUsuario);
+                rg.AltaFisica(registro);
                 return RedirectToAction(nameof(Index));
             }
             catch
