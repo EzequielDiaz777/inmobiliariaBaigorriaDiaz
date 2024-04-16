@@ -1,10 +1,10 @@
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
+    [Authorize("Administrador")]
     public class RegistroController : Controller
     {
         private RepositorioRegistro rg = new RepositorioRegistro();
@@ -17,34 +17,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // GET: RegistroController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
-        }
-
-        // GET: RegistroController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: RegistroController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: RegistroController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
+            return View(rg.ObtenerRegistroPorID(id));
         }
 
         // POST: RegistroController/Edit/5

@@ -4,45 +4,64 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Registro</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdRegistro)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdRegistro)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdUsuario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdUsuario)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdFila)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdFila)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NombreDeTabla)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NombreDeTabla)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TipoDeAccion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TipoDeAccion)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>DETALLE DEL REGISTRO</b></h1>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.IdRegistro)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.IdRegistro)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Usuario)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.Usuario.Apellido @Html.Raw(", ") @Model.Usuario.Nombre
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.IdFila)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.IdFila)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.NombreDeTabla)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.NombreDeTabla)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.TipoDeAccion)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Model.TipoDeAccion
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.FechaDeAccion)
+                        </dd>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.FechaDeAccion)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.HoraDeAccion)
+                            </dd>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.HoraDeAccion)
+                        </dd>
+                    </dl>
+                    <div class="text-center mt-3">
+                        <button type="button" onclick="window.location.href='@Url.Action("Index", "Registro")'"
+                            class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a la
+                            Lista</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -88,6 +88,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Propietario/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             if (!User.IsInRole("Administrador"))

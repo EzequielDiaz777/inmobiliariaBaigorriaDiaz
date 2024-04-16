@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-04-2024 a las 20:39:27
+-- Tiempo de generación: 16-04-2024 a las 17:49:28
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -110,6 +110,22 @@ CREATE TABLE `propietario` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `registro`
+--
+
+CREATE TABLE `registro` (
+  `IdRegistro` int(11) NOT NULL,
+  `IdUsuario` int(11) NOT NULL,
+  `IdFila` int(11) NOT NULL,
+  `NombreDeTabla` varchar(50) NOT NULL,
+  `TipoDeAccion` varchar(50) NOT NULL,
+  `FechaDeAccion` date NOT NULL,
+  `HoraDeAccion` time NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tipodeinmueble`
 --
 
@@ -171,7 +187,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`IdUsuario`, `Nombre`, `Apellido`, `Email`, `Clave`, `Rol`, `AvatarURL`, `Estado`) VALUES
-(2, 'Mariano Gabriel', 'Luzza Bonilla', 'mluzza@gmail.com', '0yfrpBchLivjClVd/2wG7Qr77e1cxpygpcbnKhVZ1Vc=', 1, '/update\\avatar_2.jpg', 1);
+(2, 'Mariano Gabriel', 'Luzza Bonilla', 'mluzza@gmail.com', '0yfrpBchLivjClVd/2wG7Qr77e1cxpygpcbnKhVZ1Vc=', 1, NULL, 1),
+(3, 'Juan', 'Perez', 'juanperez@gmai.com', 'dGioreVmmW6aW2LLVKHjFDL+t9JlEWaF3S8RJHirPtI=', 2, NULL, 1);
 
 --
 -- Índices para tablas volcadas
@@ -212,6 +229,12 @@ ALTER TABLE `pago`
 --
 ALTER TABLE `propietario`
   ADD PRIMARY KEY (`IdPropietario`);
+
+--
+-- Indices de la tabla `registro`
+--
+ALTER TABLE `registro`
+  ADD PRIMARY KEY (`IdRegistro`);
 
 --
 -- Indices de la tabla `tipodeinmueble`
@@ -266,6 +289,12 @@ ALTER TABLE `propietario`
   MODIFY `IdPropietario` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `registro`
+--
+ALTER TABLE `registro`
+  MODIFY `IdRegistro` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `tipodeinmueble`
 --
 ALTER TABLE `tipodeinmueble`
@@ -281,7 +310,7 @@ ALTER TABLE `usodeinmueble`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

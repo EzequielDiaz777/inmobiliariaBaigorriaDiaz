@@ -27,11 +27,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View(repoI.ObtenerInmueblePorID(id));
         }
 
-        public ActionResult Buscador(){
-            
-            return View();
-        }
-
         // GET: Inmueble/Create
         public ActionResult Create()
         {
@@ -59,6 +54,30 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 repoI.AltaFisica(inmueble);
                 TempData["Id"] = inmueble.IdInmueble;
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
+                return View(); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
+            }
+        }
+
+        [HttpGet]
+        public ActionResult Alta(int id)
+        {
+            return View(repoI.ObtenerInmueblePorID(id));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Alta(int id, IFormCollection collection)
+        {
+            try
+            {
+                repoI.AltaLogica(id);
                 return RedirectToAction(nameof(Index));
 
             }
@@ -112,6 +131,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         // GET: Inmueble/Delete/5
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View(repoI.ObtenerInmueblePorID(id));

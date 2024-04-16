@@ -39,15 +39,19 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
-                // Crear el registro de la operación
-                var registro = new Registro{
-                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value), 
-                    IdFila = contrato.IdContrato, 
-                    NombreDeTabla = "Contrato", 
-                    TipoDeAccion = "Alta", 
-                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today)
+
+                DateTime horaActual = DateTime.Now;
+                TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
+
+                var registro = new Registro
+                {
+                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
+                    IdFila = contrato.IdContrato,
+                    NombreDeTabla = "Contrato",
+                    TipoDeAccion = "Alta",
+                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
+                    HoraDeAccion = hora
                 };
-                Console.WriteLine(registro.IdUsuario);
                 rg.AltaFisica(registro);
                 return RedirectToAction(nameof(Index));
             }
@@ -56,6 +60,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 return View();
             }
         }
+
 
         // GET: Contrato/CreateFromParameters
         [HttpGet]
@@ -126,6 +131,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Contrato/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View(repoC.ObtenerContratoById(id));
@@ -139,6 +145,19 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             try
             {
                 repoC.BajaLogica(id);
+                DateTime horaActual = DateTime.Now;
+                TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
+
+                var registro = new Registro
+                {
+                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
+                    IdFila = id,
+                    NombreDeTabla = "Contrato",
+                    TipoDeAccion = "Baja",
+                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
+                    HoraDeAccion = hora
+                };
+                rg.AltaFisica(registro);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -35,7 +35,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
         public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
         
         public bool Estado {get; set;}
-        
+        [Display(Name = "Archivo del avatar")]
         public IFormFile? AvatarFile { get; set; }
 
         public override string ToString()

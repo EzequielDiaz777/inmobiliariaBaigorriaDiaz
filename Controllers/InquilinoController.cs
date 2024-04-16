@@ -1,7 +1,7 @@
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -106,6 +106,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Inquilino/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View(ri.ObtenerInquilinoPorID(id));

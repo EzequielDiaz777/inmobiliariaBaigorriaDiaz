@@ -78,6 +78,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         // GET: UsoDeInmuebleController/Delete/5
+        [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View(rudi.ObtenerUsoDeInmueblePorID(id));

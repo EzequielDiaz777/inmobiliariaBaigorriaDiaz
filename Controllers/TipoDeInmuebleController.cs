@@ -84,6 +84,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View(rtdi.ObtenerTipoDeInmueblePorID(id));

@@ -14,10 +14,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.IdRegistro)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUsuario)
+                @Html.DisplayNameFor(model => model.Usuario)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IdFila)
@@ -38,10 +35,7 @@
         {
             <tr class="centered-row">
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdRegistro)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdUsuario)
+                    @item.Usuario.Apellido @Html.Raw(", ") @item.Usuario.Nombre
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.IdFila)
@@ -50,22 +44,12 @@
                     @Html.DisplayFor(modelItem => item.NombreDeTabla)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TipoDeAccion)
+                    @item.TipoDeAccion
                 </td>
                 <td>
                     <span class="button-column">
-                        <a href="@Url.Action("Edit", new { id = item.IdRegistro })" title="Editar"> <i
-                                class="fas fa-edit custom-color"></i></a>
-                        |
                         <a href="@Url.Action("Details", new { id = item.IdRegistro })" title="Detalles"> <i
                                 class="fas fa-info-circle"></i></a>
-                        @if (User.IsInRole("Administrador"))
-                        {
-                            <span class="button-icon">
-                                | <a href="@Url.Action("Delete", new { id = item.IdRegistro })" title="Eliminar"> <i
-                                        class="fas fa-trash-alt text-danger"></i></a>
-                            </span>
-                        }
                     </span>
                 </td>
             </tr>

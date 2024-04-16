@@ -14,6 +14,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 
 		public int AltaFisica(Registro registro)
 		{
+			Console.WriteLine("Estoy en AltaFisica");
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
@@ -23,13 +24,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							{nameof(Registro.IdFila)},
 							{nameof(Registro.NombreDeTabla)},
 							{nameof(Registro.TipoDeAccion)},
-							{nameof(Registro.FechaDeAccion)}
+							{nameof(Registro.FechaDeAccion)},
+							{nameof(Registro.HoraDeAccion)})
 						VALUES
 							(@IdUsuario, 
 							@IdFila, 
 							@NombreDeTabla, 
 							@TipoDeAccion, 
-							@FechaDeAccion);
+							@FechaDeAccion,
+							@HoraDeAccion);
 				SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -38,6 +41,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@NombreDeTabla", registro.NombreDeTabla);
 					cmd.Parameters.AddWithValue("@TipoDeAccion", registro.TipoDeAccion);
 					cmd.Parameters.AddWithValue("@FechaDeAccion", registro.FechaDeAccion.ToDateTime(TimeOnly.MinValue));
+					cmd.Parameters.AddWithValue("@HoraDeAccion", registro.HoraDeAccion.ToString());
 					conn.Open();
 					res = Convert.ToInt32(cmd.ExecuteScalar());
 					registro.IdRegistro = res;
@@ -45,23 +49,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				}
 			}
 			return res;
-		}
-
-		public bool BajaFisica(int id)
-		{
-			bool baja;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @$"DELETE FROM {nameof(Registro)} WHERE {nameof(Registro.IdRegistro)} = @id";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@id", id);
-					conn.Open();
-					baja = cmd.ExecuteNonQuery() != 0;
-					conn.Close();
-				}
-			}
-			return baja;
 		}
 
 		public int Modificacion(Registro registro)
@@ -74,7 +61,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								{nameof(Registro.IdFila)} = @IdFila,
 								{nameof(Registro.NombreDeTabla)} = @NombreDeTabla,
 								{nameof(Registro.TipoDeAccion)} = @TipoDeAccion,
-								{nameof(Registro.FechaDeAccion)} = @FechaDeAccion
+								{nameof(Registro.FechaDeAccion)} = @FechaDeAccion,
+								{nameof(Registro.HoraDeAccion)} = @HoraDeAccion
 							WHERE {nameof(Registro.IdRegistro)} = @IdRegistro";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -83,6 +71,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@NombreDeTabla", registro.NombreDeTabla);
 					cmd.Parameters.AddWithValue("@TipoDeAccion", registro.TipoDeAccion);
 					cmd.Parameters.AddWithValue("@FechaDeAccion", registro.FechaDeAccion.ToDateTime(TimeOnly.MinValue));
+					cmd.Parameters.AddWithValue("@HoraDeAccion", registro.HoraDeAccion.ToString());
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
@@ -97,12 +86,18 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
 				var sql = @$"SELECT 
-							{nameof(Registro.IdUsuario)},
-							{nameof(Registro.IdFila)},
-							{nameof(Registro.NombreDeTabla)},
-							{nameof(Registro.TipoDeAccion)},
-							{nameof(Registro.FechaDeAccion)}
-						FROM {nameof(Registro)}";
+							r.{nameof(Registro.IdRegistro)},
+							r.{nameof(Registro.IdUsuario)},
+							r.{nameof(Registro.IdFila)},
+							r.{nameof(Registro.NombreDeTabla)},
+							r.{nameof(Registro.TipoDeAccion)},
+							r.{nameof(Registro.FechaDeAccion)},
+							r.{nameof(Registro.HoraDeAccion)},
+							u.{nameof(Usuario.Nombre)},
+							u.{nameof(Usuario.Apellido)}
+						FROM {nameof(Registro)} r
+						INNER JOIN usuario u
+							ON u.{nameof(Usuario.IdUsuario)} = r.{nameof(Registro.IdUsuario)};";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -117,7 +112,13 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								IdFila = reader.GetInt32("IdFila"),
 								NombreDeTabla = reader.GetString("NombreDeTabla"),
 								TipoDeAccion = reader.GetString("TipoDeAccion"),
-								FechaDeAccion = DateOnly.FromDateTime(reader.GetDateTime("FechaDeAccion"))
+								FechaDeAccion = DateOnly.FromDateTime(reader.GetDateTime("FechaDeAccion")),
+								HoraDeAccion = reader.GetTimeSpan("HoraDeAccion"),
+								Usuario = new Usuario()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido")
+								}
 							});
 						}
 					}
@@ -127,17 +128,23 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			return res;
 		}
 
-		public Registro ObtenerPropietarioPorID(int id)
+		public Registro ObtenerRegistroPorID(int id)
 		{
 			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
 			using MySqlConnection conn = mySqlConnection;
 			var sql = @$"SELECT 
-							{nameof(Registro.IdUsuario)},
-							{nameof(Registro.IdFila)},
-							{nameof(Registro.NombreDeTabla)},
-							{nameof(Registro.TipoDeAccion)},
-							{nameof(Registro.FechaDeAccion)}
-						FROM {nameof(Registro)}
+							r.{nameof(Registro.IdRegistro)},
+							r.{nameof(Registro.IdUsuario)},
+							r.{nameof(Registro.IdFila)},
+							r.{nameof(Registro.NombreDeTabla)},
+							r.{nameof(Registro.TipoDeAccion)},
+							r.{nameof(Registro.FechaDeAccion)},
+							r.{nameof(Registro.HoraDeAccion)},
+							u.{nameof(Usuario.Nombre)},
+							u.{nameof(Usuario.Apellido)}
+						FROM {nameof(Registro)} r
+						INNER JOIN usuario u
+							ON u.{nameof(Usuario.IdUsuario)} = r.{nameof(Registro.IdUsuario)}
 						WHERE {nameof(Registro.IdRegistro)} = @id";
 			Registro registro = new Registro();
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -155,7 +162,12 @@ namespace inmobiliariaBaigorriaDiaz.Models
 							IdFila = reader.GetInt32("IdFila"),
 							NombreDeTabla = reader.GetString("NombreDeTabla"),
 							TipoDeAccion = reader.GetString("TipoDeAccion"),
-							FechaDeAccion = DateOnly.FromDateTime(reader.GetDateTime("FechaDeAccion"))
+							FechaDeAccion = DateOnly.FromDateTime(reader.GetDateTime("FechaDeAccion")),
+							HoraDeAccion = reader.GetTimeSpan("HoraDeAccion"),
+							Usuario = new Usuario() {
+								Nombre = reader.GetString("Nombre"),
+								Apellido = reader.GetString("Apellido")
+							}
 						};
 					}
 				}
