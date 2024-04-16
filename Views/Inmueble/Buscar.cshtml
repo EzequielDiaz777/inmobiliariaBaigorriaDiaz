@@ -423,7 +423,7 @@
                             // Construir la URL del contrato con los parámetros necesarios
                             console.log(inmueble.precio)
                             // Construir la URL del contrato con los parámetros necesarios
-                            var urlCrearContratoWithParams = `/Contrato/CreateFromParameters/${inmueble.idInmueble}/${idInquilino}/${inmueble.precio}/${fechaDesde}/${fechaHasta}`;
+                            var urlCrearContratoWithParams = `/Contrato/Create/${inmueble.idInmueble}/${idInquilino}/${inmueble.precio}/${fechaDesde}/${fechaHasta}`;
                             var rows = `<tr class="centered-row">
                                     <td>${inmueble.idInmueble}</td>
                                     <td>${inmueble.direccion}</td>

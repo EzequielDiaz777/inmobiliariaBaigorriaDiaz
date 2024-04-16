@@ -38,7 +38,7 @@
             {
                 <tr class="centered-row">
                     <td>
-                        @Html.DisplayFor(model => item.IdContrato)
+                        @item.Inquilino.Apellido @Html.Raw(" - ") @item.Inmueble.Duenio.Apellido
                     </td>
                     <td>
                         @item.Inquilino.ToString()

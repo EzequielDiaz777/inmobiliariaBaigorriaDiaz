@@ -31,8 +31,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         // POST: Contrato/CreateFromParameters
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Contrato/CreateFromParameters/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
-        public ActionResult CreateFromParameters(Contrato contrato)
+        [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
+        public ActionResult Create(Contrato contrato)
         {
             try
             {
@@ -50,11 +50,11 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Contrato/CreateFromParameters
         [HttpGet]
-        [Route("Contrato/CreateFromParameters/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
-        public ActionResult CreateFromParameters(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly fechaDesde, DateOnly fechaHasta)
+        [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
+        public ActionResult Create(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly fechaDesde, DateOnly fechaHasta)
         {
             // Obtener los datos del inmueble e inquilino
-            Inmueble inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
+            Inmueble? inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
             Inquilino inquilino = repoInq.ObtenerInquilinoPorID(idInquilino);
 
             // Crear el modelo de contrato y establecer sus propiedades
@@ -69,7 +69,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 Inmueble = inmueble,
                 // Agregar otras propiedades necesarias,
             };
-            Console.WriteLine("ID inmueble del contrato: " + contrato.IdInmueble);
 
             // Devolver la vista con el modelo de contrato
             return View(contrato);
