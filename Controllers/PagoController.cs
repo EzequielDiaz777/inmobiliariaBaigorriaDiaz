@@ -30,10 +30,11 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Pago/Create
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult Create(int idContrato, decimal monto)
         {
-            ViewBag.Contratos = repoCont.ObtenerContratos();
-            string[] meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+            ViewBag.IdContrato = idContrato;
+            ViewBag.Monto = monto;
+            string[] meses = { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre" };
             ViewBag.Meses = meses;
             return View();
         }

@@ -14,18 +14,12 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="IdContrato" class="control-label">Contrato</label>
-                            <select asp-for="IdContrato" class="form-select" name="IdContrato">
-                                <option value="0">Seleccione un contrato</option>
-                                @foreach (var item in ViewBag.Contratos)
-                                {
-                                    <option value="@item.IdContrato">@(item.IdContrato)</option>
-                                }
-                            </select>
+                            <input type="text" asp-for="IdContrato" class="form-control" readonly />
                             <span asp-validation-for="IdContrato" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label asp-for="Monto" class="control-label"></label>
-                            <input asp-for="Monto" class="form-control" />
+                            <input type="text" asp-for="Monto" class="form-control" />
                             <span asp-validation-for="Monto" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -45,11 +39,9 @@
                             <input name="Fecha" type="date" class="form-control">
                             <span asp-validation-for="Fecha" class="text-danger"></span>
                             <div class="form-group text-center mt-2">
-                                <button type="submit" class="btn btn-primary">Alta</button>
+                                <button type="submit" class="btn btn-primary">Pago</button>
                                 <a href="@Url.Action("Index", "Pago")"
-                                    class="m-2 p-2 btn btn-outline-warning">Volver
-                                    a la
-                                    Lista</a>
+                                    class="m-2 p-2 btn btn-outline-warning">Volver a la Lista</a>
                             </div>
                     </form>
                 </div>

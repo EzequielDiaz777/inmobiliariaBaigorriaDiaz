@@ -4,7 +4,6 @@
 
 <h1 class="text-center"><b>LISTA DE PAGOS</b></h1>
 <div class="d-flex align-items-center justify-content-between my-3">
-    <a class="btn btn-primary" href="@Url.Action("Create")">Alta</a>
     <div class="d-flex align-items-center">
         <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
     </div>
@@ -72,6 +71,7 @@
                                         class="fas fa-trash-alt text-danger"></i></a>
                             </span>
                         }
+                        <a class="btn btn-primary" href="@Url.Action("Create", new { idContrato = item.IdContrato, monto = item.Monto })">Nuevo Pago</a>
                     </span>
                 </td>
             </tr>
