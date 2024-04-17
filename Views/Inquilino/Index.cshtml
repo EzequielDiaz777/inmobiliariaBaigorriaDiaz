@@ -31,36 +31,42 @@
     <tbody>
         @foreach (var item in Model)
         {
-            if (item.Estado)
-            {
-                <tr class="centered-row">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DNI)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Apellido)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        <span class="button-column">
-                            <a href="@Url.Action("Edit", new { id = item.IdInquilino })" title="Editar"> <i
-                                    class="fas fa-edit custom-color"></i></a>
-                            |
-                            <a href="@Url.Action("Details", new { id = item.IdInquilino })" title="Detalles"> <i
-                                    class="fas fa-info-circle"></i></a>
-                            @if (User.IsInRole("Administrador"))
+            <tr class="centered-row">
+                <td>
+                    @Html.DisplayFor(modelItem => item.DNI)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    <span class="button-column">
+                        <a href="@Url.Action("Edit", new { id = item.IdInquilino })" title="Editar"> <i
+                                class="fas fa-edit custom-color"></i></a>
+                        |
+                        <a href="@Url.Action("Details", new { id = item.IdInquilino })" title="Detalles"> <i
+                                class="fas fa-info-circle"></i></a>
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            @if (item.Estado)
                             {
                                 <span class="button-icon">
-                                    | <a href="@Url.Action("Delete", new { id = item.IdInquilino })" title="Eliminar"> <i
-                                            class="fas fa-trash-alt text-danger"></i></a>
+                                    | <a href="@Url.Action("Delete", new { id = item.IdInquilino })" title="Baja"> 
+                                        <i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                </span>
+                            } else @if (!item.Estado)
+                            {
+                                <span class="button-icon text-success">
+                                    | <a href="@Url.Action("Alta", new { id = item.IdInquilino })" title="Alta" class="text-success">
+                                        <i class="fa-solid fa-check-circle"></i></a>
                                 </span>
                             }
-                        </span>
-                    </td>
-                </tr>
-            }
+                        }
+                    </span>
+                </td>
+            </tr>
         }
     </tbody>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

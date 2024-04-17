@@ -65,26 +65,6 @@ public class RepositorioInmueble
         return res;
     }
 
-    public void BajaFisica(int id)
-    {
-        bool baja;
-        using (MySqlConnection conn = new MySqlConnection(connectionString))
-        {
-            var sql = @$"DELETE FROM {nameof(Inmueble)} WHERE {nameof(Inmueble.IdInmueble)} = @Id";
-            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-            {
-                cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                baja = cmd.ExecuteNonQuery() != 0;
-                conn.Close();
-                if (!baja)
-                {
-                    throw new InvalidOperationException($"No se encontró ningún Inmueble con el ID {id} para eliminar.");
-                }
-            }
-        }
-    }
-
     public bool AltaLogica(int id)
     {
         bool alta;

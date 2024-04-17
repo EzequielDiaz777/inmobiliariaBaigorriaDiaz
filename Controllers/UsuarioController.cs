@@ -46,6 +46,30 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult Alta(int id)
+        {
+            return View(ru.ObtenerUsuarioPorID(id));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Alta(int id, IFormCollection collection)
+        {
+            try
+            {
+                ru.AltaLogica(id);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
+                return View(); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
+            }
+        }
+
         // GET: Usuario/EditAdministrador/5
         [HttpGet]
         [Authorize(Roles = "Administrador")]

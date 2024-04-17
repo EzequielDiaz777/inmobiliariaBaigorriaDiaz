@@ -26,7 +26,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Details(int id)
         {
             ViewBag.Id = TempData["Id"];
-            return View(repoP.ObtenerPagoById(id));
+            return View(repoP.ObtenerPagoPorId(id));
         }
 
         // GET: Pago/Create
@@ -70,6 +70,30 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult Alta(int id)
+        {
+            return View(repoP.ObtenerPagoPorId(id));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Alta(int id, IFormCollection collection)
+        {
+            try
+            {
+                repoP.AltaLogica(id);
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
+                return View(); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
+            }
+        }
+
         // GET: Pago/Edit/5
         [HttpGet]
         public ActionResult Edit(int id)
@@ -77,7 +101,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             ViewBag.Contratos = repoCont.ObtenerContratos();
             string[] meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
             ViewBag.Meses = meses;
-            return View(repoP.ObtenerPagoById(id));
+            return View(repoP.ObtenerPagoPorId(id));
         }
 
         // POST: Pago/Edit/5
@@ -87,7 +111,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                Pago pagoBD = repoP.ObtenerPagoById(id);
+                Pago pagoBD = repoP.ObtenerPagoPorId(id);
                 if (pagoBD != null){
                     pagoBD.MesDePago = pago.MesDePago;
                     repoP.ModificarPago(pagoBD);
@@ -107,7 +131,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
-            return View(repoP.ObtenerPagoById(id));
+            return View(repoP.ObtenerPagoPorId(id));
         }
 
         // POST: Pago/Delete/5

@@ -63,8 +63,12 @@
                                             class="fas fa-trash-alt text-danger"></i></a>
                                 </span>
                             }
-                            | <a href="@Url.Action("Create", new { idInquilino = item.IdInquilino, IdInmueble = item.IdInmueble, precio = item.Precio })"></a> <i class="fa-solid fa-file-signature"></i>
-                            | <a href="@Url.Action("Create", "Pago", new { idContrato = item.IdContrato, monto = item.Precio })"></a> <i class="fa-solid fa-sack-dollar"></i>
+                            <span>
+                                | <a href="@Url.Action("Create", new { id = item.IdInquilino, IdInmueble = item.IdInmueble, precio = item.Precio })"><i class="fa-solid fa-file-signature"></i></a>
+                            </span>
+                            <span>
+                                | <a href="@Url.Action("Create", "Pago", new { idContrato = item.IdContrato, monto = item.Precio })"><i class="fa-solid fa-sack-dollar"></i></a>
+                            </span>
                         </span>
                     </td>
                 </tr>

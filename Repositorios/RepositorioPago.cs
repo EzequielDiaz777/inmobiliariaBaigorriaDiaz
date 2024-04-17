@@ -169,7 +169,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			return res;
 		}
 
-		public Pago ObtenerPagoById(int id)
+		public Pago ObtenerPagoPorId(int id)
 		{
 			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
 			using (MySqlConnection conn = new MySqlConnection(connectionString))

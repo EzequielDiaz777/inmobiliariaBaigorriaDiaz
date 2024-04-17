@@ -79,7 +79,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 repoI.AltaLogica(id);
                 return RedirectToAction(nameof(Index));
-
             }
             catch (Exception e)
             {
