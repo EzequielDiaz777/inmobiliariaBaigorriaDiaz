@@ -1,0 +1,67 @@
+@model inmobiliariaBaigorriaDiaz.Models.Contrato
+
+@{
+	ViewData["Title"] = "Alta";
+}
+
+<div class="container mt-3">
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-body">
+					<h1 class="text-center"><b>ALTA DEL CONTRATO</b></h1>
+					<h2 class="text-center">¿Está seguro que desea dar de alta de nuevo el siguiente contrato?</h2>
+					<hr />
+					<dl class="row">
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.IdContrato)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.IdContrato)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.IdInquilino)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.Inquilino.Apellido)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.IdInmueble)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.Inmueble.Direccion)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.Precio)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.Precio)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.Estado)
+						</dt>
+						<dd class="col-sm-8">
+							@if (!Model.Estado)
+							{
+								<span>No</span>
+							}
+							else
+							{
+								<span>Si</span>
+							}
+						</dd>
+						<dd class="col-sm-12"></dd>
+					</dl>
+					<div class="text-center">
+						<form asp-action="Alta">
+							<input type="submit" value="Alta" class="btn btn-success" style="margin-right: 30px;" />
+							<button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'"
+								class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a
+								la Lista</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-04-2024 a las 17:49:28
+-- Tiempo de generación: 17-04-2024 a las 03:15:00
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -188,7 +188,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`IdUsuario`, `Nombre`, `Apellido`, `Email`, `Clave`, `Rol`, `AvatarURL`, `Estado`) VALUES
 (2, 'Mariano Gabriel', 'Luzza Bonilla', 'mluzza@gmail.com', '0yfrpBchLivjClVd/2wG7Qr77e1cxpygpcbnKhVZ1Vc=', 1, NULL, 1),
-(3, 'Juan', 'Perez', 'juanperez@gmai.com', 'dGioreVmmW6aW2LLVKHjFDL+t9JlEWaF3S8RJHirPtI=', 2, NULL, 1);
+(3, 'Juan', 'Perez', 'juanperez@gmai.com', 'Qvl7jFXEATEcnZTGPKI3fcpym6HtJZXXBEMTUXXOTcE=', 2, NULL, 1),
+(4, 'Jorge Ezequiel', 'Diaz', 'diazezequiel777@gmail.com', 'hY1CgihxAu07W07faaTyis8dHLeKN/wrgOfVxGkRt6I=', 2, '/update\\avatar_4.jpg', 1);
 
 --
 -- Índices para tablas volcadas
@@ -234,7 +235,8 @@ ALTER TABLE `propietario`
 -- Indices de la tabla `registro`
 --
 ALTER TABLE `registro`
-  ADD PRIMARY KEY (`IdRegistro`);
+  ADD PRIMARY KEY (`IdRegistro`),
+  ADD KEY `IdUsuario` (`IdUsuario`);
 
 --
 -- Indices de la tabla `tipodeinmueble`
@@ -310,7 +312,7 @@ ALTER TABLE `usodeinmueble`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
@@ -336,6 +338,12 @@ ALTER TABLE `inmueble`
 --
 ALTER TABLE `pago`
   ADD CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`IdContrato`) REFERENCES `contrato` (`IdContrato`);
+
+--
+-- Filtros para la tabla `registro`
+--
+ALTER TABLE `registro`
+  ADD CONSTRAINT `registro_ibfk_1` FOREIGN KEY (`IdUsuario`) REFERENCES `usuario` (`IdUsuario`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

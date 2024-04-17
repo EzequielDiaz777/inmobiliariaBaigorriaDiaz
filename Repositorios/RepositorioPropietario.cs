@@ -54,7 +54,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			bool baja;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @$"UPDATE {nameof(Propietario)} SET {nameof(Propietario.Estado)} = 1 WHERE {nameof(Propietario.IdPropietario)} = @$id";
+				var sql = @$"UPDATE {nameof(Propietario)} SET {nameof(Propietario.Estado)} = 1 WHERE {nameof(Propietario.IdPropietario)} = @id";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					cmd.Parameters.AddWithValue("@id", id);

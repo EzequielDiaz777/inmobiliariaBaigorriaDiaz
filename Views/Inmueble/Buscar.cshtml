@@ -109,7 +109,6 @@
                     <table id="tablaResultados" class="table table-striped table-hover table-bordered custom-table">
                         <thead>
                             <tr>
-                                <th>Nº de Inmueble</th>
                                 <th>Dirección</th>
                                 <th>Tipo de Inmueble</th>
                                 <th>Uso del Inmueble</th>
@@ -202,10 +201,6 @@
             var apellido = $('#apellido').val();
             var nombre = $('#nombre').val();
 
-            console.log('DNI:', dni);
-            console.log('Apellido:', apellido);
-            console.log('Nombre:', nombre);
-
             // Crear un objeto con los datos del inquilino
             var inquilino = {
                 DNI: dni,
@@ -214,8 +209,6 @@
                 Telefono: "",
                 Email: "",
             };
-
-            console.log(JSON.stringify(inquilino));
 
             // Enviar los datos del inquilino al servidor para su almacenamiento en la base de datos
             $.ajax({
@@ -233,7 +226,6 @@
                     } else {
                         // Mostrar un mensaje de error si ocurrió algún problema durante la creación del inquilino
                         alert('Error al crear el inquilino:', response.message);
-                        console.log(response);
                     }
                 },
                 error: function (xhr, status, error) {
@@ -248,8 +240,6 @@
         $('#IdUsoDeInmueble').change(function () {
             // Obtener el valor seleccionado del select
             var selectedUsoId = $(this).val();
-            console.log(selectedUsoId);
-            console.log($(this).val()); // Corregido
             // Realizar la solicitud AJAX para obtener la lista de inmuebles
             $.ajax({
                 url: '@Url.Action("ObtenerInmueblesPorUso", "Inmueble")',
@@ -262,7 +252,6 @@
                     // Renderizar los nuevos resultados en la tabla
                     response.forEach(function (inmueble) {
                         var rows = `<tr class="centered-row">
-                                <td>${inmueble.idInmueble}</td>
                                 <td class="direccion">${inmueble.direccion}</td>
                                 <td>${inmueble.tipo.nombre}</td>
                                 <td>${inmueble.uso.nombre}</td>
@@ -287,8 +276,6 @@
         $('#IdTipoDeInmueble').change(function () {
             // Obtener el valor seleccionado del select
             var selectedTipoId = $(this).val();
-            console.log(selectedTipoId);
-            console.log($(this).val()); // Corregido
             // Realizar la solicitud AJAX para obtener la lista de inmuebles
             $.ajax({
                 url: '@Url.Action("ObtenerInmueblesPorTipo", "Inmueble")',
@@ -301,7 +288,7 @@
                     // Renderizar los nuevos resultados en la tabla
                     response.forEach(function (inmueble) {
                         var rows = `<tr class="centered-row">
-                                <td>${inmueble.idInmueble}</td>
+
                                 <td>${inmueble.direccion}</td>
                                 <td>${inmueble.tipo.nombre}</td>
                                 <td>${inmueble.uso.nombre}</td>
@@ -323,6 +310,21 @@
             });
         });
 
+        function validarPrecios(precioDesde, precioHasta) {
+            // Verificar que los precios no sean negativos
+            if (precioDesde < 0 || precioHasta < 0) {
+                alert('Los precios no pueden ser negativos.');
+                return false;
+            }
+            // Verificar que el precio hasta no sea menor que el precio desde
+            if (precioHasta < precioDesde) {
+                alert('El precio hasta no puede ser menor que el precio desde.');
+                return false;
+            }
+            // Si pasa todas las validaciones, retornar true
+            return true;
+        }
+
         $('#formBuscar button[type="submit"]').click(function (event) {
             // Evitar que se envíe el formulario automáticamente
             event.preventDefault();
@@ -336,7 +338,14 @@
             var fechaDesde = $('#fechaDesde').val();
             var fechaHasta = $('#fechaHasta').val();
 
-            console.log("Fecha hasta: " + fechaHasta)
+            var precioDesde = parseFloat($('#precioDesde').val());
+            var precioHasta = parseFloat($('#precioHasta').val());
+
+            // Validar los precios
+            if (!validarPrecios(precioDesde, precioHasta)) {
+                // Si la validación falla, detener el proceso
+                return;
+            }
 
             // Verificar que ningún campo esté vacío
             if (usoDeInmueble && tipoDeInmueble && ambientes && precioDesde && precioHasta && fechaDesde && fechaHasta) {
@@ -366,13 +375,12 @@
         });
 
         $(document).ready(function () {
-            // Función para formatear la fecha al formato "yyyy-MM-dd"
             function formatDate(dateString) {
-                var parts = dateString.split('/');
+                var parts = dateString.split('-');
                 if (parts.length === 3) {
-                    var year = parts[2];
+                    var year = parts[0];
                     var month = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-                    var day = parts[0].length === 1 ? '0' + parts[0] : parts[0];
+                    var day = parts[2].length === 1 ? '0' + parts[2] : parts[2];
                     return year + '-' + month + '-' + day;
                 } else {
                     return '';
@@ -391,10 +399,16 @@
                 var fechaHasta = $('#fechaHasta').val();
 
                 // Verificar que las fechas no estén vacías antes de formatearlas
-                if (fechaDesde && fechaHasta) {
+                if (fechaDesde != null && fechaHasta != null) {
                     // Formatear las fechas al formato "yyyy-MM-dd"
                     var fechaDesdeFormatted = formatDate(fechaDesde);
                     var fechaHastaFormatted = formatDate(fechaHasta);
+
+                    // Verificar si la fecha hasta es anterior a la fecha desde y viceversa
+                    if (fechaHastaFormatted < fechaDesdeFormatted) {
+                        alert('La fecha hasta no puede ser anterior a la fecha desde.');
+                        return; // Detener el proceso si la validación falla
+                    }
 
                     // Agregar las fechas formateadas al formulario
                     formData += `&fechaDesde=${fechaDesdeFormatted}&fechaHasta=${fechaHastaFormatted}`;
@@ -421,23 +435,21 @@
                         // Renderizar los resultados en la tabla
                         response.forEach(function (inmueble) {
                             // Construir la URL del contrato con los parámetros necesarios
-                            console.log(inmueble.precio)
                             // Construir la URL del contrato con los parámetros necesarios
                             var urlCrearContratoWithParams = `/Contrato/Create/${inmueble.idInmueble}/${idInquilino}/${inmueble.precio}/${fechaDesde}/${fechaHasta}`;
                             var rows = `<tr class="centered-row">
-                                    <td>${inmueble.idInmueble}</td>
-                                    <td>${inmueble.direccion}</td>
-                                    <td>${inmueble.tipo.nombre}</td>
-                                    <td>${inmueble.uso.nombre}</td>
-                                    <td>${inmueble.precio}</td>
-                                    <td>${inmueble.duenio.apellido}</td>
-                                    <td>
-                                        <span class="button-column">
-                                            <a href="${urlCrearContratoWithParams}" class="button" title="Crear Contrato"><i class="fas fa-plus"></i></a>
-                                        </span>
-                                    </td>
-                                </tr>`;
-                            console.log(rows);
+
+                            <td>${inmueble.direccion}</td>
+                            <td>${inmueble.tipo.nombre}</td>
+                            <td>${inmueble.uso.nombre}</td>
+                            <td>${inmueble.precio}</td>
+                            <td>${inmueble.duenio.apellido}</td>
+                            <td>
+                                <span class="button-column">
+                                    <a href="${urlCrearContratoWithParams}" class="button" title="Crear Contrato"><i class="fas fa-plus"></i></a>
+                                </span>
+                            </td>
+                        </tr>`;
                             $('#tablaResultados tbody').append(rows);
                         });
 

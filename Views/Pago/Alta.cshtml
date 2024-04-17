@@ -1,0 +1,60 @@
+@model inmobiliariaBaigorriaDiaz.Models.Pago
+
+@{
+	ViewData["Title"] = "Alta";
+}
+
+<div class="container mt-3">
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-body">
+					<h1 class="text-center"><b>ALTA DEL PAGO</b></h1>
+					<h2 class="text-center">¿Está seguro que desea dar de alta de nuevo el siguiente pago?</h2>
+					<hr />
+					<dl class="row">
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.NumeroDePago)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.NumeroDePago)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.IdContrato)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.IdContrato)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.Monto)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.Monto)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.MesDePago)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.MesDePago)
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.Fecha)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.Fecha)
+						</dd>
+						<dd class="col-sm-12"></dd>
+					</dl>
+					<div class="text-center">
+						<form asp-action="Alta">
+							<input type="submit" value="Alta" class="btn btn-success" style="margin-right: 30px;" />
+							<button type="button" onclick="window.location.href='@Url.Action("Index", "Pago")'"
+								class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a
+								la Lista</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

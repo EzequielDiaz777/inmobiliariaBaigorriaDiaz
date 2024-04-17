@@ -13,10 +13,10 @@
     <div class="form-group mx-2">
     </div>
     <div class="form-group">
-        <select id="estadoInmueble" class="form-control">
-            <option value="todos">Todos</option>
+        <select id="estadoInmuebles" class="form-control">
             <option value="disponible">Disponible</option>
             <option value="no-disponible">No disponible</option>
+            <option value="todos">Todos</option>
         </select>
     </div>
 </div>
@@ -89,7 +89,7 @@
 
     <script>
         $(document).ready(function () {
-            $('#estadoInmueble').change(function () {
+            $('#estadoInmuebles').change(function () {
                 var estado = $(this).val();
                 $('.table tbody tr').each(function () {
                     var disponible = $(this).data("estado");
@@ -151,6 +151,7 @@
             function getCellValue(row, index) {
                 return $(row).children('td').eq(index).text();
             }
+            $('#estadoInmuebles').trigger('change');
         });
     </script>
 </table>
