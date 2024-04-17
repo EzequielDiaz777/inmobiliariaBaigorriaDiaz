@@ -64,10 +64,10 @@
                                 </span>
                             }
                             <span>
-                                | <a href="@Url.Action("Create", new { id = item.IdInquilino, IdInmueble = item.IdInmueble, precio = item.Precio })"><i class="fa-solid fa-file-signature"></i></a>
+                                | <a href="@Url.Action("Create", new { idContrato = item.IdContrato })" title="Renovar Contrato"><i class="fa-solid fa-file-signature"></i></a>
                             </span>
                             <span>
-                                | <a href="@Url.Action("Create", "Pago", new { idContrato = item.IdContrato, monto = item.Precio })"><i class="fa-solid fa-sack-dollar"></i></a>
+                                | <a href="@Url.Action("Create", "Pago", new { idContrato = item.IdContrato, monto = item.Precio })" title="Nuevo Pago"><i class="fa-solid fa-sack-dollar"></i></a>
                             </span>
                         </span>
                     </td>
