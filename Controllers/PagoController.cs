@@ -62,7 +62,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     HoraDeAccion = hora
                 };
                 rg.AltaFisica(registro);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Contrato");
             }
             catch
             {

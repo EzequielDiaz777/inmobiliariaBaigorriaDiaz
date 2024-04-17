@@ -2,7 +2,6 @@ using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Security.Claims;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -11,7 +10,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         private RepositorioContrato repoC = new RepositorioContrato();
         private RepositorioInquilino repoInq = new RepositorioInquilino();
         private RepositorioInmueble repoInm = new RepositorioInmueble();
-        private RepositorioRegistro rg = new RepositorioRegistro();
 
         // GET: Contrato
         [HttpGet]
@@ -30,6 +28,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View(repoC.ObtenerContratoById(id));
         }
 
+        // POST: Contrato/CreateFromParameters
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
@@ -37,28 +36,22 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
+                Console.WriteLine("Post de create");
+                Console.WriteLine(contrato.IdInquilino);
                 repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
-
-                DateTime horaActual = DateTime.Now;
-                TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
-
-                var registro = new Registro
-                {
-                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
-                    IdFila = contrato.IdContrato,
-                    NombreDeTabla = "Contrato",
-                    TipoDeAccion = "Alta",
-                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
-                    HoraDeAccion = hora
-                };
-                rg.AltaFisica(registro);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
             }
+        }
+
+        public ActionResult CreatePago(int idContrato, decimal monto)
+        {
+            // Redirigir al usuario a la acción de creación de pago en el controlador de Pago, pasando los datos necesarios en la URL
+            return RedirectToAction("Create", "Pago", new { idContrato = idContrato, monto = monto });
         }
 
 
@@ -131,7 +124,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Contrato/Delete/5
         [HttpGet]
-        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View(repoC.ObtenerContratoById(id));
@@ -145,19 +137,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             try
             {
                 repoC.BajaLogica(id);
-                DateTime horaActual = DateTime.Now;
-                TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
-
-                var registro = new Registro
-                {
-                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
-                    IdFila = id,
-                    NombreDeTabla = "Contrato",
-                    TipoDeAccion = "Baja",
-                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
-                    HoraDeAccion = hora
-                };
-                rg.AltaFisica(registro);
                 return RedirectToAction(nameof(Index));
             }
             catch
