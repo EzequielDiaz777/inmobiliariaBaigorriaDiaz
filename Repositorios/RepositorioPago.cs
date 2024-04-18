@@ -137,20 +137,29 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			{
 				string sql =
 							@$"SELECT 
-								{nameof(Pago.NumeroDePago)}, 
-								{nameof(Pago.MesDePago)},
-								{nameof(Pago.Monto)}, 
-								{nameof(Pago.Fecha)},
+								pag.{nameof(Pago.NumeroDePago)}, 
+								pag.{nameof(Pago.MesDePago)},
+								pag.{nameof(Pago.Monto)}, 
+								pag.{nameof(Pago.Fecha)},
 								pag.{nameof(Pago.Estado)},
-								cont.{nameof(Contrato.IdContrato)}
+								cont.{nameof(Contrato.IdContrato)},
+								inq.{nameof(Inquilino.Apellido)} AS InquilinoApellido,
+								prop.{nameof(Propietario.Apellido)} AS PropietarioApellido
 							FROM {nameof(Pago)} AS pag
-							INNER JOIN {nameof(Contrato)} AS cont
-							ON pag.{nameof(Pago.IdContrato)} = cont.{nameof(Contrato.IdContrato)}";
-	
+							INNER JOIN {nameof(Contrato)} AS cont 
+							ON pag.{nameof(Pago.IdContrato)} = cont.{nameof(Contrato.IdContrato)}
+							INNER JOIN {nameof(Inquilino)} AS inq 
+							ON cont.{nameof(Contrato.IdInquilino)} = inq.{nameof(Inquilino.IdInquilino)}
+							INNER JOIN {nameof(Inmueble)} AS inm 
+							ON cont.{nameof(Contrato.IdInmueble)} = inm.{nameof(Inmueble.IdInmueble)}
+							INNER JOIN {nameof(Propietario)} AS prop 
+							ON inm.{nameof(Inmueble.IdPropietario)} = prop.{nameof(Propietario.IdPropietario)}";
+
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
 					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
 						while (reader.Read())
 						{
 							res.Add(new Pago
@@ -161,13 +170,29 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								Monto = reader.GetDecimal("Monto"),
 								Fecha = DateOnly.FromDateTime(reader.GetDateTime("Fecha")),
 								Estado = reader.GetBoolean("Estado"),
+								Contrato = new Contrato
+								{
+									Inquilino = new Inquilino
+									{
+										Apellido = reader.GetString("InquilinoApellido")
+									},
+									Inmueble = new Inmueble
+									{
+										Duenio = new Propietario
+										{
+											Apellido = reader.GetString("PropietarioApellido")
+										}
+									}
+								}
 							});
 						}
+					}
 					conn.Close();
 				}
 			}
 			return res;
 		}
+
 
 		public Pago ObtenerPagoPorId(int id)
 		{

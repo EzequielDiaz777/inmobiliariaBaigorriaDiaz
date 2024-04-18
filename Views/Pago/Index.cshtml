@@ -21,10 +21,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NumeroDePago)
+                Inquilino Apellido
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdContrato)
+                Propietario Apellido
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Monto)
@@ -45,10 +45,10 @@
         {
             <tr class="centered-row" data-Estado="@item.Estado.ToString().ToLower()">
                 <td>
-                    @Html.DisplayFor(modelItem => item.NumeroDePago)
+                    @Html.DisplayFor(modelItem => item.Contrato.Inquilino.Apellido)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdContrato)
+                    @Html.DisplayFor(modelItem => item.Contrato.Inmueble.Duenio.Apellido)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Monto)
