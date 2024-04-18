@@ -6,24 +6,22 @@
 
 <h1 class="text-center"><b>LISTA DE CONTRATOS</b></h1>
 <div class="d-flex justify-content-between align-items-center my-3">
-    <div>
+    <div class="d-flex flex-column">
         <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
     </div>
-</div>
-<div class="d-flex justify-content-between align-items-center my-3">
     <div class="form-group">
-        <label for="fechaDesdeInput">Ingrese la fecha desde donde desea buscar:</label>
-        <input type="date" id="fechaDesdeInput" class="form-control" placeholder="Fecha desde">
+        <label for="fechaDesdeInput">Fecha desde:</label>
+        <input type="date" style="width: fit-content;" id="fechaDesdeInput" class="form-control">
     </div>
     <div class="form-group">
-        <label for="fechaHastaInput">Ingrese la fecha hasta donde desea buscar:</label>
-        <input type="date" id="fechaHastaInput" class="form-control" placeholder="Fecha hasta">
+        <label for="fechaHastaInput">Fecha hasta:</label>
+        <input type="date" style="width: fit-content;" id="fechaHastaInput" class="form-control">
     </div>
-    <div class="form-group">
-        <select id="estadoContratos" class="form-control">
-            <option value="disponible">Disponible</option>
-            <option value="no-disponible">No disponible</option>
-            <option value="todos">Todos</option>
+    <div class="form-group text-center">
+        <select id="estadoContratos" class="form-control text-center">
+            <option value="disponible">&#8194;Vigente</option>
+            <option value="no-disponible">&#8194;No vigente</option>
+            <option value="todos">&#8194;Todos</option>
         </select>
     </div>
 </div>
@@ -72,27 +70,29 @@
                         |
                         <a href="@Url.Action("Details", new { id = item.IdContrato })" title="Detalles"> <i
                                 class="fas fa-info-circle"></i></a>
-                        @if (User.IsInRole("Administrador"))
+                        @if (User.IsInRole("Administrador") && item.Estado)
                         {
-                            @if (item.Estado)
-                            {
-                                <span class="button-icon">
-                                    | <a href="@Url.Action("Delete", new { id = item.IdContrato })" title="Baja"> 
-                                        <i class="fa-solid fas fa-trash-alt text-danger"></i></a>
-                                </span>
-                                <span>
-                                    | <a href="@Url.Action("Create", "Pago", new { idContrato = item.IdContrato, monto = item.Precio })"><i class="fa-solid fa-sack-dollar"></i></a>
-                                </span>
-                            } else @if (!item.Estado)
-                            {
-                                <span class="button-icon text-success">
-                                    | <a href="@Url.Action("Alta", new { id = item.IdContrato })" title="Alta" class="text-success">
-                                        <i class="fa-solid fa-check-circle"></i></a>
-                                </span>
-                            }
+                            <span class="button-icon">
+                                | <a href="@Url.Action("Delete", new { id = item.IdContrato })" title="Baja">
+                                    <i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                            </span>
+                        }
+                        else @if (User.IsInRole("Administrador") && !item.Estado)
+                        {
+                            <span class="button-icon text-success">
+                                | <a href="@Url.Action("Alta", new { id = item.IdContrato })" title="Alta" class="text-success">
+                                    <i class="fa-solid fa-check-circle"></i></a>
+                            </span>
+                        }
+                        @if (item.Estado)
+                        {
+                            <span>
+                                | <a href="@Url.Action("Create", "Pago", new { idContrato = item.IdContrato, monto = item.Precio })" title="Nuevo Pago"><i class="fa-solid fa-money-bill-wave" style="color: green "></i></a>
+                            </span>
                         }
                         <span>
-                            | <a href="@Url.Action("Create", new { id = item.IdInquilino, IdInmueble = item.IdInmueble, precio = item.Precio })"><i class="fa-solid fa-file-signature"></i></a>
+                            | <a href="@Url.Action("Create", new { id = item.IdContrato })" title="Renovar Contrato"><i
+                                    class="fa-solid fa-file-signature" style="color: black"></i></a>
                         </span>
                     </span>
                 </td>

@@ -235,85 +235,14 @@
             });
         });
 
-
-        // Agregar evento de cambio al select
-        $('#IdUsoDeInmueble').change(function () {
-            // Obtener el valor seleccionado del select
-            var selectedUsoId = $(this).val();
-            // Realizar la solicitud AJAX para obtener la lista de inmuebles
-            $.ajax({
-                url: '@Url.Action("ObtenerInmueblesPorUso", "Inmueble")',
-                type: 'GET',
-                data: { id: selectedUsoId },
-                success: function (response) {
-                    // Limpiar la tabla de resultados
-                    $('#tablaResultados tbody').empty();
-
-                    // Renderizar los nuevos resultados en la tabla
-                    response.forEach(function (inmueble) {
-                        var rows = `<tr class="centered-row">
-                                <td class="direccion">${inmueble.direccion}</td>
-                                <td>${inmueble.tipo.nombre}</td>
-                                <td>${inmueble.uso.nombre}</td>
-                                <td>${inmueble.precio}</td>
-                                <td>${inmueble.duenio.apellido}</td>
-                                <td>
-                                    <span class="button-column">
-                                        <a href="/Contrato/Create/?idInmueble=${inmueble.idInmueble}" title="Crear Contrato"><i class="fas fa-plus"></i></a>
-                                    </span>
-                                </td>
-                            </tr>`;
-                        $('#tablaResultados tbody').append(rows);
-                    });
-                },
-                error: function (xhr, status, error) {
-                    // Manejar errores si es necesario
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-
-        $('#IdTipoDeInmueble').change(function () {
-            // Obtener el valor seleccionado del select
-            var selectedTipoId = $(this).val();
-            // Realizar la solicitud AJAX para obtener la lista de inmuebles
-            $.ajax({
-                url: '@Url.Action("ObtenerInmueblesPorTipo", "Inmueble")',
-                type: 'GET',
-                data: { id: selectedTipoId },
-                success: function (response) {
-                    // Limpiar la tabla de resultados
-                    $('#tablaResultados tbody').empty();
-
-                    // Renderizar los nuevos resultados en la tabla
-                    response.forEach(function (inmueble) {
-                        var rows = `<tr class="centered-row">
-
-                                <td>${inmueble.direccion}</td>
-                                <td>${inmueble.tipo.nombre}</td>
-                                <td>${inmueble.uso.nombre}</td>
-                                <td>${inmueble.precio}</td>
-                                <td>${inmueble.duenio.apellido}</td>
-                                <td>
-                                    <span class="button-column">
-                                        <a href="/Contrato/Create/?idInmueble=${inmueble.idInmueble}" title="Crear Contrato"><i class="fas fa-plus"></i></a>
-                                    </span>
-                                </td>
-                            </tr>`;
-                        $('#tablaResultados tbody').append(rows);
-                    });
-                },
-                error: function (xhr, status, error) {
-                    // Manejar errores si es necesario
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-
-        function validarPrecios(precioDesde, precioHasta) {
+        function validarNumeros(precioDesde, precioHasta, ambientes) {
             // Verificar que los precios no sean negativos
-            if (precioDesde < 0 || precioHasta < 0) {
-                alert('Los precios no pueden ser negativos.');
+            if(ambientes < 1){
+                alert('El ambiente no pueden contener un número negativo o cero.');
+                return false;
+            }
+            if (precioDesde < 1 || precioHasta < 1) {
+                alert('Los precios no pueden ser negativos o cero.');
                 return false;
             }
             // Verificar que el precio hasta no sea menor que el precio desde
@@ -342,7 +271,7 @@
             var precioHasta = parseFloat($('#precioHasta').val());
 
             // Validar los precios
-            if (!validarPrecios(precioDesde, precioHasta)) {
+            if (!validarNumeros(precioDesde, precioHasta, ambientes)) {
                 // Si la validación falla, detener el proceso
                 return;
             }
