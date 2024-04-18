@@ -7,16 +7,17 @@
 <h1 class="text-center"><b>LISTA DE PROPIETARIOS</b></h1>
 <div class="d-flex justify-content-between align-items-center my-3">
     <div>
-        <a class="btn btn-primary" href="@Url.Action("Create")">Alta</a>
+        <a class="btn btn-primary mb-2" href="@Url.Action("Create")">Alta</a>
         <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
     </div>
     <div class="form-group mx-2">
     </div>
     <div class="form-group">
-        <select id="estadoPropietarios" class="form-control">
-            <option value="disponible">Disponible</option>
-            <option value="no-disponible">No disponible</option>
+        <select id="estadoPropietarios" class="form-control text-center">
+            <option value="disponible">Activo</option>
+            <option value="no-disponible">Inactivo</option>
             <option value="todos">Todos</option>
+            
         </select>
     </div>
 </div>

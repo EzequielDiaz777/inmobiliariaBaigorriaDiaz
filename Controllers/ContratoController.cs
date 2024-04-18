@@ -57,6 +57,39 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Contrato/CreateFromParameters
         [HttpGet]
+        
+        public ActionResult Create(int id)
+        {
+
+            // Crear el modelo de contrato y establecer sus propiedades
+            Contrato contrato = repoC.ObtenerContratoById(id);    
+            
+
+            // Devolver la vista con el modelo de contrato
+            return View(contrato);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+    
+        public ActionResult Create(Contrato contrato, IFormCollection collection)
+        {
+            try
+            {
+                if(contrato.IdContrato != 0){
+                    repoC.BajaLogica(contrato.IdContrato);
+                }
+                repoC.AltaFisica(contrato);
+                TempData["Id"] = contrato.IdContrato;
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        [HttpGet]
         [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
         public ActionResult Create(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly fechaDesde, DateOnly fechaHasta)
         {
@@ -80,6 +113,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             // Devolver la vista con el modelo de contrato
             return View(contrato);
         }
+
 
         [HttpGet]
         public ActionResult Alta(int id)

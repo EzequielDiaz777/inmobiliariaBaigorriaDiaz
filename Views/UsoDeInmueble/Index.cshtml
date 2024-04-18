@@ -7,13 +7,13 @@
 <h1 class="text-center"><b>LISTA DE USOS DE INMUEBLES</b></h1>
 <div class="d-flex justify-content-between align-items-center my-3">
     <div>
-        <a class="btn btn-primary" href="@Url.Action("Create")">Alta</a>
+        <a class="btn btn-primary mb-2" href="@Url.Action("Create")">Alta</a>
         <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
     </div>
     <div class="form-group mx-2">
     </div>
     <div class="form-group">
-        <select id="estadoUsos" class="form-control">
+        <select id="estadoUsos" class="form-control text-center">
             <option value="disponible">Disponible</option>
             <option value="no-disponible">No disponible</option>
             <option value="todos">Todos</option>
@@ -23,9 +23,6 @@
 <table class="table table-striped table-hover table-bordered custom-table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUsoDeInmueble)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
@@ -41,9 +38,6 @@
         @foreach (var item in Model)
         {
             <tr class="centered-row" data-Estado="@item.Estado.ToString().ToLower()">
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdUsoDeInmueble)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
@@ -86,7 +80,7 @@
                 </td>
             </tr>
         }
-        }
+        
     </tbody>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
