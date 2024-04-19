@@ -95,6 +95,7 @@
                 // Si el valor seleccionado es 'custom', muestra el input
                 if (value === 'custom') {
                     $('#contratosHastaInput').show();
+                    $('.table tbody').empty();
                 } else if (value !== 'custom') {
                     // Si no es 'custom', oculta el input
                     $('#contratosHastaInput').hide();
@@ -104,7 +105,7 @@
             });
 
             $('#contratosHastaSelect').change(function () {
-                if ($(this).val() !== '') {
+                if ($(this).val() !== '' && $(this).val() !== 'custom') {
                     event.preventDefault(); // Evitar que se envíe el formulario
                     var dias = $(this).val();
                     // Realiza una solicitud AJAX al endpoint ObtenerContratosPorFechas

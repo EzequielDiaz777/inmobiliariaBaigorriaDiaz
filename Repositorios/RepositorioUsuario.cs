@@ -107,6 +107,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 
 		public int Modificacion(Usuario usuario)
 		{
+			Console.WriteLine("Estoy en usuario: " + usuario.AvatarURL);
 			int res;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{

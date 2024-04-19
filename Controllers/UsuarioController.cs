@@ -1,10 +1,12 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Security.Claims;
+using System.Web.WebPages;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -82,8 +84,19 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpPost]
         public async Task<ActionResult> EditAdministrador(int id, Usuario usuario, IFormFile? avatarFile)
         {
+            ClaimsIdentity? identity = null;
+            if (mismoUsuario(id))
+            {
+                identity = (ClaimsIdentity?)User.Identity;
+            }
             try
             {
+                if (usuario.Nombre.IsEmpty() || usuario.Apellido.IsEmpty() || usuario.Email.IsEmpty())
+                {
+                    ModelState.AddModelError("", "No puede haber ningún campo vacío");
+                    ViewBag.Roles = Usuario.ObtenerRoles();
+                    return View(usuario);
+                }
                 if (!ModelState.IsValid)
                 {
                     // Itera sobre cada par clave-valor en ModelState
@@ -120,19 +133,93 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                         {
                             u.Clave = Usuario.hashearClave(usuario.Clave);
                         }
+                        if(!u.AvatarURL.IsEmpty()){
+                            var ruta = Path.Combine(environment.WebRootPath, "uploads", $"avatar_{id}" + Path.GetExtension(u.AvatarURL));
+                            if (System.IO.File.Exists(ruta))
+                            {
+                                Console.WriteLine("¡Archivo eliminado!");
+                                System.IO.File.Delete(ruta);
+                            }
+                        }
+                        // Actualizar la URL del avatar en la base de datos
                         if (avatarFile != null)
                         {
+                            Console.WriteLine("avatarFile no es nulo");
                             var resizedImagePath = await ProcesarAvatarAsync(u, avatarFile);
                             if (resizedImagePath == null)
                             {
+                                Console.WriteLine("reizedImagePath es null");
                                 return View(usuario); // Retorna la vista con errores de validación si la extensión del archivo no es válida
                             }
-                            // Actualizar la URL del avatar en la base de datos
+
                             u.AvatarURL = resizedImagePath;
+
+                            // Actualizar la claim de AvatarURL del usuario
+                            if (identity != null)
+                            {
+                                var existingClaim = identity.FindFirst(ClaimTypes.UserData);
+
+                                // Eliminar la claim existente de AvatarURL
+                                if (existingClaim != null)
+                                {
+                                    identity.RemoveClaim(existingClaim);
+                                }
+
+                                // Agregar la nueva claim de AvatarURL
+                                identity.AddClaim(new Claim(ClaimTypes.UserData, resizedImagePath));
+
+                                // Actualizar los claims del usuario en la autenticación del usuario
+                                await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+                            }
+                        }
+                        else
+                        {
+                            // Si no se proporciona un archivo, simplemente redirige a la página de índice
+                            u.AvatarURL = "";
+
+                            // Actualizar la claim de AvatarURL del usuario
+                            if (identity != null)
+                            {
+                                var existingClaim = identity.FindFirst(ClaimTypes.UserData);
+
+                                // Eliminar la claim existente de AvatarURL
+                                if (existingClaim != null)
+                                {
+                                    identity.RemoveClaim(existingClaim);
+                                }
+
+                                // Agregar la nueva claim de AvatarURL
+                                identity.AddClaim(new Claim(ClaimTypes.UserData, ""));
+
+                                // Actualizar los claims del usuario en la autenticación del usuario
+                                await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+                            }
+                        }
+                        if (identity != null)
+                        {
+                            var nameClaim = identity.FindFirst(ClaimTypes.Name);
+                            var emailClaim = identity.FindFirst(ClaimTypes.Email);
+                            var rolClaim = identity.FindFirst(ClaimTypes.Role);
+
+                            if (nameClaim != null)
+                            {
+                                identity.RemoveClaim(nameClaim);
+                            }
+                            if (emailClaim != null)
+                            {
+                                identity.RemoveClaim(emailClaim);
+                            }
+                            if (rolClaim != null)
+                            {
+                                identity.RemoveClaim(rolClaim);
+                            }
+
+                            identity.AddClaim(new Claim(ClaimTypes.Name, u.ToString()));
+                            identity.AddClaim(new Claim(ClaimTypes.Email, u.Email));
+                            identity.AddClaim(new Claim(ClaimTypes.Role, u.RolNombre));
                         }
                         ru.Modificacion(u);
                         return RedirectToAction("Index"); // Redirige al Index después de una edición exitosa
-
                     }
                     else
                     {
@@ -158,7 +245,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 return null; // Retorna null si la extensión del archivo no es válida
             }
 
-            var directoryPath = Path.Combine(environment.WebRootPath, "update");
+            var directoryPath = Path.Combine(environment.WebRootPath, "uploads");
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
@@ -187,9 +274,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             using (var image = Image.Load(imagePath))
             {
                 image.Mutate(x => x.Resize(30, 30));
-                var resizedImagePath = Path.Combine(environment.WebRootPath, "update", Path.GetFileName(imagePath));
+                var resizedImagePath = Path.Combine(environment.WebRootPath, "uploads", Path.GetFileName(imagePath));
                 image.Save(resizedImagePath);
-                return Path.Combine("/update", Path.GetFileName(imagePath));
+                return Path.Combine("/uploads", Path.GetFileName(imagePath));
             }
         }
 
@@ -244,7 +331,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             var usuarioId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.PrimarySid));
 
             // Verificar si el usuario autenticado coincide con el ID del perfil solicitado
-            return usuarioId != id;
+            return usuarioId == id;
         }
 
         // GET: Usuario/EditPerfil/5
@@ -252,7 +339,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult EditPerfil(int id)
         {
 
-            if (mismoUsuario(id))
+            if (!mismoUsuario(id))
             {
                 return RedirectToAction("Perfil", "Home");
             }
@@ -263,10 +350,16 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // POST: Usuario/EditPerfil/5
         [HttpPost]
-        public ActionResult EditPerfil(int id, Usuario usuario)
+        public async Task<ActionResult> EditPerfil(int id, Usuario usuario)
         {
             try
             {
+                if (usuario.Nombre.IsEmpty() || usuario.Apellido.IsEmpty() || usuario.Email.IsEmpty())
+                {
+                    ModelState.AddModelError("", "No puede haber ningún campo vacío");
+                    ViewBag.Roles = Usuario.ObtenerRoles();
+                    return View(usuario);
+                }
                 if (ModelState.IsValid)
                 {
                     Usuario u = ru.ObtenerUsuarioPorID(id);
@@ -275,6 +368,33 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                         u.Nombre = usuario.Nombre;
                         u.Apellido = usuario.Apellido;
                         u.Email = usuario.Email;
+
+                        var identity = (ClaimsIdentity?)User.Identity;
+                        if (identity != null)
+                        {
+                            var nameClaim = identity.FindFirst(ClaimTypes.Name);
+                            var emailClaim = identity.FindFirst(ClaimTypes.Email);
+                            var rolClaim = identity.FindFirst(ClaimTypes.Role);
+
+                            if (nameClaim != null)
+                            {
+                                identity.RemoveClaim(nameClaim);
+                            }
+                            if (emailClaim != null)
+                            {
+                                identity.RemoveClaim(emailClaim);
+                            }
+                            if (rolClaim != null)
+                            {
+                                identity.RemoveClaim(rolClaim);
+                            }
+
+                            identity.AddClaim(new Claim(ClaimTypes.Name, u.ToString()));
+                            identity.AddClaim(new Claim(ClaimTypes.Email, u.Email));
+                            identity.AddClaim(new Claim(ClaimTypes.Role, u.RolNombre));
+
+                            await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+                        }
                         ru.Modificacion(u);
                         return RedirectToAction("Index");
                     }
@@ -297,11 +417,12 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             }
         }
 
+
         // GET: Usuario/EditAvatar/5
         [HttpGet]
         public ActionResult EditAvatar(int id)
         {
-            if (mismoUsuario(id))
+            if (!mismoUsuario(id))
             {
                 return RedirectToAction("Perfil", "Home");
             }
@@ -314,19 +435,47 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
+                ClaimsIdentity? identity = null;
+                if (mismoUsuario(id))
+                {
+                    identity = (ClaimsIdentity?)User.Identity;
+                }
                 var usuario = ru.ObtenerUsuarioPorID(id);
+                // Actualizar la URL del avatar en la base de datos
+                var ruta = Path.Combine(environment.WebRootPath, "uploads", $"avatar_{id}" + Path.GetExtension(usuario.AvatarURL));
+                if (System.IO.File.Exists(ruta))
+                {
+                    System.IO.File.Delete(ruta);
+                }
                 if (avatarFile != null)
                 {
                     var resizedImagePath = await ProcesarAvatarAsync(usuario, avatarFile);
                     if (resizedImagePath == null)
                     {
+                        Console.WriteLine("reizedImagePath es null");
                         return View(usuario); // Retorna la vista con errores de validación si la extensión del archivo no es válida
                     }
 
-                    // Actualizar la URL del avatar en la base de datos
                     usuario.AvatarURL = resizedImagePath;
-                    ru.Modificacion(usuario);
 
+                    // Actualizar la claim de AvatarURL del usuario
+                    if (identity != null)
+                    {
+                        var existingClaim = identity.FindFirst(ClaimTypes.UserData);
+
+                        // Eliminar la claim existente de AvatarURL
+                        if (existingClaim != null)
+                        {
+                            identity.RemoveClaim(existingClaim);
+                        }
+
+                        // Agregar la nueva claim de AvatarURL
+                        identity.AddClaim(new Claim(ClaimTypes.UserData, resizedImagePath));
+
+                        // Actualizar los claims del usuario en la autenticación del usuario
+                        await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+                        ru.Modificacion(usuario);
+                    }
                     TempData["Id"] = usuario.IdUsuario;
                     return RedirectToAction(nameof(Index));
                 }
@@ -334,7 +483,25 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 {
                     // Si no se proporciona un archivo, simplemente redirige a la página de índice
                     usuario.AvatarURL = "";
-                    ru.Modificacion(usuario);
+                    // Actualizar la claim de AvatarURL del usuario
+                    if (identity != null)
+                    {
+                        var existingClaim = identity.FindFirst(ClaimTypes.UserData);
+
+                        // Eliminar la claim existente de AvatarURL
+                        if (existingClaim != null)
+                        {
+                            identity.RemoveClaim(existingClaim);
+                        }
+
+                        // Agregar la nueva claim de AvatarURL
+                        identity.AddClaim(new Claim(ClaimTypes.UserData, ""));
+
+                        // Actualizar los claims del usuario en la autenticación del usuario
+                        await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+                        ru.Modificacion(usuario);
+                    }
+                    TempData["Id"] = usuario.IdUsuario;
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -349,7 +516,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult EditClaveEmpleado(int id)
         {
-            if (mismoUsuario(id))
+            if (!mismoUsuario(id))
             {
                 return RedirectToAction("Perfil", "Home");
             }
