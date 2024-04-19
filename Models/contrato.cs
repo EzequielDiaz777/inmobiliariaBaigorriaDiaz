@@ -27,9 +27,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Required]
         [Display(Name = "Fecha original del final del alquiler")]
         public DateOnly AlquilerHastaOriginal { get; set; }
-        [Required]
-        [Display(Name = "Contrato vigente")]
-        public bool Estado { get; set; }
+        
         [Required]
         [ForeignKey(nameof(IdInquilino))]
         public Inquilino Inquilino { get; set; } = new Inquilino();

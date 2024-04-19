@@ -20,6 +20,41 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             return View(repoC.ObtenerContratos());
         }
 
+        [HttpGet]
+        public ActionResult ObtenerContratos()
+        {
+            var contratos = repoC.ObtenerContratos();
+            return Json(contratos);
+        }
+
+        [HttpGet]
+        public ActionResult ObtenerContratosVigentes()
+        {
+            var contratosVigentes = repoC.ObtenerContratosVigentes();
+            return Json(contratosVigentes);
+        }
+
+        [HttpGet]
+        public ActionResult ObtenerContratosNoVigentes()
+        {
+            var contratosNoVigentes = repoC.ObtenerContratosNoVigentes();
+            return Json(contratosNoVigentes);
+        }
+
+        [HttpGet]
+        public ActionResult ObtenerContratosPorFechas(string desde, string hasta)
+        {
+            var contratosPorFechas = repoC.ObtenerContratosPorFechas(desde, hasta);
+            return Json(contratosPorFechas);
+        }
+
+        [HttpGet]
+        public ActionResult ObtenerContratosPorDias(string dias)
+        {
+            var contratosPorDias = repoC.ObtenerContratosPorDias(dias);
+            return Json(contratosPorDias);
+        }
+
         // GET: Contrato/Details/5
         [HttpGet]
         public ActionResult Details(int id)
@@ -57,13 +92,13 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Contrato/CreateFromParameters
         [HttpGet]
-        
+
         public ActionResult Create(int id)
         {
 
             // Crear el modelo de contrato y establecer sus propiedades
-            Contrato contrato = repoC.ObtenerContratoById(id);    
-            
+            Contrato contrato = repoC.ObtenerContratoById(id);
+
 
             // Devolver la vista con el modelo de contrato
             return View(contrato);
@@ -71,14 +106,11 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-    
+
         public ActionResult Create(Contrato contrato, IFormCollection collection)
         {
             try
             {
-                if(contrato.IdContrato != 0){
-                    repoC.BajaLogica(contrato.IdContrato);
-                }
                 repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
                 return RedirectToAction(nameof(Index));
@@ -119,23 +151,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Alta(int id)
         {
             return View(repoC.ObtenerContratoById(id));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Alta(int id, IFormCollection collection)
-        {
-            try
-            {
-                repoC.AltaLogica(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                ModelState.AddModelError(string.Empty, "Ha ocurrido un error al cargar la página.");
-                return View(); // Retorna la vista con el modelo para que el usuario pueda corregir la entrada.
-            }
         }
 
         // GET: Contrato/Edit/5
@@ -190,7 +205,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                repoC.BajaLogica(id);
+                repoC.BajaFisica(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

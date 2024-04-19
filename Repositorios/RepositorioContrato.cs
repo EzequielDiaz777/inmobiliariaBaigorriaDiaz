@@ -22,16 +22,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Contrato.Precio)}, 
 						{nameof(Contrato.AlquilerDesde)}, 
 						{nameof(Contrato.AlquilerHasta)},
-						{nameof(Contrato.AlquilerHastaOriginal)},
-						{nameof(Contrato.Estado)}) 
+						{nameof(Contrato.AlquilerHastaOriginal)}
 					VALUES 
 						(@IdInquilino, 
 						@IdInmueble, 
 						@Precio, 
 						@AlquilerDesde, 
 						@AlquilerHasta, 
-						@AlquilerHastaOriginal, 
-						1);
+						@AlquilerHastaOriginal
+						);
 					SELECT LAST_INSERT_ID()";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
@@ -70,48 +69,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					{
 						throw new InvalidOperationException($"No se encontró ningún contrato con el ID {id} para eliminar.");
 					}
-				}
-			}
-			return baja;
-		}
-
-		public bool AltaLogica(int id)
-		{
-			bool alta;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @$"UPDATE {nameof(Contrato)} SET {nameof(Contrato.Estado)} = 1 WHERE {nameof(Contrato.IdContrato)} = @id";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@id", id);
-					conn.Open();
-					alta = cmd.ExecuteNonQuery() != 0;
-					conn.Close();
-				}
-				if (!alta)
-				{
-					throw new InvalidOperationException($"No se encontró ningún contrato con el ID {id} para dar de alta.");
-				}
-			}
-			return alta;
-		}
-
-		public bool BajaLogica(int id)
-		{
-			bool baja;
-			using (MySqlConnection conn = new MySqlConnection(connectionString))
-			{
-				var sql = @$"UPDATE {nameof(Contrato)} SET {nameof(Contrato.Estado)} = 0 WHERE {nameof(Contrato.IdContrato)} = @id";
-				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-				{
-					cmd.Parameters.AddWithValue("@id", id);
-					conn.Open();
-					baja = cmd.ExecuteNonQuery() != 0;
-					conn.Close();
-				}
-				if (!baja)
-				{
-					throw new InvalidOperationException($"No se encontró ningún contrato con el ID {id} para dar de baja.");
 				}
 			}
 			return baja;
@@ -159,15 +116,15 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								{nameof(Contrato.AlquilerDesde)}, 
 								{nameof(Contrato.AlquilerHasta)},
 								{nameof(Contrato.AlquilerHastaOriginal)},
-								c.{nameof(Contrato.Estado)},
 								inq.{nameof(Inquilino.Nombre)},
 								inq.{nameof(Inquilino.Apellido)},
 								inm.{nameof(Inmueble.Direccion)}
 							FROM {nameof(Contrato)} AS c
-							INNER JOIN {nameof(Inquilino)} AS inq
-							ON c.{nameof(Contrato.IdInquilino)} = inq.{nameof(Inquilino.IdInquilino)}
-							INNER JOIN {nameof(Inmueble)} AS inm
-							ON c.{nameof(Contrato.IdInmueble)} = inm.{nameof(Inmueble.IdInmueble)}";
+								INNER JOIN {nameof(Inquilino)} AS inq
+									ON c.{nameof(Contrato.IdInquilino)} = inq.{nameof(Inquilino.IdInquilino)}
+								INNER JOIN {nameof(Inmueble)} AS inm
+									ON c.{nameof(Contrato.IdInmueble)} = inm.{nameof(Inmueble.IdInmueble)}
+							ORDER BY c.AlquilerDesde DESC;";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -181,7 +138,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
 								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
 								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
-								Estado = reader.GetBoolean("Estado"),
 								Inquilino = new Inquilino()
 								{
 									Nombre = reader.GetString("Nombre"),
@@ -213,7 +169,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								{nameof(Contrato.AlquilerDesde)}, 
 								{nameof(Contrato.AlquilerHasta)},
 								{nameof(Contrato.AlquilerHastaOriginal)},
-								c.{nameof(Contrato.Estado)},
 								inq.{nameof(Inquilino.Nombre)},
 								inq.{nameof(Inquilino.Apellido)},
 								inm.{nameof(Inmueble.Direccion)}
@@ -241,7 +196,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
 								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
 								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
-								Estado = reader.GetBoolean("Estado"),
 								Inquilino = new Inquilino
 								{
 									IdInquilino = reader.GetInt32("IdInquilino"),
@@ -260,6 +214,217 @@ namespace inmobiliariaBaigorriaDiaz.Models
 				}
 				return contrato;
 			}
+		}
+
+		public List<Contrato> ObtenerContratosPorDias(string dias)
+		{
+			var res = new List<Contrato>();
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"SELECT 
+								c.IdContrato,
+								c.Precio,
+								c.AlquilerDesde,
+								c.AlquilerHasta,
+								c.AlquilerHastaOriginal,
+								inq.Nombre,
+								inq.Apellido,
+								inm.Direccion
+							FROM Contrato AS c
+								INNER JOIN Inquilino AS inq 
+									ON c.IdInquilino = inq.IdInquilino
+								INNER JOIN Inmueble AS inm 
+									ON c.IdInmueble = inm.IdInmueble
+							WHERE c.AlquilerHasta < DATE_ADD(NOW(), INTERVAL @dias DAY)
+							ORDER BY c.AlquilerDesde DESC;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					cmd.Parameters.AddWithValue("@dias", dias);
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+						while (reader.Read())
+						{
+							res.Add(new Contrato
+							{
+								IdContrato = reader.GetInt32("IdContrato"),
+								Precio = reader.GetDecimal("Precio"),
+								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
+								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
+								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
+								Inquilino = new Inquilino()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido"),
+								},
+								Inmueble = new Inmueble()
+								{
+									Direccion = reader.GetString("Direccion")
+								}
+							});
+						}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Contrato> ObtenerContratosPorFechas(string desde, string hasta)
+		{
+			var res = new List<Contrato>();
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"SELECT 
+								c.IdContrato,
+								c.Precio,
+								c.AlquilerDesde,
+								c.AlquilerHasta,
+								c.AlquilerHastaOriginal,
+								inq.Nombre,
+								inq.Apellido,
+								inm.Direccion
+							FROM Contrato AS c
+								INNER JOIN Inquilino AS inq 
+									ON c.IdInquilino = inq.IdInquilino
+								INNER JOIN Inmueble AS inm 
+									ON c.IdInmueble = inm.IdInmueble
+							WHERE 
+								c.AlquilerDesde >= @desde
+								AND c.AlquilerHasta <= @hasta
+							ORDER BY c.AlquilerDesde DESC;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					cmd.Parameters.AddWithValue("@desde", desde);
+					cmd.Parameters.AddWithValue("@hasta", hasta);
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+						while (reader.Read())
+						{
+							res.Add(new Contrato
+							{
+								IdContrato = reader.GetInt32("IdContrato"),
+								Precio = reader.GetDecimal("Precio"),
+								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
+								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
+								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
+								Inquilino = new Inquilino()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido"),
+								},
+								Inmueble = new Inmueble()
+								{
+									Direccion = reader.GetString("Direccion")
+								}
+							});
+						}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Contrato> ObtenerContratosVigentes()
+		{
+			var res = new List<Contrato>();
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"SELECT 
+								c.IdContrato,
+								c.Precio,
+								c.AlquilerDesde,
+								c.AlquilerHasta,
+								c.AlquilerHastaOriginal,
+								inq.Nombre,
+								inq.Apellido,
+								inm.Direccion
+							FROM Contrato AS c
+								INNER JOIN Inquilino AS inq 
+									ON c.IdInquilino = inq.IdInquilino
+								INNER JOIN Inmueble AS inm 
+									ON c.IdInmueble = inm.IdInmueble
+							WHERE c.AlquilerHasta > NOW()
+							ORDER BY c.AlquilerDesde DESC;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+						while (reader.Read())
+						{
+							res.Add(new Contrato
+							{
+								IdContrato = reader.GetInt32("IdContrato"),
+								Precio = reader.GetDecimal("Precio"),
+								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
+								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
+								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
+								Inquilino = new Inquilino()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido"),
+								},
+								Inmueble = new Inmueble()
+								{
+									Direccion = reader.GetString("Direccion")
+								}
+							});
+						}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Contrato> ObtenerContratosNoVigentes()
+		{
+			var res = new List<Contrato>();
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"SELECT 
+								c.IdContrato,
+								c.Precio,
+								c.AlquilerDesde,
+								c.AlquilerHasta,
+								c.AlquilerHastaOriginal,
+								inq.Nombre,
+								inq.Apellido,
+								inm.Direccion
+							FROM Contrato AS c
+								INNER JOIN Inquilino AS inq ON c.IdInquilino = inq.IdInquilino
+								INNER JOIN Inmueble AS inm ON c.IdInmueble = inm.IdInmueble
+							WHERE c.AlquilerHasta < NOW()
+							ORDER BY c.AlquilerDesde DESC;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+						while (reader.Read())
+						{
+							res.Add(new Contrato
+							{
+								IdContrato = reader.GetInt32("IdContrato"),
+								Precio = reader.GetDecimal("Precio"),
+								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
+								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
+								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
+								Inquilino = new Inquilino()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido"),
+								},
+								Inmueble = new Inmueble()
+								{
+									Direccion = reader.GetString("Direccion")
+								}
+							});
+						}
+					conn.Close();
+				}
+			}
+			return res;
 		}
 	}
 }
