@@ -85,7 +85,8 @@ namespace inmobiliariaBaigorriaDiaz.Models
 						{nameof(Contrato.IdInmueble)} = @IdInmueble,
 						{nameof(Contrato.Precio)} = @Precio,
 						{nameof(Contrato.AlquilerDesde)} = @AlquilerDesde,
-						{nameof(Contrato.AlquilerHasta)} = @AlquilerHasta
+						{nameof(Contrato.AlquilerHasta)} = @AlquilerHasta,
+						{nameof(Contrato.AlquilerHastaOriginal)} = @AlquilerHastaOriginal
 					WHERE 
 						{nameof(Contrato.IdContrato)} = @IdContrato";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
@@ -96,6 +97,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
 					cmd.Parameters.AddWithValue("@Precio", contrato.Precio);
 					cmd.Parameters.AddWithValue("@AlquilerDesde", contrato.AlquilerDesde.ToDateTime(TimeOnly.MinValue));
 					cmd.Parameters.AddWithValue("@AlquilerHasta", contrato.AlquilerHasta.ToDateTime(TimeOnly.MinValue));
+					cmd.Parameters.AddWithValue("@AlquilerHastaOriginal", contrato.AlquilerHastaOriginal.ToDateTime(TimeOnly.MinValue));
 					conn.Open();
 					res = cmd.ExecuteNonQuery();
 					conn.Close();
@@ -318,6 +320,90 @@ namespace inmobiliariaBaigorriaDiaz.Models
 									Direccion = reader.GetString("Direccion")
 								}
 							});
+						}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public int ObtenerMesesTotales(int id){
+			var res = 1;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"
+							SELECT 
+								TIMESTAMPDIFF(MONTH, AlquilerDesde, AlquilerHasta) AS mesesTotales
+							FROM contrato
+							WHERE IdContrato = @id;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					cmd.Parameters.AddWithValue("@id", id);
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+						if (reader.Read())
+						{
+							res += reader.GetInt32("mesesTotales");
+						}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public int ObtenerMesesPagados(int id)
+		{
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"
+							SELECT 
+								COUNT(p.IdContrato) AS cantidadDePagos
+							FROM contrato AS c
+								INNER JOIN pago AS p
+								ON c.IdContrato = p.IdContrato
+							WHERE c.IdContrato = @id
+								AND p.Estado = 1;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					cmd.Parameters.AddWithValue("@id", id);
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+						if (reader.Read())
+						{
+							res = reader.GetInt32("cantidadDePagos");
+						}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public int ObtenerMesesAdeudados(int id){
+			var res = 1;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"
+							SELECT 
+								TIMESTAMPDIFF(MONTH, c.AlquilerDesde, NOW()) AS mesesTotales,
+								COUNT(p.IdContrato) AS cantidadDePagos
+							FROM contrato AS c
+								INNER JOIN pago AS p
+								ON c.IdContrato = p.IdContrato
+							WHERE c.IdContrato = @id
+								AND p.Estado = 1;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					cmd.Parameters.AddWithValue("@id", id);
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+						if(reader.Read())
+						{
+							res += reader.GetInt32("mesesTotales");
+							res -= reader.GetInt32("cantidadDePagos");
 						}
 					conn.Close();
 				}

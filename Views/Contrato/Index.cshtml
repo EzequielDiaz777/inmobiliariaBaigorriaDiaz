@@ -55,36 +55,6 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr class="centered-row" data-Id-Contrato="@item.IdContrato.ToString().ToLower()"
-                data-Alquiler-Desde="@item.AlquilerDesde.ToString().ToLower()"
-                data-Alquiler-Hasta="@item.AlquilerHasta.ToString().ToLower()">
-                <td>
-                    @item.Inquilino.ToString()
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.Inmueble.Direccion)
-                </td>
-                <td>
-                    <span class="button-column">
-                        <a href="@Url.Action("Edit", new { id = item.IdContrato })" title="Editar"> <i
-                                class="fas fa-edit custom-color"></i></a>
-                        |
-                        <a href="@Url.Action("Details", new { id = item.IdContrato })" title="Detalles"> <i
-                                class="fas fa-info-circle"></i></a>
-                        | <a href="@Url.Action("Delete", new { id = item.IdContrato })" title="Baja">
-                            <i class="fa-solid fas fa-trash-alt text-danger"></i></a>
-                        |
-                        <a href="@Url.Action("Create", "Pago", new { idContrato = item.IdContrato, monto = item.Precio })"
-                            title="Nuevo Pago"><i class="fa-solid fa-money-bill-wave" style="color: green "></i></a>
-                        |
-                        <a href="@Url.Action("Create", new { id = item.IdContrato })" title="Renovar Contrato"><i
-                                class="fa-solid fa-file-signature" style="color: black"></i></a>
-                    </span>
-                </td>
-            </tr>
-        }
     </tbody>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -176,7 +146,7 @@
                                                     </span>
                                                     |
                                                     <span class="button-icon">
-                                                        <a href="${deleteUrl}" title="Baja"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="${deleteUrl}" title="Cancelar contrato"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
                                                     </span>
                                                     |
                                                     <span class="button-icon">
@@ -247,7 +217,7 @@
                                                     </span>
                                                     |
                                                     <span class="button-icon">
-                                                        <a href="${deleteUrl}" title="Baja"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                                        <a href="${deleteUrl}" title="Cancelar contrato"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
                                                     </span>
                                                     |
                                                     <span class="button-icon">
@@ -273,26 +243,119 @@
             });
 
             function cargarTabla(url) {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function (response) {
-                        // Asegúrate de manejar response como un array
-                        if (Array.isArray(response)) {
-                            // Limpia la tabla actual
-                            $('.table tbody').empty();
+                if (url != '@Url.Action("ObtenerContratosNoVigentes", "Contrato")'){
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (response) {
+                            // Asegúrate de manejar response como un array
+                            if (Array.isArray(response)) {
+                                // Limpia la tabla actual
+                                $('.table tbody').empty();
 
-                            // Itera sobre cada elemento en response
-                            response.forEach(function (item) {
-                                // Construye las URL para los enlaces
-                                var editUrl = '/Contrato/Edit/' + item.idContrato;
-                                var detailsUrl = '/Contrato/Details/' + item.idContrato;
-                                var renewUrl = '/Contrato/Create/' + item.idContrato;
-                                var cPagoUrl = '/Pago/Create?idContrato=' + item.idContrato + '&monto=' + item.precio;
-                                var deleteUrl = 'Contrato/Delete/' + item.idContrato;
+                                // Itera sobre cada elemento en response
+                                response.forEach(function (item) {
+                                    var hoy = new Date();
+                                    var fechaHasta = new Date(item.alquilerHasta)
+                                    console.log(hoy <= fechaHasta)
+                                    if(hoy <= fechaHasta){
+                                        // Construye las URL para los enlaces
+                                        var editUrl = '/Contrato/Edit/' + item.idContrato;
+                                        var detailsUrl = '/Contrato/Details/' + item.idContrato;
+                                        var renewUrl = '/Contrato/Create/' + item.idContrato;
+                                        var cPagoUrl = '/Pago/Create?idContrato=' + item.idContrato + '&monto=' + item.precio;
+                                        var cancelarUrl = 'Contrato/CancelarContrato/' + item.idContrato;
 
-                                // Construye la fila para la tabla
-                                var row = `
+                                        // Construye la fila para la tabla
+                                        var row = `
+                                                <tr class="centered-row" data-Id-Contrato="${item.idContrato}" data-Alquiler-Desde="${item.alquilerDesde}" data-Alquiler-Hasta="${item.alquilerHasta}">
+                                                    <td>${item.inquilino.apellido} ${item.inquilino.nombre}</td>
+                                                    <td>${item.inmueble.direccion}</td>
+                                                    <td>
+                                                        <span class="button-column">
+                                                            <span class="button-icon">
+                                                                <a href="${editUrl}" title="Editar"><i class="fas fa-edit custom-color"></i></a>
+                                                            </span>
+                                                            |
+                                                            <span class="button-icon">
+                                                                <a href="${detailsUrl}" title="Detalles"><i class="fas fa-info-circle"></i></a>
+                                                            </span>
+                                                            |
+                                                            <span class="button-icon">
+                                                                <a href="${cancelarUrl}" title="Cancelar contrato"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                                            </span>
+                                                            |
+                                                            <span class="button-icon">
+                                                                <a href="${cPagoUrl}" title="Nuevo Pago"><i class="fa-solid fa-money-bill-wave" style="color: green"></i></a>
+                                                            </span>
+                                                            |
+                                                            <span class="button-icon">
+                                                                <a href="${renewUrl}" title="Renovar Contrato"><i class="fa-solid fa-file-signature" style="color: black"></i></a>
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        // Añade la fila a la tabla
+                                        $('.table tbody').append(row);
+                                    } else {
+                                        // Construye las URL para los enlaces
+                                        var editUrl = '/Contrato/Edit/' + item.idContrato;
+                                        var detailsUrl = '/Contrato/Details/' + item.idContrato;
+                                        var renewUrl = '/Contrato/Create/' + item.idContrato;
+
+                                        // Construye la fila para la tabla
+                                        var row = `
+                                                <tr class="centered-row" data-Id-Contrato="${item.idContrato}" data-Alquiler-Desde="${item.alquilerDesde}" data-Alquiler-Hasta="${item.alquilerHasta}">
+                                                    <td>${item.inquilino.apellido} ${item.inquilino.nombre}</td>
+                                                    <td>${item.inmueble.direccion}</td>
+                                                    <td>
+                                                        <span class="button-column">
+                                                            <span class="button-icon">
+                                                                <a href="${editUrl}" title="Editar"><i class="fas fa-edit custom-color"></i></a>
+                                                            </span>
+                                                            |
+                                                            <span class="button-icon">
+                                                                <a href="${detailsUrl}" title="Detalles"><i class="fas fa-info-circle"></i></a>
+                                                            </span>
+                                                            |
+                                                            <span class="button-icon">
+                                                                <a href="${renewUrl}" title="Renovar Contrato"><i class="fa-solid fa-file-signature" style="color: black"></i></a>
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        // Añade la fila a la tabla
+                                        $('.table tbody').append(row);
+                                    }
+                                });
+                            }
+                        },
+
+                        error: function (xhr, status, error) {
+                            console.error('Error al obtener los contratos:', error);
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function (response) {
+                            // Asegúrate de manejar response como un array
+                            if (Array.isArray(response)) {
+                                // Limpia la tabla actual
+                                $('.table tbody').empty();
+
+                                // Itera sobre cada elemento en response
+                                response.forEach(function (item) {
+                                    // Construye las URL para los enlaces
+                                    var editUrl = '/Contrato/Edit/' + item.idContrato;
+                                    var detailsUrl = '/Contrato/Details/' + item.idContrato;
+                                    var renewUrl = '/Contrato/Create/' + item.idContrato;
+
+                                    // Construye la fila para la tabla
+                                    var row = `
                                             <tr class="centered-row" data-Id-Contrato="${item.idContrato}" data-Alquiler-Desde="${item.alquilerDesde}" data-Alquiler-Hasta="${item.alquilerHasta}">
                                                 <td>${item.inquilino.apellido} ${item.inquilino.nombre}</td>
                                                 <td>${item.inmueble.direccion}</td>
@@ -307,30 +370,23 @@
                                                         </span>
                                                         |
                                                         <span class="button-icon">
-                                                            <a href="${deleteUrl}" title="Baja"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
-                                                        </span>
-                                                        |
-                                                        <span class="button-icon">
-                                                            <a href="${cPagoUrl}" title="Nuevo Pago"><i class="fa-solid fa-money-bill-wave" style="color: green"></i></a>
-                                                        </span>
-                                                        |
-                                                        <span class="button-icon">
                                                             <a href="${renewUrl}" title="Renovar Contrato"><i class="fa-solid fa-file-signature" style="color: black"></i></a>
                                                         </span>
                                                     </span>
                                                 </td>
                                             </tr>
                                         `;
-                                // Añade la fila a la tabla
-                                $('.table tbody').append(row);
-                            });
-                        }
-                    },
+                                    // Añade la fila a la tabla
+                                    $('.table tbody').append(row);
+                                });
+                            }
+                        },
 
-                    error: function (xhr, status, error) {
-                        console.error('Error al obtener los contratos:', error);
-                    }
-                });
+                        error: function (xhr, status, error) {
+                            console.error('Error al obtener los contratos:', error);
+                        }
+                    });
+                }
             }
 
             // Evento 'change' para el desplegable '#estadoContratos'
@@ -396,6 +452,7 @@
             function getCellValue(row, index) {
                 return $(row).children('td').eq(index).text();
             }
+            cargarTabla('@Url.Action("ObtenerContratos", "Contrato")');
         });
     </script>
 </table>

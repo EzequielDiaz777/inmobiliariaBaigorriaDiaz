@@ -1,0 +1,84 @@
+@model inmobiliariaBaigorriaDiaz.Models.Contrato
+
+@{
+	ViewData["Title"] = "Cancelación de contrato";
+}
+<div class="container mt-3">
+	<div class="row justify-content-center">
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-body">
+					<h1 class="text-center"><b>CANCELACIÓN DEL CONTRATO</b></h1>
+					<h2 class="text-center">¿Estas seguro de querer cancelar este contrato?</h2>
+					<hr />
+					<dl class="row">
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.IdInquilino)
+						</dt>
+						<dd class="col-sm-8">
+							@Model.Inquilino.ToString()
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.IdInmueble)
+						</dt>
+						<dd class="col-sm-8">
+							@Model.Inmueble.Direccion
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.AlquilerDesde)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.AlquilerDesde)
+						</dd>
+						<dt class="col-sm-4">
+							Cantidad de cuotas
+						</dt>
+						<dd class="col-sm-8">
+							@ViewBag.mesesTotales
+						</dd>
+						<dt class="col-sm-4">
+							Cuotas adeudadas
+						</dt>
+						<dd class="col-sm-8">
+							@ViewBag.mesesAdeudados
+						</dd>
+						<dt class="col-sm-4">
+							@Html.DisplayNameFor(model => model.AlquilerHasta)
+						</dt>
+						<dd class="col-sm-8">
+							@Html.DisplayFor(model => model.AlquilerHasta)
+						</dd>
+						<dd class="col-sm-12"></dd>
+					</dl>
+					@if (ViewBag.mesesAdeudados > 0)
+					{
+						<div class="text-center">
+							<p>Usted tiene meses adeudados en su contrato, no puede cancelarlo.</p>
+							<a type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'"
+								class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a
+								la Lista</a>
+						</div>
+					}
+					else
+					{
+						<div class="text-center">
+							<form asp-action="ConfirmarPago" asp-controller="Pago" method="get">
+								<!-- Campo oculto para enviar el ID del contrato -->
+								<input type="hidden" name="id" value="@Model.IdContrato" />
+								<!-- Botón para cancelar el contrato -->
+								<input type="submit" value="Cancelar contrato" class="btn btn-danger"
+									style="margin-right: 30px;" />
+								<!-- Botón para volver a la lista -->
+								<button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'"
+									class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;"> Volver a
+									la Lista</button>
+							</form>
+						</div>
+
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

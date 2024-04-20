@@ -35,7 +35,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             ViewBag.IdContrato = idContrato;
             ViewBag.Monto = monto;
-            string[] meses = { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre" };
+            string[] meses = { "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre", "cancelación" };
             ViewBag.Meses = meses;
             return View();
         }
@@ -99,7 +99,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         public ActionResult Edit(int id)
         {
             ViewBag.Contratos = repoCont.ObtenerContratos();
-            string[] meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+            string[] meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre", "cancelación" ];
             ViewBag.Meses = meses;
             return View(repoP.ObtenerPagoPorId(id));
         }
@@ -124,6 +124,60 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmarPago(int id)
+        {
+            decimal deuda;
+            var mesesPagados = repoCont.ObtenerMesesPagados(id);
+            var mesesTotales = repoCont.ObtenerMesesTotales(id);
+            var mesesPagos = mesesPagados < (int)(mesesTotales/2);
+            // Obtiene el contrato y calcula la deuda (esto es un ejemplo, personaliza según tu lógica)
+            var contrato = repoCont.ObtenerContratoById(id);
+            if(mesesPagos){
+                deuda = contrato.Precio*2; // Por ejemplo, el precio del contrato es la deuda
+            } else {
+                deuda = contrato.Precio;
+            }
+
+            var pago = new Pago
+            {
+                IdContrato = contrato.IdContrato,
+                Contrato = contrato,
+                MesDePago = "cancelacion",
+                Monto = deuda,
+                Fecha = DateOnly.FromDateTime(DateTime.Today)
+            };
+            Console.WriteLine(pago.IdContrato);
+            return View(pago);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmarPago(Pago pago)
+        {
+            Console.WriteLine(pago.IdContrato);
+            repoP.AltaFisica(pago);
+            TempData["Id"] = pago.NumeroDePago;
+            DateTime horaActual = DateTime.Now;
+            TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
+
+            var registro = new Registro
+            {
+                IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
+                IdFila = pago.NumeroDePago,
+                NombreDeTabla = "Pago",
+                TipoDeAccion = "Alta",
+                FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
+                HoraDeAccion = hora
+            };
+            rg.AltaFisica(registro);
+            var contrato = repoCont.ObtenerContratoById(pago.IdContrato);
+            contrato.AlquilerHasta = DateOnly.FromDateTime(DateTime.Now);
+            repoCont.ModificarContrato(contrato);
+            // Redirige al índice de contratos después de procesar el pago
+            return RedirectToAction("Index", "Contrato");
         }
 
         // GET: Pago/Delete/5

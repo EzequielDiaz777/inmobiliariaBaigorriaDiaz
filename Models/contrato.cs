@@ -30,10 +30,12 @@ namespace inmobiliariaBaigorriaDiaz.Models
         
         [Required]
         [ForeignKey(nameof(IdInquilino))]
+        [Display(Name = "Nombre del inquilino")]
         public Inquilino Inquilino { get; set; } = new Inquilino();
 
         [Required]
         [ForeignKey(nameof(IdInmueble))]
+        [Display(Name = "Dirección del inmueble")]
         public Inmueble Inmueble { get; set; } = new Inmueble();
 
 

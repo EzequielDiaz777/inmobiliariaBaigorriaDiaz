@@ -19,13 +19,13 @@
                             @Html.DisplayFor(model => model.IdContrato)
                         </dd>
                         <dt class="col-sm-4">
-                            <span>Inquilino</span>
+                            @Html.DisplayNameFor(model => model.Inquilino)
                         </dt>
                         <dd class="col-sm-8">
                             @(Model.Inquilino.ToString())
                         </dd>
                         <dt class="col-sm-4">
-                            <span>Dirección del inmueble</span>
+                            @Html.DisplayNameFor(model => model.Inmueble.Direccion)
                         </dt>
                         <dd class="col-sm-8">
                             @(Model.Inmueble.Direccion)
@@ -48,7 +48,6 @@
                         <dd class="col-sm-8">
                             @Html.DisplayFor(model => model.AlquilerHasta)
                         </dd>
-                        
                         <dd class="col-sm-12"></dd>
                     </dl>
                     <div class="text-center mt-3"> <!-- Agrega margen superior aquí -->

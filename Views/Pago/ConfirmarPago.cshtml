@@ -1,0 +1,69 @@
+@model inmobiliariaBaigorriaDiaz.Models.Pago
+
+@{
+    ViewData["Title"] = "Confirmación del pago";
+    string fecha = Model.Fecha.ToString("dd-MM-yyyy");
+}
+
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="text-center"><b>CONFIRMACIÓN DEL PAGO</b></h1>
+                    <hr />
+                    <dl class="row">
+						<form asp-action="ConfirmarPago" method="post">
+							<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+							<div class="form-group">
+								<label asp-for="IdContrato" class="control-label"></label>
+								<input asp-for="IdContrato" class="form-control" readonly />
+								<span asp-validation-for="IdContrato" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Contrato.Inquilino" class="control-label"></label>
+								@{
+									string inquilino = @Model.Contrato.Inquilino.ToString();
+								}
+								<input asp-for="Contrato.Inquilino.Apellido" value="@inquilino" class="form-control" readonly />
+							</div>
+							<div class="form-group">
+								<label asp-for="Contrato.Inmueble" class="control-label"></label>
+								@{
+									string inmueble = @Model.Contrato.Inmueble.Direccion;
+								}
+								<input asp-for="Contrato.Inmueble.Direccion" value="@inmueble" class="form-control"
+									readonly />
+							</div>
+							<div class="form-group">
+								<label asp-for="Monto" class="control-label"></label>
+								<input asp-for="Monto" class="form-control" readonly />
+								<span asp-validation-for="Monto" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="MesDePago" class="control-label"></label>
+								<input asp-for="MesDePago" class="form-control" readonly />
+								<span asp-validation-for="MesDePago" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Fecha" class="control-label">Fecha de finalización</label>
+								<input asp-for="Fecha" type="date" class="form-control" />
+								<span asp-validation-for="Fecha" class="text-danger"></span>
+							</div>
+							<br>
+							<div class="form-group text-center">
+								<input type="submit" value="Confirmar Pago" class="btn btn-primary btn-guardar"
+									style="margin-right: 30px;" />
+								<button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'"
+									class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;">
+									Volver a la Lista
+								</button>
+							</div>
+						</form>
+
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

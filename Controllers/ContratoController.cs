@@ -177,6 +177,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     contratoBD.Precio = contrato.Precio;
                     contratoBD.AlquilerDesde = contrato.AlquilerDesde;
                     contratoBD.AlquilerHasta = contrato.AlquilerHasta;
+                    contratoBD.AlquilerHastaOriginal = contrato.AlquilerHasta;
                     repoC.ModificarContrato(contratoBD);
                     return RedirectToAction(nameof(Index));
                 }
@@ -189,6 +190,15 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 return View();
             }
+        }
+
+        [HttpGet]
+        public ActionResult CancelarContrato(int id)
+        {
+            ViewBag.mesesAdeudados = repoC.ObtenerMesesAdeudados(id);
+            ViewBag.mesesTotales = repoC.ObtenerMesesTotales(id);
+            Console.WriteLine(id);
+            return View(repoC.ObtenerContratoById(id));
         }
 
         // GET: Contrato/Delete/5

@@ -87,6 +87,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             ClaimsIdentity? identity = null;
             if (mismoUsuario(id))
             {
+                Console.WriteLine("Tengo la misma identity que el usuario logueado");
                 identity = (ClaimsIdentity?)User.Identity;
             }
             try
