@@ -310,7 +310,7 @@ public class RepositorioInmueble
                     AND i.Estado = 1
                         AND NOT EXISTS (
                             SELECT 1 FROM Contrato c
-                            WHERE c.IdInmueble = i.IdInmueble AND c.Estado = 1);";
+                            WHERE c.IdInmueble = i.IdInmueble);";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@id", id);
@@ -373,7 +373,7 @@ public class RepositorioInmueble
                     AND i.Estado = 1
                         AND NOT EXISTS (
                             SELECT 1 FROM Contrato c
-                            WHERE c.IdInmueble = i.IdInmueble AND c.Estado = 1);";
+                            WHERE c.IdInmueble = i.IdInmueble);";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@id", id);
@@ -439,7 +439,6 @@ public class RepositorioInmueble
                         AND NOT EXISTS (
                             SELECT 1 FROM Contrato c
                             WHERE c.IdInmueble = inmueble.IdInmueble
-                                AND c.Estado = 1
                                 AND c.AlquilerHasta >= @fechaDesde AND c.AlquilerDesde <= @fechaHasta);";
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {

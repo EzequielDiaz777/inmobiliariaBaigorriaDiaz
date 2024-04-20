@@ -172,7 +172,7 @@
                             <input type="hidden" id="idInquilino" name="idInquilino" value="">
                             <div class="form-group text-center">
                                 <label for="dni" class="control-label">DNI</label>
-                                <input id="dni" value="${dni}" class="form-control" required />
+                                <input id="dniForm" value="${dni}" class="form-control" required />
                             </div>
                             <div class="form-group text-center">
                                 <label for="apellido" class="control-label">Apellido</label>
@@ -219,10 +219,14 @@
                 success: function (response) {
                     // Manejar la respuesta del servidor
                     if (response.success) {
+                        // Ocultar el botón 'crearInquilinoBtn'
+                        $('#crearInquilinoBtn').hide();
+                        // Establecer los campos 'dni', 'apellido' y 'nombre' como readonly
+                        $('#dniForm').prop('readonly', true);
+                        $('#apellido').prop('readonly', true);
+                        $('#nombre').prop('readonly', true);
                         $('#buscarInmuebleContainer').removeClass('d-none');
-                        $('#idInquilino').val(response.inquilino.idInquilino);
-                        // Mostrar un mensaje de éxito o realizar alguna acción adicional si es necesario
-                        alert('Inquilino creado exitosamente.');
+                        $('#idInquilino').val(response.idInquilino);
                     } else {
                         // Mostrar un mensaje de error si ocurrió algún problema durante la creación del inquilino
                         alert('Error al crear el inquilino:', response.message);

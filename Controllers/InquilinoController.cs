@@ -40,6 +40,10 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 ri.AltaFisica(inquilino);
                 TempData["Id"] = inquilino.IdInquilino;
+                TempData["Message"] = @$"< strong >¡Éxito! </ strong > datos guardados correctamente!
+                        < button type = 'button' class='close' data-dismiss='alert' aria-label='Close'>
+                            <span aria-hidden='true'>&#x2714;</span>
+                        </button>'";
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -57,8 +61,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 // Realizar las operaciones necesarias con el objeto Inquilino
                 ri.AltaFisica(inquilino);
                 TempData["Id"] = inquilino.IdInquilino;
-
-                return Json(new { success = true, message = "Inquilino creado exitosamente" });
+                return Json(new { success = true, inquilino.IdInquilino, message = "Inquilino creado exitosamente" });
             }
             catch (Exception ex)
             {
