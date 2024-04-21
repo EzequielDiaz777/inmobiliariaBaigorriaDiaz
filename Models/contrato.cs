@@ -25,7 +25,7 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Display(Name = "Alquiler hasta")]
         public DateOnly AlquilerHasta { get; set; }
         [Required]
-        [Display(Name = "Fecha original del final del alquiler")]
+        [Display(Name = "Finalización original")]
         public DateOnly AlquilerHastaOriginal { get; set; }
         
         [Required]
