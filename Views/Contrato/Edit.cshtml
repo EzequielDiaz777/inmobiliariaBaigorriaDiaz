@@ -12,7 +12,7 @@
                     <h1 class="text-center"><b>ACTUALIZACIÓN DEL CONTRATO</b></h1>
                     <hr />
                     <dl class="row">
-                        <form asp-action="Edit">
+                        <form id="editForm" asp-action="Edit">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
                                 <label asp-for="IdContrato" class="control-label"></label>
@@ -70,7 +70,7 @@
                             </div>
                             <br>
                             <div class="form-group text-center">
-                                <input type="submit" value="Guardar" class="btn btn-primary btn-guardar"
+                                <input type="submit" id="editBtn" value="Guardar" class="btn btn-primary btn-guardar"
                                     style="margin-right: 30px;" />
                                 <button type="button" onclick="window.location.href='@Url.Action("Index", "Contrato")'"
                                     class="btn btn-outline-warning" style="font-weight: bold; border-width: 2px;">
@@ -87,43 +87,29 @@
 
 <script>
     $(document).ready(function () {
-        function formatDate(dateString) {
-            var parts = dateString.split('-');
-            if (parts.length === 3) {
-                var year = parts[0];
-                var month = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-                var day = parts[2].length === 1 ? '0' + parts[2] : parts[2];
-                return year + '-' + month + '-' + day;
-            } else {
-                return '';
-            }
-        }
-
-        // Delegado de evento para el formulario de búsqueda
-        $('#formBuscar').submit(function (event) {
-            event.preventDefault(); // Evitar que se recargue la página
-
-            // Obtener los datos del formulario
-            var formData = $(this).serialize();
+        // Delegado de evento para el formulario de edición
+        $('#editForm').on('submit', function (event) {
+            // Evitar que se envíe el formulario
+            event.preventDefault();
 
             // Obtener las fechas desde los campos de fecha
-            var fechaDesde = $('#AlquilerDesde').val();
-            var fechaHasta = $('#AlquilerHasta').val();
+            console.log($('#AlquilerDesde').val());
+            console.log($('#AlquilerHasta').val());
 
-            // Verificar que las fechas no estén vacías antes de formatearlas
-            if (fechaDesde != null && fechaHasta != null) {
-                // Formatear las fechas al formato "yyyy-MM-dd"
-                var fechaDesdeFormatted = formatDate(fechaDesde);
-                var fechaHastaFormatted = formatDate(fechaHasta);
+            var fechaDesde = new Date($('#AlquilerDesde').val());
+            var fechaHasta = new Date($('#AlquilerHasta').val());
 
-                // Verificar si la fecha hasta es anterior a la fecha desde y viceversa
-                if (fechaHastaFormatted < fechaDesdeFormatted) {
-                    alert('La fecha hasta no puede ser anterior a la fecha desde.');
-                    return; // Detener el proceso si la validación falla
-                } else {
-                    $('#formBuscar').submit();
-                }
+            console.log(fechaDesde); 
+            console.log(fechaHasta);
+            console.log(fechaHasta < fechaDesde);
+            // Verificar si la fecha hasta es anterior a la fecha desde
+            if (fechaHasta < fechaDesde) {
+                alert('La fecha de fin del contrato no puede ser anterior a la fecha de inicio.');
+                return; // Detener el proceso si la validación falla
             }
+
+            // Si las validaciones pasan, enviar el formulario
+            //this.submit();
         });
     });
 </script>

@@ -48,6 +48,14 @@
                         <dd class="col-sm-8">
                             @Html.DisplayFor(model => model.AlquilerHasta)
                         </dd>
+                        @if(Model.AlquilerHastaOriginal != Model.AlquilerHasta){
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.AlquilerHastaOriginal)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.AlquilerHastaOriginal)
+                            </dd>
+                        }
                         <dd class="col-sm-12"></dd>
                     </dl>
                     <div class="text-center mt-3"> <!-- Agrega margen superior aquí -->
