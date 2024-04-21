@@ -1,5 +1,121 @@
 @model List<Inmueble>
 
+<!-- Modal para campo DNI vacío -->
+<div class="modal fade error-modal" id="dniVacioModal" tabindex="-1" aria-labelledby="dniVacioModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dniVacioModalLabel">¡Atención!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+                <span style="margin-left: 10px;">Por favor ingrese el DNI del inquilino antes de realizar la búsqueda.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para campos vacíos al buscar inmueble -->
+<div class="modal fade error-modal" id="camposVaciosModal" tabindex="-1" aria-labelledby="camposVaciosModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black" id="camposVaciosModalLabel">¡Atención!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+                <span style="margin-left: 10px;"> Por favor complete todos los campos antes de buscar un inmueble.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para cuando el ambiente es cero o negativo -->
+<div class="modal fade error-modal" id="ambienteNegativoModal" tabindex="-1" aria-labelledby="ambienteNegativoModalLabel" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 600px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: black">¡Atención!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+            <span style="margin-left: 10px;"> El ambiente no puede ser 0 o negativo.</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para cuando el precio es negativo -->
+<div class="modal fade error-modal" id="precioNegativoModal" tabindex="-1" aria-labelledby="precioNegativoModal" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 600px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: black">¡Atención!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+            <span style="margin-left: 10px;">El precio no puede ser negativo.</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para cuando el precio hasta es menor que el precio desde -->
+<div class="modal fade error-modal" id="precioInvalidoModal" tabindex="-1" aria-labelledby="precioInvalidoModal" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 600px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: black">¡Atención!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+            <span style="margin-left: 10px;">El precio hasta debe ser mayor o igual que el precio desde.</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para fecha inválida -->
+<div class="modal fade error-modal" id="fechaInvalidaModal" tabindex="-1" aria-labelledby="fechaInvalidaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black" id="fechaInvalidaModalLabel">¡Atención!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+                <span style="margin-left: 10px;"> La fecha hasta no puede ser anterior a la fecha desde.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container">
     <h1 class="text-center">Disponibilidad de Inmuebles</h1>
 
@@ -183,9 +299,6 @@
                                 <input id="nombre" class="form-control" required />
                             </div>
                             <br>
-                            <div class="form-group text-center">
-                                <button id="crearInquilinoBtn" class="btn btn-primary">Crear Inquilino</button>
-                            </div>
                         </div>
                     </div>
                 `);
@@ -229,29 +342,29 @@
                         $('#idInquilino').val(response.idInquilino);
                     } else {
                         // Mostrar un mensaje de error si ocurrió algún problema durante la creación del inquilino
-                        alert('Error al crear el inquilino:', response.message);
+                        $('#errorModal').modal('show');
                     }
                 },
                 error: function (xhr, status, error) {
                     // Manejar errores de la solicitud AJAX si es necesario
-                    console.error('Error en la solicitud AJAX:', error);
+                    $('#errorModal').modal('show');
                 }
             });
         });
 
         function validarNumeros(precioDesde, precioHasta, ambientes) {
-            // Verificar que los precios no sean negativos
+            // Verificar que los ambientes no sean negativos
             if(ambientes < 1){
-                alert('El ambiente no pueden contener un número negativo o cero.');
+                $('#ambienteNegativoModal').modal('show');
                 return false;
             }
             if (precioDesde < 1 || precioHasta < 1) {
-                alert('Los precios no pueden ser negativos o cero.');
+                $('#precioNegativoModal').modal('show');
                 return false;
             }
             // Verificar que el precio hasta no sea menor que el precio desde
             if (precioHasta < precioDesde) {
-                alert('El precio hasta no puede ser menor que el precio desde.');
+                $('#precioInvalidoModal').modal('show');
                 return false;
             }
             // Si pasa todas las validaciones, retornar true
@@ -274,21 +387,25 @@
             var precioDesde = parseFloat($('#precioDesde').val());
             var precioHasta = parseFloat($('#precioHasta').val());
 
-            // Validar los precios
-            if (!validarNumeros(precioDesde, precioHasta, ambientes)) {
-                // Si la validación falla, detener el proceso
-                return;
-            }
-
-            // Verificar que ningún campo esté vacío
             if (usoDeInmueble && tipoDeInmueble && ambientes && precioDesde && precioHasta && fechaDesde && fechaHasta) {
-                // Si ningún campo está vacío, enviar el formulario
-                $('#formBuscar').submit();
-            } else {
-                // Si algún campo está vacío, mostrar un mensaje de error
-                alert('Por favor complete todos los campos antes de buscar un inmueble');
-            }
-        });
+                    // Si ningún campo está vacío, continuar con las otras validaciones
+                    // Convertir los precios a números flotantes
+                    var precioDesde = parseFloat($('#precioDesde').val());
+                    var precioHasta = parseFloat($('#precioHasta').val());
+
+                    // Validar los precios
+                    if (!validarNumeros(precioDesde, precioHasta, ambientes)) {
+                        // Si la validación falla, detener el proceso
+                        return;
+                    }
+
+                    // Enviar el formulario si todas las validaciones son exitosas
+                    $('#formBuscar').submit();
+                } else {
+                    // Si algún campo está vacío, mostrar un mensaje de error
+                    $('#camposVaciosModal').modal('show');
+                }
+            });
 
         $('#BuscarInquilino button[type="submit"]').click(function (event) {
             // Evitar que se envíe el formulario automáticamente
@@ -303,7 +420,7 @@
                 $('#BuscarInquilino').submit();
             } else {
                 // Si el campo está vacío, mostrar un mensaje de error
-                alert('Por favor ingrese el DNI del inquilino antes de realizar la búsqueda.');
+                $('#dniVacioModal').modal('show');
             }
         });
 
@@ -339,7 +456,7 @@
 
                     // Verificar si la fecha hasta es anterior a la fecha desde y viceversa
                     if (fechaHastaFormatted < fechaDesdeFormatted) {
-                        alert('La fecha hasta no puede ser anterior a la fecha desde.');
+                        $('#fechaInvalidaModal').modal('show');
                         return; // Detener el proceso si la validación falla
                     }
 

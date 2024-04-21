@@ -100,3 +100,26 @@ dl.row dd {
 .custom-color {
   color: orange;
 }
+
+.modal-dialog {
+  max-width: 600px;
+}
+.modal-content {
+	background-color: #f1f1f1;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+	background-color: #dc3545;
+	color: white;
+}
+.modal-body {
+	padding: 20px;
+}
+.modal-footer {
+	background-color: #f1f1f1;
+}
+
+
+
