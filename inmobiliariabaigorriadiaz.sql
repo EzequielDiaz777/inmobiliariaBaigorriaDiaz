@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-04-2024 a las 03:15:00
+-- Tiempo de generación: 21-04-2024 a las 21:52:26
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `inmobiliariabaigorriadiaz`
 --
-CREATE DATABASE IF NOT EXISTS `inmobiliariabaigorriadiaz` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `inmobiliariabaigorriadiaz`;
 
 -- --------------------------------------------------------
 
@@ -36,8 +34,7 @@ CREATE TABLE `contrato` (
   `Precio` decimal(10,2) NOT NULL,
   `AlquilerDesde` date NOT NULL,
   `AlquilerHasta` date NOT NULL,
-  `AlquilerHastaOriginal` date NOT NULL,
-  `Estado` tinyint(1) NOT NULL
+  `AlquilerHastaOriginal` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -187,9 +184,8 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`IdUsuario`, `Nombre`, `Apellido`, `Email`, `Clave`, `Rol`, `AvatarURL`, `Estado`) VALUES
-(2, 'Mariano Gabriel', 'Luzza Bonilla', 'mluzza@gmail.com', '0yfrpBchLivjClVd/2wG7Qr77e1cxpygpcbnKhVZ1Vc=', 1, NULL, 1),
-(3, 'Juan', 'Perez', 'juanperez@gmai.com', 'Qvl7jFXEATEcnZTGPKI3fcpym6HtJZXXBEMTUXXOTcE=', 2, NULL, 1),
-(4, 'Jorge Ezequiel', 'Diaz', 'diazezequiel777@gmail.com', 'hY1CgihxAu07W07faaTyis8dHLeKN/wrgOfVxGkRt6I=', 2, '/update\\avatar_4.jpg', 1);
+(3, 'Juan', 'Perez', 'juanperez@gmail.com', '0yfrpBchLivjClVd/2wG7Qr77e1cxpygpcbnKhVZ1Vc=', 2, NULL, 1),
+(5, 'Mariano Gabriel', 'Luzza Bonilla', 'mluzza@gmail.com', '0yfrpBchLivjClVd/2wG7Qr77e1cxpygpcbnKhVZ1Vc=', 1, NULL, 1);
 
 --
 -- Índices para tablas volcadas
@@ -312,7 +308,7 @@ ALTER TABLE `usodeinmueble`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `IdUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas

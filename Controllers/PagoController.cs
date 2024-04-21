@@ -83,6 +83,18 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             try
             {
                 repoP.AltaLogica(id);
+                DateTime horaActual = DateTime.Now;
+                TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
+
+                var registroP = new Registro
+                {
+                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
+                    IdFila = id,
+                    NombreDeTabla = "Pago",
+                    TipoDeAccion = "Alta",
+                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
+                    HoraDeAccion = hora
+                };
                 return RedirectToAction(nameof(Index));
 
             }
@@ -163,7 +175,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             DateTime horaActual = DateTime.Now;
             TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
 
-            var registro = new Registro
+            var registroP = new Registro
             {
                 IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
                 IdFila = pago.NumeroDePago,
@@ -172,7 +184,18 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
                 HoraDeAccion = hora
             };
-            rg.AltaFisica(registro);
+            rg.AltaFisica(registroP);
+            
+            var registroC = new Registro
+            {
+                IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
+                IdFila = pago.IdContrato,
+                NombreDeTabla = "Contrato",
+                TipoDeAccion = "Baja",
+                FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
+                HoraDeAccion = hora
+            };
+            rg.AltaFisica(registroC);
             var contrato = repoCont.ObtenerContratoById(pago.IdContrato);
             contrato.AlquilerHasta = DateOnly.FromDateTime(DateTime.Now);
             repoCont.ModificarContrato(contrato);

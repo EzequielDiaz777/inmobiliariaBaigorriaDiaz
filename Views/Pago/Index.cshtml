@@ -21,12 +21,15 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Contrato.Inquilino.Apellido)
+                @Html.DisplayNameFor(model => model.IdContrato)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Contrato.Inquilino.Apellido)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Contrato.Inmueble.Duenio.Apellido)
+            </th>
+            <th class="no-ordenable">
                 @Html.DisplayNameFor(model => model.Monto)
             </th>
             <th>
@@ -44,6 +47,9 @@
         @foreach (var item in Model)
         {
             <tr class="centered-row" data-Estado="@item.Estado.ToString().ToLower()">
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdContrato)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Contrato.Inquilino.Apellido)
                 </td>
@@ -120,6 +126,7 @@
                 var searchText = $(this).val().toLowerCase();
                 $('.table tbody tr').each(function () {
                     var rowData = $(this).text().toLowerCase();
+                    console.log(rowData);
                     if (rowData.indexOf(searchText) === -1) {
                         $(this).hide();
                     } else {

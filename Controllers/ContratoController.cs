@@ -2,6 +2,7 @@ using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -10,6 +11,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         private RepositorioContrato repoC = new RepositorioContrato();
         private RepositorioInquilino repoInq = new RepositorioInquilino();
         private RepositorioInmueble repoInm = new RepositorioInmueble();
+        private RepositorioRegistro rg = new RepositorioRegistro();
 
         // GET: Contrato
         [HttpGet]
@@ -99,6 +101,18 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 contrato.AlquilerHastaOriginal = contrato.AlquilerHasta;
                 repoC.AltaFisica(contrato);
+                DateTime horaActual = DateTime.Now;
+                TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
+                var registroP = new Registro
+                {
+                    IdUsuario = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.PrimarySid)?.Value),
+                    IdFila = contrato.IdContrato,
+                    NombreDeTabla = "Contrato",
+                    TipoDeAccion = "Alta",
+                    FechaDeAccion = DateOnly.FromDateTime(DateTime.Today),
+                    HoraDeAccion = hora
+                };
+                rg.AltaFisica(registroP);
                 TempData["Id"] = contrato.IdContrato;
                 return RedirectToAction(nameof(Index));
             }
