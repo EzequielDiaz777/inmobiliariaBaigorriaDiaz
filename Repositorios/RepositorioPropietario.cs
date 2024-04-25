@@ -128,6 +128,69 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 		}
 
+		public int ObtenerCantidadDeFilas(){
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT COUNT(IdPropietario)
+							FROM propietario;";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							res = reader.GetInt32("COUNT(IdPropietario)");
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Propietario> ObtenerPropietarios(int limite, int paginado)
+		{
+			var res = new List<Propietario>();
+			var off = limite * (paginado - 1);
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT 
+						{nameof(Propietario.IdPropietario)}, 
+						{nameof(Propietario.Nombre)}, 
+						{nameof(Propietario.Apellido)}, 
+						{nameof(Propietario.Telefono)}, 
+						{nameof(Propietario.Email)}, 
+						{nameof(Propietario.DNI)}, 
+						{nameof(Propietario.Estado)} 
+					FROM {nameof(Propietario)}
+					LIMIT {limite} OFFSET {off}";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							res.Add(new Propietario
+							{
+								IdPropietario = reader.GetInt32("IdPropietario"),
+								Nombre = reader.GetString("Nombre"),
+								Apellido = reader.GetString("Apellido"),
+								Telefono = reader["Telefono"] != DBNull.Value ? reader.GetString("Telefono") : "",
+								Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
+								DNI = reader.GetString("DNI"),
+								Estado = reader.GetBoolean("Estado")
+							});
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
 		public List<Propietario> ObtenerPropietarios()
 		{
 			var res = new List<Propietario>();

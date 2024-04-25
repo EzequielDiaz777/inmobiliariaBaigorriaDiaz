@@ -14,10 +14,19 @@
     </div>
     <div class="form-group">
         <select id="estadoPropietarios" class="form-control text-center">
+            <option value="todos">Todos</option>
             <option value="disponible">Activo</option>
             <option value="no-disponible">Inactivo</option>
-            <option value="todos">Todos</option>
-            
+        </select>
+    </div>
+    <div class="text-center">
+        <span>Cantidad de filas: </span>
+        <select id="limite" class="form-control w-auto">
+            <option selected value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
         </select>
     </div>
 </div>
@@ -38,7 +47,7 @@
             </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="tbody">
         @foreach (var item in Model)
         {
             <tr class="centered-row" data-Estado="@item.Estado.ToString().ToLower()">
@@ -81,10 +90,25 @@
             </tr>
         }
     </tbody>
+    <span>
+        Páginas
+        @for (int i = 1; i <= ViewBag.cant; i++)
+        {
+            <button class="btn btn-success pag"> @i </button>
+            if (i != ViewBag.cant)
+            {
+                <span> | </span>
+            }
+        }
+    </span>
+    <br>
+    <br>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         $(document).ready(function () {
+            let rol = "@ViewBag.rol";
+            console.log(rol);
             $('#estadoPropietarios').change(function () {
                 var estado = $(this).val();
                 $('.table tbody tr').each(function () {
@@ -109,6 +133,65 @@
                         $(this).hide();
                     } else {
                         $(this).show();
+                    }
+                });
+            });
+
+            $('.pag').click(function () {
+                var paginado = $(this).text(); // Número de página que se hizo clic
+                var limite = $('#limite').val(); // Límite de filas por página
+
+                // Realizar una solicitud AJAX al método Paginado del controlador
+                $.ajax({
+                    url: '@Url.Action("Paginado", "Propietario")',
+                    type: 'GET',
+                    data: { limite: limite, paginado: paginado },
+                    success: function (response) {
+                        // Limpiar el cuerpo de la tabla
+                        $('.tbody').empty();
+
+                        // Agregar las filas de Propietario a la tabla
+                        response.forEach(function (propietario) {
+                            var editUrl = `/Propietario/Edit/${propietario.idPropietario}`;
+                            var detailsUrl = `/Propietario/Details/${propietario.idPropietario}`;
+                            var deleteUrl = `/Propietario/Delete/${propietario.idPropietario}`;
+                            var altaUrl = `/Propietario/Alta/${propietario.idPropietario}`;
+
+                            var fila = `
+                                <tr class="centered-row" data-estado="${propietario.estado ? 'true' : 'false'}">
+                                    <td>${propietario.dni}</td>
+                                    <td>${propietario.apellido}</td>
+                                    <td>${propietario.nombre}</td>
+                                    <td>
+                                        <span class="button-column">
+                                            <a href="${editUrl}" title="Editar"><i class="fas fa-edit custom-color"></i></a>
+                                            |
+                                            <a href="${detailsUrl}" title="Detalles"><i class="fas fa-info-circle"></i></a>
+                                        `;
+                                        if (rol == 'Administrador') {
+                                            if (propietario.estado) {
+                                                fila += `
+                                            |
+                                            <a href="${deleteUrl}" title="Baja"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                        `;
+                                        } else {
+                                            fila += `
+                                        |
+                                        <a href="${altaUrl}" title="Alta" class="text-success">
+                                            <i class="fa-solid fa-check-circle"></i>
+                                        </a>
+                                    `;
+                                        }
+                                    }
+                                    // Cerrar la columna de botones y la fila
+                                    fila += `
+                                        </span>
+                                    </td>
+                                </tr>
+                                `;
+                            $('.tbody').append(fila);
+                        });
+                        $('#estadoPropietarios').val('todos');
                     }
                 });
             });
@@ -147,7 +230,7 @@
             function getCellValue(row, index) {
                 return $(row).children('td').eq(index).text();
             }
-            
+
             $('#estadoPropietarios').trigger('change');
         });
     </script>

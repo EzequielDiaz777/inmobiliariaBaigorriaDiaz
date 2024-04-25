@@ -20,7 +20,7 @@
 <table class="table table-striped table-hover table-bordered custom-table">
     <thead>
         <tr>
-            <th>
+            <th class="id">
                 @Html.DisplayNameFor(model => model.IdContrato)
             </th>
             <th>
@@ -125,9 +125,8 @@
             $('#searchInput').on('input', function () {
                 var searchText = $(this).val().toLowerCase();
                 $('.table tbody tr').each(function () {
-                    var rowData = $(this).text().toLowerCase();
-                    console.log(rowData);
-                    if (rowData.indexOf(searchText) === -1) {
+                    var idContrato = $(this).find('td:first-child').text().toLowerCase();
+                    if (idContrato.indexOf(searchText) === -1) {
                         $(this).hide();
                     } else {
                         $(this).show();

@@ -2,6 +2,7 @@ using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 namespace inmobiliariaBaigorriaDiaz.Controllers
 {
@@ -11,12 +12,30 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Propietario
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(int limite = 5, int paginado = 1)
         {
-            ViewBag.Id = TempData["Id"];
-            ViewBag.entidad = "propietario";
-            return View(rp.ObtenerPropietarios());
+            // Establecer si el usuario es un administrador en ViewBag
+            ViewBag.rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            // Obtener la cantidad total de filas de Propietario
+            var cantidad = rp.ObtenerCantidadDeFilas();
+            ViewBag.cant = (int)Math.Ceiling((double)cantidad / limite);
+
+            // Obtener la lista de Propietario paginada
+            var propietarios = rp.ObtenerPropietarios(limite, paginado);
+
+            // Establecer la vista
+            return View(propietarios);
         }
+
+
+
+        [HttpGet]
+        public IActionResult Paginado(int limite, int paginado)
+        {
+            var propietarios = rp.ObtenerPropietarios(limite, paginado);
+            return Json(propietarios);
+        }
+
 
         // GET: Propietario/Details/5
         [HttpGet]
@@ -140,10 +159,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         public IActionResult NoAutorizado()
         {
-            return View(); // Puedes redirigir a una vista específica para mostrar un mensaje de error o realizar alguna acción.
+            return View();
         }
 
-        // Filtro de acción para redirigir si el usuario no está autenticado
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!User.Identity.IsAuthenticated)
