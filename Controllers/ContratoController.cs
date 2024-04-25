@@ -1,6 +1,5 @@
 using inmobiliariaBaigorriaDiaz.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
@@ -15,11 +14,35 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Contrato
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(int limite = 5, int paginado = 1, int cantidad = 0)
         {
             ViewBag.Id = TempData["Id"];
             ViewBag.entidad = "contrato";
-            return View(repoC.ObtenerContratos());
+            ViewBag.limite = limite;
+
+            ViewBag.rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            // Obtener la cantidad total de filas de Propietario
+            if (cantidad == 0)
+            {
+                cantidad = repoC.ObtenerCantidadDeFilas();
+            }
+
+            // Calcula el número total de páginas
+            ViewBag.totalPages = (int)Math.Ceiling((double)cantidad / limite);
+
+            // Establece la página actual en `ViewBag`
+            ViewBag.currentPage = paginado;
+
+            return View(repoC.ObtenerContratos(limite, paginado));
+        }
+
+        [HttpGet]
+        public IActionResult Paginado(int limite, int paginado)
+        {
+            // Asegúrate de recibir el valor de `limite` y `paginado`
+            ViewBag.limite = limite;
+            return Json(repoC.ObtenerContratos(limite, paginado));
         }
 
         [HttpGet]

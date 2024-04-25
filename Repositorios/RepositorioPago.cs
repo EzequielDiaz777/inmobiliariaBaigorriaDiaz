@@ -130,6 +130,99 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 		}
 
+		public int ObtenerCantidadDeFilas()
+		{
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT COUNT({nameof(Pago.NumeroDePago)})
+							FROM {nameof(Pago)};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							res = reader.GetInt32("COUNT(NumeroDePago)");
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Pago> ObtenerPagos(int limite, int paginado)
+		{
+			var res = new List<Pago>();
+			int offset = (paginado - 1) * limite;
+
+			if (offset < 0)
+			{
+				offset = 0;
+			}
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				string sql =
+							@$"SELECT 
+								pag.{nameof(Pago.NumeroDePago)}, 
+								pag.{nameof(Pago.MesDePago)},
+								pag.{nameof(Pago.Monto)}, 
+								pag.{nameof(Pago.Fecha)},
+								pag.{nameof(Pago.Estado)},
+								cont.{nameof(Contrato.IdContrato)},
+								inq.{nameof(Inquilino.Apellido)} AS InquilinoApellido,
+								prop.{nameof(Propietario.Apellido)} AS PropietarioApellido
+							FROM {nameof(Pago)} AS pag
+							INNER JOIN {nameof(Contrato)} AS cont 
+							ON pag.{nameof(Pago.IdContrato)} = cont.{nameof(Contrato.IdContrato)}
+							INNER JOIN {nameof(Inquilino)} AS inq 
+							ON cont.{nameof(Contrato.IdInquilino)} = inq.{nameof(Inquilino.IdInquilino)}
+							INNER JOIN {nameof(Inmueble)} AS inm 
+							ON cont.{nameof(Contrato.IdInmueble)} = inm.{nameof(Inmueble.IdInmueble)}
+							INNER JOIN {nameof(Propietario)} AS prop 
+							ON inm.{nameof(Inmueble.IdPropietario)} = prop.{nameof(Propietario.IdPropietario)}
+							LIMIT {limite} OFFSET {offset}";
+
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							res.Add(new Pago
+							{
+								NumeroDePago = reader.GetInt32("NumeroDePago"),
+								IdContrato = reader.GetInt32("IdContrato"),
+								MesDePago = reader.GetString("MesDePago"),
+								Monto = reader.GetDecimal("Monto"),
+								Fecha = DateOnly.FromDateTime(reader.GetDateTime("Fecha")),
+								Estado = reader.GetBoolean("Estado"),
+								Contrato = new Contrato
+								{
+									Inquilino = new Inquilino
+									{
+										Apellido = reader.GetString("InquilinoApellido")
+									},
+									Inmueble = new Inmueble
+									{
+										Duenio = new Propietario
+										{
+											Apellido = reader.GetString("PropietarioApellido")
+										}
+									}
+								}
+							});
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
 		public List<Pago> ObtenerPagos()
 		{
 			var res = new List<Pago>();
@@ -192,7 +285,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 			return res;
 		}
-
 
 		public Pago ObtenerPagoPorId(int id)
 		{

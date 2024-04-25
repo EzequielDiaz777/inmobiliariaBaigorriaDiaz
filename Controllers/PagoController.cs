@@ -14,11 +14,34 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Pago
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(int limite = 5, int paginado = 1, int cantidad = 0)
         {
             ViewBag.Id = TempData["Id"];
             ViewBag.entidad = "pago";
-            return View(repoP.ObtenerPagos());
+            ViewBag.limite = limite;
+
+            ViewBag.rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            // Obtener la cantidad total de filas de Propietario
+            if (cantidad == 0)
+            {
+                cantidad = repoP.ObtenerCantidadDeFilas();
+            }
+
+            // Calcula el número total de páginas
+            ViewBag.totalPages = (int)Math.Ceiling((double)cantidad / limite);
+
+            // Establece la página actual en `ViewBag`
+            ViewBag.currentPage = paginado;
+            return View(repoP.ObtenerPagos(limite, paginado));
+        }
+
+        [HttpGet]
+        public IActionResult Paginado(int limite, int paginado)
+        {
+            // Asegúrate de recibir el valor de `limite` y `paginado`
+            ViewBag.limite = limite;
+            return Json(repoP.ObtenerPagos(limite, paginado));
         }
 
         // GET: Pago/Details/5

@@ -115,6 +115,91 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 		}
 
+		public int ObtenerCantidadDeFilas()
+		{
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT COUNT({nameof(Contrato.IdContrato)})
+							FROM {nameof(Contrato)};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							res = reader.GetInt32("COUNT(IdContrato)");
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Contrato> ObtenerContratos(int limite, int paginado)
+		{
+			var res = new List<Contrato>();
+			int offset = (paginado - 1) * limite;
+
+			if (offset < 0)
+			{
+				offset = 0;
+			}
+
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"
+						SELECT 
+							c.{nameof(Contrato.IdContrato)}, 
+							c.{nameof(Contrato.Precio)}, 
+							{nameof(Contrato.AlquilerDesde)}, 
+							{nameof(Contrato.AlquilerHasta)},
+							{nameof(Contrato.AlquilerHastaOriginal)},
+							inq.{nameof(Inquilino.Nombre)},
+							inq.{nameof(Inquilino.Apellido)},
+							inm.{nameof(Inmueble.Direccion)}
+						FROM {nameof(Contrato)} AS c
+							INNER JOIN {nameof(Inquilino)} AS inq
+								ON c.{nameof(Contrato.IdInquilino)} = inq.{nameof(Inquilino.IdInquilino)}
+							INNER JOIN {nameof(Inmueble)} AS inm
+								ON c.{nameof(Contrato.IdInmueble)} = inm.{nameof(Inmueble.IdInmueble)}
+						ORDER BY c.AlquilerDesde DESC
+						LIMIT {limite} OFFSET {offset}";
+
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							res.Add(new Contrato
+							{
+								IdContrato = reader.GetInt32("IdContrato"),
+								Precio = reader.GetDecimal("Precio"),
+								AlquilerDesde = DateOnly.FromDateTime(reader.GetDateTime("AlquilerDesde")),
+								AlquilerHasta = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHasta")),
+								AlquilerHastaOriginal = DateOnly.FromDateTime(reader.GetDateTime("AlquilerHastaOriginal")),
+								Inquilino = new Inquilino()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido"),
+								},
+								Inmueble = new Inmueble()
+								{
+									Direccion = reader.GetString("Direccion")
+								}
+							});
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
 		public List<Contrato> ObtenerContratos()
 		{
 			var res = new List<Contrato>();

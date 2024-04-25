@@ -80,6 +80,84 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 		}
 
+		public int ObtenerCantidadDeFilas()
+		{
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT COUNT({nameof(Registro.IdRegistro)})
+							FROM {nameof(Registro)};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							res = reader.GetInt32("COUNT(IdRegistro)");
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Registro> ObtenerRegistros(int limite, int paginado)
+		{
+			var res = new List<Registro>();
+			int offset = (paginado - 1) * limite;
+
+			if (offset < 0)
+			{
+				offset = 0;
+			}
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT 
+							r.{nameof(Registro.IdRegistro)},
+							r.{nameof(Registro.IdUsuario)},
+							r.{nameof(Registro.IdFila)},
+							r.{nameof(Registro.NombreDeTabla)},
+							r.{nameof(Registro.TipoDeAccion)},
+							r.{nameof(Registro.FechaDeAccion)},
+							r.{nameof(Registro.HoraDeAccion)},
+							u.{nameof(Usuario.Nombre)},
+							u.{nameof(Usuario.Apellido)}
+						FROM {nameof(Registro)} r
+						INNER JOIN usuario u
+							ON u.{nameof(Usuario.IdUsuario)} = r.{nameof(Registro.IdUsuario)}
+							LIMIT {limite} OFFSET {offset};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							res.Add(new Registro
+							{
+								IdRegistro = reader.GetInt32("IdRegistro"),
+								IdUsuario = reader.GetInt32("IdUsuario"),
+								IdFila = reader.GetInt32("IdFila"),
+								NombreDeTabla = reader.GetString("NombreDeTabla"),
+								TipoDeAccion = reader.GetString("TipoDeAccion"),
+								FechaDeAccion = DateOnly.FromDateTime(reader.GetDateTime("FechaDeAccion")),
+								HoraDeAccion = reader.GetTimeSpan("HoraDeAccion"),
+								Usuario = new Usuario()
+								{
+									Nombre = reader.GetString("Nombre"),
+									Apellido = reader.GetString("Apellido")
+								}
+							});
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
 		public List<Registro> ObtenerRegistros()
 		{
 			var res = new List<Registro>();

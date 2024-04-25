@@ -10,8 +10,75 @@
             <div class="card">
                 <div class="card-body">
                     <h1 class="text-center"><b>ALTA DE INMUEBLE</b></h1>
-                    <form asp-action="Create" class="needs-validation" novalidate>
+
+                    <!-- Formulario de búsqueda de propietarios -->
+                    <form id="BuscarPropietario" class="mt-md-0 mt-4">
+                        <h2>Buscar Propietario</h2>
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">Ingrese el DNI del propietario:</label>
+                            <input type="number" name="dni" id="dni" class="form-control">
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </div>
+                    </form>
+
+                    <!-- Espacio donde se mostrará la información del propietario encontrado o el formulario para crear uno nuevo -->
+                    <div class="resultadoPropietario mt-3"></div>
+
+                    <!-- Formulario de alta de inmueble -->
+                    <form asp-action="Create" class="needs-validation" novalidate id="formAltaInmueble">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Otros campos del formulario de alta de inmueble -->
+                        <div class="form-group">
+                            <label asp-for="Direccion" class="control-label"></label>
+                            <input asp-for="Direccion" class="form-control" />
+                            <span asp-validation-for="Direccion" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Ambientes" class="control-label"></label>
+                            <input asp-for="Ambientes" class="form-control" />
+                            <span asp-validation-for="Ambientes" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Superficie" class="control-label"></label>
+                            <input asp-for="Superficie" class="form-control" />
+                            <span asp-validation-for="Superficie" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Longitud" class="control-label"></label>
+                            <input asp-for="Longitud" class="form-control" />
+                            <span asp-validation-for="Longitud" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Latitud" class="control-label"></label>
+                            <input asp-for="Latitud" class="form-control" />
+                            <span asp-validation-for="Latitud" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Precio" class="control-label"></label>
+                            <input asp-for="Precio" class="form-control" />
+                            <span asp-validation-for="Precio" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Uso del inmueble</label>
+                            <select class="form-select" name="IdUsoDeInmueble">
+                                <option disabled="" selected="" hidden="" value="">Seleccione un uso de inmueble
+                                </option>
+                                @foreach (var item in ViewBag.UsosDeInmuebles)
+                                {
+                                    <option value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="IdUsoDeInmueble" class="text-danger"></span>
+                        </div>
                         <div class="form-group">
                             <label asp-for="IdTipoDeInmueble" class="control-label">Tipo de inmueble</label>
                             <div class="select-group">
@@ -30,65 +97,15 @@
                                 </select>
                             </div>
                             <span asp-validation-for="IdTipoDeInmueble" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Direccion" class="control-label"></label>
-                            <input asp-for="Direccion" class="form-control" />
-                            <span asp-validation-for="Direccion" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Ambientes" class="control-label"></label>
-                            <input asp-for="Ambientes" class="form-control" />
-                            <span asp-validation-for="Ambientes" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Superficie" class="control-label"></label>
-                            <input asp-for="Superficie" class="form-control" />
-                            <span asp-validation-for="Superficie" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Longitud" class="control-label"></label>
-                            <input asp-for="Longitud" class="form-control" />
-                            <span asp-validation-for="Longitud" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Latitud" class="control-label"></label>
-                            <input asp-for="Latitud" class="form-control" />
-                            <span asp-validation-for="Latitud" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Precio" class="control-label"></label>
-                            <input asp-for="Precio" class="form-control" />
-                            <span asp-validation-for="Precio" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Uso del inmueble</label>
-                            <select class="form-select" name="IdUsoDeInmueble">
-                                <option disabled="" selected="" hidden="" value="">Seleccione un uso de inmueble
-                                </option>
-                                @foreach (var item in ViewBag.UsosDeInmuebles)
-                                {
-                                    <option value="@item.IdUsoDeInmueble">@(item.Nombre)</option>
-                                }
-                            </select>
-                            <span asp-validation-for="IdUsoDeInmueble" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Propietario</label>
-                            <select class="form-select" name="IdPropietario">
-                                <option disabled="" selected="" hidden="" value="">Seleccione un Propietario</option>
-                                @foreach (var item in ViewBag.Propietarios)
-                                {
-                                    <option value="@item.IdPropietario">@(item.ToString())</option>
-                                }
-                            </select>
-                            <span asp-validation-for="IdPropietario" class="text-danger"></span>
-                        </div>
+
+                        <!-- Campo oculto para el ID del propietario -->
+                        <input type="hidden" id="idPropietario" name="idPropietario" value="" />
+
+                        <!-- Botones para guardar y volver a la lista -->
                         <div class="form-group text-center mt-2">
                             <button type="submit" class="btn btn-primary">Alta</button>
-                            <a href="@Url.Action("Index", "Inmueble")" class="m-2 p-2 btn btn-outline-warning">Volver
-                                a la
-                                Lista</a>
+                            <a href="@Url.Action("Index", "Inmueble")" class="m-2 p-2 btn btn-outline-warning">Volver a
+                                la Lista</a>
                         </div>
                     </form>
                 </div>
@@ -99,18 +116,114 @@
 
 @section Scripts {
     <script>
-        // Validar los campos y mostrar los iconos de verificación
-        $(document).ready(function () {
-            $('.input-group input').on('input', function () {
-                var inputGroup = $(this).closest('.input-group');
-                var iconCheck = inputGroup.find('.fa-check');
-                var iconTimes = inputGroup.find('.fa-times');
-                if ($(this).val().trim() !== '') {
-                    iconCheck.removeClass('d-none');
-                    iconTimes.addClass('d-none');
-                } else {
-                    iconCheck.addClass('d-none');
-                    iconTimes.removeClass('d-none');
+        // Función para manejar la búsqueda de propietarios por DNI
+        $('#BuscarPropietario').submit(function (event) {
+            event.preventDefault(); // Evitar que se recargue la página
+            var dni = $('#dni').val();
+
+            $.ajax({
+                url: '@Url.Action("BuscarPropietario", "Propietario")',
+                type: 'GET',
+                data: { dni: dni },
+                success: function (response) {
+                    if (response.propietario.dni !== '') {
+                        // Mostrar la información del propietario encontrado
+                        $('.resultadoPropietario').html(`
+                                <div class="row">
+                                    <div>
+                                        <hr>
+                                        <div>
+                                            <input type="hidden" id="idPropietario" name="idPropietario" value="${response.propietario.idPropietario}">
+                                            <div class="form-group text-center">
+                                                <label asp-for="DNI" class="control-label">DNI</label>
+                                                <input asp-for="DNI" value="${response.propietario.dni}" readonly class="form-control" required />
+                                                <span asp-validation-for="DNI" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group text-center">
+                                                <label asp-for="Apellido" class="control-label">Apellido</label>
+                                                <input asp-for="Apellido" value="${response.propietario.apellido}" readonly class="form-control" required />
+                                                <span asp-validation-for="Apellido" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group text-center">
+                                                <label asp-for="Nombre" class="control-label">Nombre</label>
+                                                <input asp-for="Nombre" value="${response.propietario.nombre}" readonly class="form-control" required />
+                                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                    } else {
+                        // Mostrar el formulario para crear un nuevo propietario si no se encuentra
+                        $('.resultadoPropietario').html(`
+                                <div class="row">
+                                    <div>
+                                        <hr>
+                                        <input type="hidden" id="idPropietario" name="idPropietario" value="">
+                                        <div class="form-group text-center">
+                                            <label for="dniForm" class="control-label">DNI</label>
+                                            <input id="dniForm" value="${dni}" class="form-control" required />
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="apellido" class="control-label">Apellido</label>
+                                            <input id="apellido" class="form-control" required />
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="nombre" class="control-label">Nombre</label>
+                                            <input id="nombre" class="form-control" required />
+                                        </div>
+                                        <br>
+                                        <div class="text-center">
+                                            <button id="crearPropietarioBtn" class="btn btn-primary">Crear Propietario</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                    }
+                }
+            });
+        });
+
+        // Función para manejar la creación de un nuevo propietario si no se encuentra
+        $(document).on('click', '#crearPropietarioBtn', function () {
+            // Recopilar los datos del formulario
+            var dni = $('#dniForm').val();
+            var apellido = $('#apellido').val();
+            var nombre = $('#nombre').val();
+
+            // Crear un objeto con los datos del propietario
+            var propietario = {
+                DNI: dni,
+                Apellido: apellido,
+                Nombre: nombre,
+                Telefono: "",
+                Email: "",
+            };
+
+            // Enviar los datos del propietario al servidor para su almacenamiento en la base de datos
+            $.ajax({
+                url: '@Url.Action("CreateJSON", "Propietario")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(propietario),
+                success: function (response) {
+                    // Manejar la respuesta del servidor
+                    if (response.success) {
+                        // Ocultar el botón 'crearPropietarioBtn'
+                        $('#crearPropietarioBtn').hide();
+                        // Establecer los campos 'dni', 'apellido' y 'nombre' como readonly
+                        $('#dniForm').prop('readonly', true);
+                        $('#apellido').prop('readonly', true);
+                        $('#nombre').prop('readonly', true);
+                        $('#idPropietario').val(response.idPropietario);
+                    } else {
+                        // Mostrar un mensaje de error si ocurrió algún problema durante la creación del propietario
+                        alert('Error al crear el propietario:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Manejar errores de la solicitud AJAX si es necesario
+                    alert('Error en la solicitud AJAX:', error);
                 }
             });
         });

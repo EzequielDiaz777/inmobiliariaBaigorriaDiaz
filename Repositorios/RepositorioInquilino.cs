@@ -128,6 +128,75 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 		}
 
+		public int ObtenerCantidadDeFilas()
+		{
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT COUNT({nameof(Inquilino.IdInquilino)})
+							FROM {nameof(Inquilino)};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							res = reader.GetInt32("COUNT(IdInquilino)");
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Inquilino> ObtenerInquilinos(int limite, int paginado)
+		{
+			var res = new List<Inquilino>();
+			int offset = (paginado - 1) * limite;
+
+			if (offset < 0)
+			{
+				offset = 0;
+			}
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT 
+						{nameof(Inquilino.IdInquilino)}, 
+						{nameof(Inquilino.Nombre)}, 
+						{nameof(Inquilino.Apellido)}, 
+						{nameof(Inquilino.Telefono)}, 
+						{nameof(Inquilino.Email)}, 
+						{nameof(Inquilino.DNI)}, 
+						{nameof(Inquilino.Estado)} 
+					FROM {nameof(Inquilino)}
+					LIMIT {limite} OFFSET {offset}";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							res.Add(new Inquilino
+							{
+								IdInquilino = reader.GetInt32("IdInquilino"),
+								Nombre = reader.GetString("Nombre"),
+								Apellido = reader.GetString("Apellido"),
+								Telefono = reader["Telefono"] != DBNull.Value ? reader.GetString("Telefono") : "",
+								Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
+								DNI = reader.GetString("DNI"),
+								Estado = reader.GetBoolean("Estado")
+							});
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
 		public List<Inquilino> ObtenerInquilinos()
 		{
 			var res = new List<Inquilino>();

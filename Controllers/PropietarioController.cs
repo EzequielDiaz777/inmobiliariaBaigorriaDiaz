@@ -12,30 +12,36 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Propietario
         [HttpGet]
-        public ActionResult Index(int limite = 5, int paginado = 1)
+        public ActionResult Index(int limite = 5, int paginado = 1, int cantidad = 0)
         {
-            // Establecer si el usuario es un administrador en ViewBag
+            ViewBag.Id = TempData["Id"];
+            ViewBag.entidad = "propietario";
+            // Establece `limite` en `ViewBag` para usarlo en la vista
+            ViewBag.limite = limite;
+
             ViewBag.rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
             // Obtener la cantidad total de filas de Propietario
-            var cantidad = rp.ObtenerCantidadDeFilas();
-            ViewBag.cant = (int)Math.Ceiling((double)cantidad / limite);
+            if(cantidad == 0){
+                cantidad = rp.ObtenerCantidadDeFilas();
+            }
 
-            // Obtener la lista de Propietario paginada
-            var propietarios = rp.ObtenerPropietarios(limite, paginado);
+            // Calcula el número total de páginas
+            ViewBag.totalPages = (int)Math.Ceiling((double)cantidad / limite);
 
-            // Establecer la vista
-            return View(propietarios);
+            // Establece la página actual en `ViewBag`
+            ViewBag.currentPage = paginado;
+            // Devuelve la vista con los datos de `propietarios`
+            return View(rp.ObtenerPropietarios(limite, paginado));
         }
-
-
 
         [HttpGet]
         public IActionResult Paginado(int limite, int paginado)
         {
-            var propietarios = rp.ObtenerPropietarios(limite, paginado);
-            return Json(propietarios);
+            // Asegúrate de recibir el valor de `limite` y `paginado`
+            ViewBag.limite = limite;
+            return Json(rp.ObtenerPropietarios(limite, paginado));
         }
-
 
         // GET: Propietario/Details/5
         [HttpGet]
@@ -126,6 +132,40 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 Console.WriteLine(ex.Message.ToString());
                 return RedirectToAction("Edit");
+            }
+        }
+
+        [HttpGet]
+        public ActionResult BuscarPropietario(int dni)
+        {
+            var propietario = rp.ObtenerPropietarioPorDNI(dni);
+            if (propietario != null)
+            {
+                // Si el inquilino se encuentra, devolvemos los datos como un objeto JSON con la propiedad "success" igual a true
+                // y los datos del inquilino en la propiedad "inquilino"
+
+                return Json(new { success = true, propietario = propietario });
+            }
+            else
+            {
+                // Si el inquilino no se encuentra, devolvemos un objeto JSON con la propiedad "success" igual a false
+                return Json(new { success = false });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult CreateJSON([FromBody] Propietario propietario)
+        {
+            try
+            {
+                // Realizar las operaciones necesarias con el objeto propietario
+                rp.AltaFisica(propietario);
+                TempData["Id"] = propietario.IdPropietario;
+                return Json(new { success = true, propietario.IdPropietario, message = "propietario creado exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
             }
         }
 

@@ -128,12 +128,13 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 		}
 
-		public int ObtenerCantidadDeFilas(){
+		public int ObtenerCantidadDeFilas()
+		{
 			var res = 0;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
-				var sql = @$"SELECT COUNT(IdPropietario)
-							FROM propietario;";
+				var sql = @$"SELECT COUNT({nameof(Propietario.IdPropietario)})
+							FROM {nameof(Propietario)};";
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -153,19 +154,26 @@ namespace inmobiliariaBaigorriaDiaz.Models
 		public List<Propietario> ObtenerPropietarios(int limite, int paginado)
 		{
 			var res = new List<Propietario>();
-			var off = limite * (paginado - 1);
+			int offset = (paginado - 1) * limite;
+
+			if (offset < 0)
+			{
+				offset = 0;
+			}
+
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{
 				var sql = @$"SELECT 
-						{nameof(Propietario.IdPropietario)}, 
-						{nameof(Propietario.Nombre)}, 
-						{nameof(Propietario.Apellido)}, 
-						{nameof(Propietario.Telefono)}, 
-						{nameof(Propietario.Email)}, 
-						{nameof(Propietario.DNI)}, 
-						{nameof(Propietario.Estado)} 
-					FROM {nameof(Propietario)}
-					LIMIT {limite} OFFSET {off}";
+                {nameof(Propietario.IdPropietario)}, 
+                {nameof(Propietario.Nombre)}, 
+                {nameof(Propietario.Apellido)}, 
+                {nameof(Propietario.Telefono)}, 
+                {nameof(Propietario.Email)}, 
+                {nameof(Propietario.DNI)}, 
+                {nameof(Propietario.Estado)} 
+            FROM {nameof(Propietario)}
+            LIMIT {limite} OFFSET {offset}";
+
 				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 				{
 					conn.Open();
@@ -248,6 +256,46 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
 			{
 				cmd.Parameters.AddWithValue("@id", id);
+				conn.Open();
+				using (MySqlDataReader reader = cmd.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						propietario = new Propietario
+						{
+							IdPropietario = reader.GetInt32("IdPropietario"),
+							Nombre = reader.GetString("Nombre"),
+							Apellido = reader.GetString("Apellido"),
+							Telefono = reader["Telefono"] != DBNull.Value ? reader.GetString("Telefono") : "",
+							Email = reader["Email"] != DBNull.Value ? reader.GetString("Email") : "",
+							DNI = reader.GetString("DNI"),
+							Estado = reader.GetBoolean("Estado")
+						};
+					}
+				}
+				conn.Close();
+			}
+			return propietario;
+		}
+
+		public Propietario ObtenerPropietarioPorDNI(int dni)
+		{
+			MySqlConnection mySqlConnection = new MySqlConnection(connectionString);
+			using MySqlConnection conn = mySqlConnection;
+			var sql = @$"SELECT 
+						{nameof(Propietario.IdPropietario)}, 
+						{nameof(Propietario.Nombre)}, 
+						{nameof(Propietario.Apellido)}, 
+						{nameof(Propietario.Telefono)}, 
+						{nameof(Propietario.Email)}, 
+						{nameof(Propietario.DNI)}, 
+						{nameof(Propietario.Estado)} 
+					FROM {nameof(Propietario)} 
+					WHERE {nameof(Propietario.DNI)} = @dni";
+			Propietario propietario = new Propietario();
+			using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+			{
+				cmd.Parameters.AddWithValue("@dni", dni);
 				conn.Open();
 				using (MySqlDataReader reader = cmd.ExecuteReader())
 				{

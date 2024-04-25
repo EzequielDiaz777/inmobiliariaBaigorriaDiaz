@@ -137,6 +137,77 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			}
 		}
 
+		public int ObtenerCantidadDeFilas()
+		{
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT COUNT({nameof(Usuario.IdUsuario)})
+							FROM {nameof(Usuario)};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							res = reader.GetInt32("COUNT(IdUsuario)");
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<Usuario> ObtenerUsuarios(int limite, int paginado)
+		{
+			var res = new List<Usuario>();
+			int offset = (paginado - 1) * limite;
+
+			if (offset < 0)
+			{
+				offset = 0;
+			}
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT 
+						{nameof(Usuario.IdUsuario)},
+						{nameof(Usuario.Nombre)}, 
+						{nameof(Usuario.Apellido)}, 
+						{nameof(Usuario.Email)},
+						{nameof(Usuario.Clave)}, 
+						{nameof(Usuario.Rol)},
+						{nameof(Usuario.AvatarURL)},
+						{nameof(Usuario.Estado)}
+					FROM {nameof(Usuario)}
+					LIMIT {limite} OFFSET {offset};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							res.Add(new Usuario
+							{
+								IdUsuario = reader.GetInt32("IdUsuario"),
+								Nombre = reader.GetString("Nombre"),
+								Apellido = reader.GetString("Apellido"),
+								Email = reader.GetString("Email"),
+								Clave = reader.GetString("Clave"),
+								Rol = reader.GetInt32("Rol"),
+								AvatarURL = reader["AvatarURL"] != DBNull.Value ? reader.GetString("AvatarURL") : "",
+								Estado = reader.GetBoolean("Estado")
+							});
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+		
 		public List<Usuario> ObtenerUsuarios()
 		{
 			var res = new List<Usuario>();

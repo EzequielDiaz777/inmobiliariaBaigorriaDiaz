@@ -87,6 +87,67 @@ namespace inmobiliariaBaigorriaDiaz.Models
 			return res;
 		}
 
+		public int ObtenerCantidadDeFilas()
+		{
+			var res = 0;
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT COUNT({nameof(UsoDeInmueble.IdUsoDeInmueble)})
+							FROM {nameof(UsoDeInmueble)};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						if (reader.Read())
+						{
+							res = reader.GetInt32("COUNT(IdUsoDeInmueble)");
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+
+		public List<UsoDeInmueble> ObtenerUsosDeInmuebles(int limite, int paginado)
+		{
+			var res = new List<UsoDeInmueble>();
+			int offset = (paginado - 1) * limite;
+
+			if (offset < 0)
+			{
+				offset = 0;
+			}
+			using (MySqlConnection conn = new MySqlConnection(connectionString))
+			{
+				var sql = @$"SELECT 
+						{nameof(UsoDeInmueble.IdUsoDeInmueble)}, 
+						{nameof(UsoDeInmueble.Nombre)},
+						{nameof(UsoDeInmueble.Estado)}				
+					FROM {nameof(UsoDeInmueble)}
+					LIMIT {limite} OFFSET {offset};";
+				using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+				{
+					conn.Open();
+					using (MySqlDataReader reader = cmd.ExecuteReader())
+					{
+						while (reader.Read())
+						{
+							res.Add(new UsoDeInmueble
+							{
+								IdUsoDeInmueble = reader.GetInt32("IdUsoDeInmueble"),
+								Nombre = reader.GetString("Nombre"),
+								Estado = reader.GetBoolean("Estado"),
+							});
+						}
+					}
+					conn.Close();
+				}
+			}
+			return res;
+		}
+		
 		public List<UsoDeInmueble> ObtenerUsosDeInmuebles()
 		{
 			var res = new List<UsoDeInmueble>();
