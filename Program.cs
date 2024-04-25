@@ -4,16 +4,33 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => {
-        options.LoginPath = "/Home/Login";
-        options.LogoutPath = "/Home/Logout";
-        options.AccessDeniedPath = "/Home";
-    });
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.AccessDeniedPath = "/Home";
+    options.LoginPath = "/Home/Login";
+    options.LogoutPath = "/Home/Logout";
+    options.Events.OnRedirectToLogin = context =>
+    {
+        // En lugar de pasar ReturnUrl, simplemente redirige al usuario a la página de inicio de sesión
+        context.Response.Redirect("/Home/Login");
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        // Redirige a la página de inicio sin agregar ReturnUrl
+        context.Response.Redirect("/Home");
+        return Task.CompletedTask;
+    };
+});
 
-builder.Services.AddAuthorization(options => {
+builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
-    options.AddPolicy("Empleado", policy => policy.RequireRole("Empleado"));
 });
 
 var app = builder.Build();

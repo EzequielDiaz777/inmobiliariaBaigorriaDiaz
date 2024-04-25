@@ -148,7 +148,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                context.Result = RedirectToAction("Index", "Home"); // Redirige al Index del controlador Home
+                context.Result = new RedirectResult("/Home/Login");
             }
             base.OnActionExecuting(context);
         }
