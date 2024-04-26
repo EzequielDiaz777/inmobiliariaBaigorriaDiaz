@@ -12,13 +12,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
 
 		public int AltaFisica(Contrato contrato)
 		{
-			Console.WriteLine("Alta Fisica entrada");
-			Console.WriteLine("Contrato: " + contrato.IdInquilino);
-			Console.WriteLine("Contrato: " + contrato.IdInmueble);
-			Console.WriteLine("Contrato: " + contrato.Precio);
-			Console.WriteLine("Contrato: " + contrato.AlquilerDesde);
-			Console.WriteLine("Contrato: " + contrato.AlquilerHasta);
-			Console.WriteLine("Contrato: " + contrato.AlquilerHastaOriginal);
 			var res = -1;
 			using (MySqlConnection conn = new MySqlConnection(connectionString))
 			{

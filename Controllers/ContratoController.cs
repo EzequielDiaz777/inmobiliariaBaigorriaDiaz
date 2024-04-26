@@ -172,6 +172,16 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
+                contrato.AlquilerHastaOriginal = contrato.AlquilerHasta;
+                contrato.IdInquilino = contrato.Inquilino.IdInquilino;
+                contrato.IdInmueble = contrato.Inmueble.IdInmueble;
+                Console.WriteLine("Post entrada");
+                Console.WriteLine("IdInquilino: " + contrato.IdInquilino);
+                Console.WriteLine("IdInmueble: " + contrato.IdInmueble);
+                Console.WriteLine("Precio: " + contrato.Precio);
+                Console.WriteLine("AlquilerDesde: " + contrato.AlquilerDesde);
+                Console.WriteLine("AlquilerHasta: " + contrato.AlquilerHasta);
+                Console.WriteLine("AlquilerHastaOriginal: " + contrato.AlquilerHastaOriginal);
                 repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
                 return RedirectToAction(nameof(Index));
