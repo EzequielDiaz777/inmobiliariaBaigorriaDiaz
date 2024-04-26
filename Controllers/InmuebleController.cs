@@ -76,10 +76,43 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                repoI.AltaFisica(inmueble);
-                TempData["Id"] = inmueble.IdInmueble;
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid)
+                {
+                    // Itera sobre cada par clave-valor en ModelState
+                    foreach (var entry in ModelState)
+                    {
+                        // Obtiene el nombre de la propiedad
+                        var propertyName = entry.Key;
 
+                        // Obtiene la colección de errores para la propiedad actual
+                        var errors = entry.Value.Errors;
+
+                        // Itera sobre los errores en la colección
+                        foreach (var error in errors)
+                        {
+                            // Accede a la descripción del error
+                            var errorMessage = error.ErrorMessage;
+
+                            // Haz lo que necesites con el mensaje de error
+                            Console.WriteLine($"Error en la propiedad '{propertyName}': {errorMessage}");
+                        }
+                    }
+                    return View(inmueble);
+                }
+                else
+                {
+                    Console.WriteLine(inmueble.IdPropietario);
+                    inmueble.IdPropietario = inmueble.Duenio.IdPropietario;
+                    Console.WriteLine(inmueble.IdPropietario);
+                    Console.WriteLine(inmueble.IdTipoDeInmueble);
+                    Console.WriteLine(inmueble.IdUsoDeInmueble);
+                    if(inmueble.IdPropietario != 0)
+                    {
+                        repoI.AltaFisica(inmueble);
+                    }
+                    TempData["Id"] = inmueble.IdInmueble;
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch (Exception e)
             {
