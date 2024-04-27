@@ -5,40 +5,115 @@
 }
 
 <h1 class="text-center"><b>LISTA DE CONTRATOS</b></h1>
-<div class="d-flex justify-content-between align-items-center my-3">
-    <div class="d-flex flex-column">
-        <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
-    </div>
-    <div class="form-group text-center" style="display: flex; flex-direction: column; align-items: center;">
-        <label for="estadoContratos">Buscar contratos hasta:</label>
-        <div style="display: flex; align-items: center;">
-            <select id="contratosHastaSelect" class="form-control text-center" style="width: fit-content;">
-                <option value="">Seleccione una opción</option>
-                <option value="30">30</option>
-                <option value="60">60</option>
-                <option value="90">90</option>
-                <option value="custom">Seleccionar plazo</option>
-            </select>
-            <input type="number" id="contratosHastaInput" class="form-control"
-                style="width: 100px; display: none; margin-left: 10px;" placeholder="plazo">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center my-3">
+                <!-- Contenedor para "Alta" y "searchInput" -->
+                <div class="d-flex flex-column">
+                    <input type="text" id="searchInput" class="form-control me-2" placeholder="Buscar...">
+                    <!-- Contenedor para el paginado -->
+                    <div class="pagination-container d-flex justify-content-between align-items-center mt-2">
+                        <!-- Botón para ir a la página anterior -->
+                        <a href="@Url.Action("Index", new { paginado = ViewBag.currentPage - 1, limite = ViewBag.limite })"
+                            class="btn btn-secondary @(ViewBag.currentPage == 1 ? "disabled" : "")">
+                            Anterior
+                        </a>
+                        <!-- Enlaces de paginación -->
+                        <div class="d-flex align-items-center">
+                            @{
+                                int rango = 2;
+                                int totalPages = ViewBag.totalPages;
+                                int startPage = Math.Max(1, ViewBag.currentPage - rango);
+                                int endPage = Math.Min(totalPages, startPage + 4);
+                                if (endPage - startPage + 1 < 5)
+                                {
+                                    if (startPage == 1)
+                                    {
+                                        endPage = Math.Min(startPage + 4, totalPages);
+                                    }
+                                    else if (endPage == totalPages)
+                                    {
+                                        startPage = Math.Max(endPage - 4, 1);
+                                    }
+                                }
+                            }
+                            @for (int i = startPage; i <= endPage; i++)
+                            {
+                                <a href="@Url.Action("Index", new { paginado = i, limite = ViewBag.limite })"
+                                    class="btn @(i == ViewBag.currentPage ? "btn-primary" : "btn-light") mx-1">
+                                    @i
+                                </a>
+                            }
+                            <!-- Botón para ir a la página siguiente -->
+                            <a href="@Url.Action("Index", new { paginado = ViewBag.currentPage + 1, limite = ViewBag.limite })"
+                                class="btn btn-secondary @(ViewBag.currentPage == totalPages ? "disabled" : "")">
+                                Siguiente
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor para campos de fechas -->
+                <div class="d-flex flex-column mx-2">
+                    <div class="form-group text-center mb-2">
+                        <label for="fechaDesdeInput">Fecha desde:</label>
+                        <input type="date" id="fechaDesdeInput" class="form-control">
+                    </div>
+                    <div class="form-group text-center">
+                        <label for="fechaHastaInput">Fecha hasta:</label>
+                        <input type="date" id="fechaHastaInput" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Contenedor para "Buscar contratos hasta:" -->
+                <div class="form-group text-center me-2">
+                    <div>
+                        <label for="estadoContratos">Buscar contratos hasta:</label>
+                        <div class="d-flex align-items-center">
+                            <select id="contratosHastaSelect" class="form-control text-center"
+                                style="width: fit-content;">
+                                <option value="">Seleccione una opción</option>
+                                <option value="30">30</option>
+                                <option value="60">60</option>
+                                <option value="90">90</option>
+                                <option value="custom">Seleccionar plazo</option>
+                            </select>
+                            <input type="number" id="contratosHastaInput" class="form-control"
+                                style="width: 100px; display: none; margin-left: 10px;" placeholder="plazo">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenedor para "Ordenar por:" y "Cantidad de filas" -->
+                <div class="d-flex flex-column align-items-center me-2">
+                    <!-- Contenedor para "Ordenar por:" -->
+                    <div class="form-group">
+                        <span>Ordenar por:</span>
+                        <select id="estadoPropietarios" class="form-control text-center">
+                            <option value="todos">Todos</option>
+                            <option value="disponible">Activo</option>
+                            <option value="no-disponible">Inactivo</option>
+                        </select>
+                    </div>
+                    <!-- Contenedor para "Cantidad de filas" -->
+                    <div class="form-group mt-2">
+                        <span>Cantidad de filas:</span>
+                        <select id="limite" class="form-control w-auto text-center mx-auto">
+                            <option selected value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form-group text-center">
-        <label for="fechaDesdeInput">Fecha desde:</label>
-        <input type="date" style="width: fit-content;" id="fechaDesdeInput" class="form-control">
-    </div>
-    <div class="form-group text-center">
-        <label for="fechaHastaInput">Fecha hasta:</label>
-        <input type="date" style="width: fit-content;" id="fechaHastaInput" class="form-control">
-    </div>
-    <div class="form-group text-center">
-        <select id="estadoContratos" class="form-control text-center">
-            <option value="todos">&#8194;Todos</option>
-            <option value="disponible">&#8194;Vigente</option>
-            <option value="no-disponible">&#8194;No vigente</option>
-        </select>
-    </div>
 </div>
+
+<!-- Ahora, a continuación, tienes la tabla -->
 
 <table class="table table-striped table-hover table-bordered custom-table">
     <thead>
@@ -123,52 +198,13 @@
 
                         // Itera sobre cada elemento en contratos
                         contratos.forEach(function (item) {
-                            // Construye las URLs para los enlaces
-                            var editUrl = '/Contrato/Edit/' + item.idContrato;
-                            var detailsUrl = '/Contrato/Details/' + item.idContrato;
-                            var renewUrl = '/Contrato/Create/' + item.idContrato;
-                            var cPagoUrl = '/Pago/Create?idContrato=' + item.idContrato + '&monto=' + item.precio;
-                            var deleteUrl = 'Contrato/Delete/' + item.idContrato;
-
-                            // Construye la fila para la tabla
-                            var row = `
-                                        <tr class="centered-row" data-Id-Contrato="${item.idContrato}" data-Alquiler-Desde="${item.alquilerDesde}" data-Alquiler-Hasta="${item.alquilerHasta}">
-                                            <td>${item.inquilino.apellido} ${item.inquilino.nombre}</td>
-                                            <td>${item.inmueble.direccion}</td>
-                                            <td>
-                                                <span class="button-column">
-                                                    <span class="button-icon">
-                                                        <a href="${editUrl}" title="Editar"><i class="fas fa-edit custom-color"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${detailsUrl}" title="Detalles"><i class="fas fa-info-circle"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${deleteUrl}" title="Cancelar contrato"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${cPagoUrl}" title="Nuevo Pago"><i class="fa-solid fa-money-bill-wave" style="color: green"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${renewUrl}" title="Renovar Contrato"><i class="fa-solid fa-file-signature" style="color: black"></i></a>
-                                                    </span>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    `;
-                            // Añade la fila a la tabla
-                            $('.table tbody').append(row);
+                            cargaDeTabla(item);
                         });
                     },
                     error: function (xhr, status, error) {
                         console.error('Error al obtener los contratos por fechas:', error);
                     }
                 });
-
             }
 
             $('#fechaDesdeInput, #fechaHastaInput').keydown(function (event) {
@@ -194,45 +230,7 @@
                             // Limpia la tabla actual
                             $('.table tbody').empty();
                             response.forEach(function (item) {
-                                // Construye las URL para los enlaces
-                                var editUrl = '/Contrato/Edit/' + item.idContrato;
-                                var detailsUrl = '/Contrato/Details/' + item.idContrato;
-                                var renewUrl = '/Contrato/Create/' + item.idContrato;
-                                var cPagoUrl = '/Pago/Create?idContrato=' + item.idContrato + '&monto=' + item.precio;
-                                var deleteUrl = 'Contrato/Delete/' + item.idContrato;
-
-                                // Construye la fila para la tabla
-                                var row = `
-                                        <tr class="centered-row" data-Id-Contrato="${item.idContrato}" data-Alquiler-Desde="${item.alquilerDesde}" data-Alquiler-Hasta="${item.alquilerHasta}">
-                                            <td>${item.inquilino.apellido} ${item.inquilino.nombre}</td>
-                                            <td>${item.inmueble.direccion}</td>
-                                            <td>
-                                                <span class="button-column">
-                                                    <span class="button-icon">
-                                                        <a href="${editUrl}" title="Editar"><i class="fas fa-edit custom-color"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${detailsUrl}" title="Detalles"><i class="fas fa-info-circle"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${deleteUrl}" title="Cancelar contrato"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${cPagoUrl}" title="Nuevo Pago"><i class="fa-solid fa-money-bill-wave" style="color: green"></i></a>
-                                                    </span>
-                                                    |
-                                                    <span class="button-icon">
-                                                        <a href="${renewUrl}" title="Renovar Contrato"><i class="fa-solid fa-file-signature" style="color: black"></i></a>
-                                                    </span>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    `;
-                                // Añade la fila a la tabla
-                                $('.table tbody').append(row);
+                                cargaDeTabla(item);
                             });
                         },
                         error: function (xhr, status, error) {
@@ -243,7 +241,7 @@
             });
 
             function cargarTabla(url) {
-                if (url != '@Url.Action("ObtenerContratosNoVigentes", "Contrato")'){
+                if (url != '@Url.Action("ObtenerContratosNoVigentes", "Contrato")') {
                     $.ajax({
                         url: url,
                         type: 'GET',
@@ -258,7 +256,7 @@
                                     var hoy = new Date();
                                     var fechaHasta = new Date(item.alquilerHasta)
                                     console.log(hoy <= fechaHasta)
-                                    if(hoy <= fechaHasta){
+                                    if (hoy <= fechaHasta) {
                                         // Construye las URL para los enlaces
                                         var editUrl = '/Contrato/Edit/' + item.idContrato;
                                         var detailsUrl = '/Contrato/Details/' + item.idContrato;
@@ -389,6 +387,83 @@
                 }
             }
 
+            function cargaDeTabla(contrato) {
+                var hoy = new Date();
+                var fechaHasta = new Date(contrato.alquilerHasta)
+                console.log(hoy <= fechaHasta)
+                if (hoy <= fechaHasta) {
+                    // Construye las URL para los enlaces
+                    var editUrl = '/Contrato/Edit/' + contrato.idContrato;
+                    var detailsUrl = '/Contrato/Details/' + contrato.idContrato;
+                    var renewUrl = '/Contrato/Create/' + contrato.idContrato;
+                    var cPagoUrl = '/Pago/Create?idContrato=' + contrato.idContrato + '&monto=' + contrato.precio;
+                    var cancelarUrl = 'Contrato/CancelarContrato/' + contrato.idContrato;
+
+                    // Construye la fila para la tabla
+                    var row = `
+                                <tr class="centered-row" data-Id-Contrato="${contrato.idContrato}" data-Alquiler-Desde="${contrato.alquilerDesde}" data-Alquiler-Hasta="${contrato.alquilerHasta}">
+                                    <td>${contrato.inquilino.apellido} ${contrato.inquilino.nombre}</td>
+                                    <td>${contrato.inmueble.direccion}</td>
+                                    <td>
+                                        <span class="button-column">
+                                            <span class="button-icon">
+                                                <a href="${editUrl}" title="Editar"><i class="fas fa-edit custom-color"></i></a>
+                                            </span>
+                                            |
+                                            <span class="button-icon">
+                                                <a href="${detailsUrl}" title="Detalles"><i class="fas fa-info-circle"></i></a>
+                                            </span>
+                                            |
+                                            <span class="button-icon">
+                                                <a href="${cancelarUrl}" title="Cancelar contrato"><i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                            </span>
+                                            |
+                                            <span class="button-icon">
+                                                <a href="${cPagoUrl}" title="Nuevo Pago"><i class="fa-solid fa-money-bill-wave" style="color: green"></i></a>
+                                            </span>
+                                            |
+                                            <span class="button-icon">
+                                                <a href="${renewUrl}" title="Renovar Contrato"><i class="fa-solid fa-file-signature" style="color: black"></i></a>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            `;
+                    // Añade la fila a la tabla
+                    $('.table tbody').append(row);
+                } else {
+                    // Construye las URL para los enlaces
+                    var editUrl = '/Contrato/Edit/' + contrato.idContrato;
+                    var detailsUrl = '/Contrato/Details/' + contrato.idContrato;
+                    var renewUrl = '/Contrato/Create/' + contrato.idContrato;
+
+                    // Construye la fila para la tabla
+                    var row = `
+                                <tr class="centered-row" data-Id-Contrato="${contrato.idContrato}" data-Alquiler-Desde="${contrato.alquilerDesde}" data-Alquiler-Hasta="${contrato.alquilerHasta}">
+                                    <td>${contrato.inquilino.apellido} ${contrato.inquilino.nombre}</td>
+                                    <td>${contrato.inmueble.direccion}</td>
+                                    <td>
+                                        <span class="button-column">
+                                            <span class="button-icon">
+                                                <a href="${editUrl}" title="Editar"><i class="fas fa-edit custom-color"></i></a>
+                                            </span>
+                                            |
+                                            <span class="button-icon">
+                                                <a href="${detailsUrl}" title="Detalles"><i class="fas fa-info-circle"></i></a>
+                                            </span>
+                                            |
+                                            <span class="button-icon">
+                                                <a href="${renewUrl}" title="Renovar Contrato"><i class="fa-solid fa-file-signature" style="color: black"></i></a>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            `;
+                    // Añade la fila a la tabla
+                    $('.table tbody').append(row);
+                }
+            }
+
             // Evento 'change' para el desplegable '#estadoContratos'
             $('#estadoContratos, #contratosHastaSelect').change(function () {
                 var estado = $(this).val();  // Obtiene el valor seleccionado en el desplegable
@@ -456,126 +531,3 @@
         });
     </script>
 </table>
-
-<!-- 
-    function formatDate(dateString) {
-        var parts = dateString.split('/');
-        if (parts.length === 3) {
-            var year = parts[0];
-            var month = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-            var day = parts[2].length === 1 ? '0' + parts[2] : parts[2];
-            return day + '-' + month + '-' + year;
-        } else {
-            return '';
-        }
-    }
-
-    function formatearFechas(fecha){
-        var fechaActual = new Date();
-        var fechaContrato = new Date();
-        console.log("fecha del contrato: ", fechaActual);
-        var opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        var fechaActualFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
-        var fechaFormateada = fechaContrato.toLocaleDateString('es-ES', opciones);
-
-        console.log('Fecha formateada:', fechaFormateada);
-        console.log('Fecha actual formateada:', fechaActualFormateada);
-
-        // Obtener el día, mes y año como números enteros
-        var diaA = fechaActualFormateada.getDate(); // Obtiene el día del mes (1-31)
-        var mesA = fechaActualFormateada.getMonth() + 1; // Obtiene el mes (0-11, por lo que sumamos 1 para obtener 1-12)
-        var añoA = fechaActualFormateada.getFullYear(); // Obtiene el año
-
-        var diaC = fechaFormateada.getDate(); // Obtiene el día del mes (1-31)
-        var mesC = fechaFormateada.getMonth() + 1; // Obtiene el mes (0-11, por lo que sumamos 1 para obtener 1-12)
-        var añoC = fechaFormateada.getFullYear(); // Obtiene el año
-
-        console.log('Día actual:', dia);
-        console.log('Mes actual:', mes);
-        console.log('Año actual:', año);
-
-        console.log('Día contrato: ', diaC)
-        console.log('Mes contrato: ', mesC)
-        console.log('Año contrato: ', añoC)
-    }
-
-    $('#estadoContratos').change(function () {
-
-        // Crear un objeto Date con la fecha actual
-
-
-        //console.log(fechaFormateada);
-        /* Formatear la fecha actual para obtener solo día, mes y año
-        var opciones = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        var fechaFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
-
-        console.log('Fecha formateada:', fechaFormateada);
-
-        // Obtener el día, mes y año como números enteros
-        var dia = fechaActual.getDate(); // Obtiene el día del mes (1-31)
-        var mes = fechaActual.getMonth() + 1; // Obtiene el mes (0-11, por lo que sumamos 1 para obtener 1-12)
-        var año = fechaActual.getFullYear(); // Obtiene el año
-
-        console.log('Día:', dia);
-        console.log('Mes:', mes);
-        console.log('Año:', año);*/
-
-        $('.table tbody tr').each(function () {
-            var disponible = $(this).data("alquiler-hasta");
-            var estado = $(this).val();
-            formatearFechas(disponible);
-            //console.log("Estado: ", estado);
-            //console.log("Fecha hasta del contrato: ", fechaContrato);
-            //console.log("Fecha de hoy", fechaHoy);
-            //console.log("El contrato es posterior a la fecha de hoy: ", disponible > fechaHoy);
-            //console.log("El contrato es anterior a la fecha de hoy: ", disponible < fechaHoy);
-            if (estado === 'todos') {
-                $(this).show();
-            } else if (estado === 'disponible' && disponible > fechaHoy) {
-                $(this).show();
-            } else if (estado === 'no-disponible' && (disponible < fechaHoy)) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    });
-
-    function formatDateInput(dateString) {
-        var parts = dateString.split('-');
-        if (parts.length === 3) {
-            var year = parts[0];
-            var month = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-            var day = parts[2].length === 1 ? '0' + parts[2] : parts[2];
-            return day + '-' + month + '-' + year;
-        } else {
-            return '';
-        }
-    }
-
-    $('#fechaDesdeInput, #fechaHastaInput').on('change', function () {
-        var fechaDesde = $('#fechaDesdeInput').val();
-        var fechaHasta = $('#fechaHastaInput').val();
-        var fechaDesdeCorregido = formatDateInput(fechaDesde);
-        var fechaHastaCorregido = formatDateInput(fechaHasta);
-
-        $('.table tbody tr').each(function () {
-            var fechaContratoDesde = $(this).data('alquiler-desde');
-            var fechaContratoHasta = $(this).data('alquiler-hasta');
-
-            // Convertir las fechas de contrato al formato 'dd-mm-yyyy'
-            var fechaContratoDesdeFormateada = formatDate(fechaContratoDesde);
-            var fechaContratoHastaFormateada = formatDate(fechaContratoHasta);
-
-            // Verificar si la fecha del contrato está dentro del rango especificado
-            if ((fechaDesdeCorregido === '' || fechaContratoDesdeFormateada >= fechaDesdeCorregido) && (fechaHastaCorregido === '' || fechaContratoHastaFormateada <= fechaHastaCorregido)) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    });
-
-    // Aquí movemos la línea para disparar el evento change
-    //darDeBajaContratosVencidos();
--->

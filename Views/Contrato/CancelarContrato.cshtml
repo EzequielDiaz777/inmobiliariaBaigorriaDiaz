@@ -40,7 +40,14 @@
 							Cuotas adeudadas
 						</dt>
 						<dd class="col-sm-8">
-							@ViewBag.mesesAdeudados
+							@if (@ViewBag.mesesAdeudados > 0)
+							{
+								@ViewBag.mesesAdeudados
+							}
+							else
+							{
+								<span>No adeuda meses</span>
+							}
 						</dd>
 						<dt class="col-sm-4">
 							@Html.DisplayNameFor(model => model.AlquilerHasta)

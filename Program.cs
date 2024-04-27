@@ -4,12 +4,13 @@ var builder = WebApplication.CreateBuilder(args);
 /*
 Inmobiliaria:
 - Corregir renovar contrato (LISTO)
-- Mejorar el crear inmueble
-- Mejorar el buscar
+- Mejorar el crear inmueble (LISTO)
+- Mejorar el buscar inmueble (LISTO)
 - Corregir actualizar contrato
 - Corregir el 'Volver' en Renovar contrato (LISTO)
 - Corregir el buscador para que no sea por JS
 - Verificar los páginados de los index
+- Corregir details de propietario
 */
 // Add services to the container.
 builder.Services.AddControllersWithViews();
