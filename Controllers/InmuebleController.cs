@@ -183,22 +183,25 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         [HttpGet]
-        public ActionResult Buscar()
+        public ActionResult Buscar(int id)
         {
+            ViewBag.IdInquilino = id;
             ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
             ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
+            var inquilino = repoIn.ObtenerInquilinoPorID(id);
+            ViewBag.Inquilino = inquilino;
             return View();
         }
 
         // POST: /Buscar
         [HttpPost]
-        public IActionResult Buscar(int IdUsoDeInmueble, int IdTipoDeInmueble, int ambientes, decimal precioDesde, decimal precioHasta, DateTime fechaDesde, DateTime fechaHasta)
+        public IActionResult Buscar(int? IdUsoDeInmueble, int? IdTipoDeInmueble, int? ambientes, decimal? precioDesde, decimal? precioHasta, DateTime? fechaDesde, DateTime? fechaHasta)
         {
+            Console.WriteLine("Uso de inmueble: " + IdUsoDeInmueble);
             var inmueblesEncontrados = repoI.BuscarInmuebles(IdUsoDeInmueble, IdTipoDeInmueble, ambientes, precioDesde, precioHasta, fechaDesde, fechaHasta);
-
-            // Devuelve los resultados directamente a la vista utilizando el método View()
             return Json(inmueblesEncontrados);
         }
+
 
         [HttpGet]
         public IActionResult ObtenerInmueblesPorUso(int id)
@@ -210,7 +213,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public IActionResult ObtenerInmueblesPorTipo(int id)
         {
-            Console.WriteLine(id);
             var inmuebles = repoI.ObtenerInmueblesPorTipo(id);
             return Json(inmuebles);
         }

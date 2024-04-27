@@ -89,25 +89,26 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         [HttpGet]
-        [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
-        public ActionResult Create(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly fechaDesde, DateOnly fechaHasta)
+        [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde?}/{fechaHasta?}")]
+        public ActionResult Create(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly? fechaDesde, DateOnly? fechaHasta)
         {
-            Console.WriteLine(idInquilino);
-            // Obtener los datos del inmueble e inquilino
-            Inmueble? inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
+            Console.WriteLine("IdInquilino: " + idInquilino);
+            Console.WriteLine("IdInmueble: " + idInmueble);
+            Console.WriteLine("Precio: " + precioInmueble);
+            Console.WriteLine("AlquilerDesde: " + fechaDesde);
+            Console.WriteLine("AlquilerHasta: " + fechaHasta);
+            Inmueble inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
             Inquilino inquilino = repoInq.ObtenerInquilinoPorID(idInquilino);
-
             // Crear el modelo de contrato y establecer sus propiedades
             Contrato contrato = new Contrato
             {
                 IdInquilino = idInquilino,
                 IdInmueble = idInmueble,
                 Precio = precioInmueble,
-                AlquilerDesde = fechaDesde,
-                AlquilerHasta = fechaHasta,
+                AlquilerDesde = fechaDesde ?? default(DateOnly),
+                AlquilerHasta = fechaHasta ?? default(DateOnly),
                 Inquilino = inquilino,
                 Inmueble = inmueble,
-                // Agregar otras propiedades necesarias,
             };
 
             // Devolver la vista con el modelo de contrato
@@ -115,15 +116,41 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         // POST: Contrato/CreateFromParameters
-        [HttpPost]
+        /*[HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
-        public ActionResult Create(Contrato contrato)
+        public ActionResult Create(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly fechaDesde, DateOnly fechaHasta)
         {
             try
             {
-                contrato.AlquilerHastaOriginal = contrato.AlquilerHasta;
+                // Verificar que las fechas no sean nulas
+                if (fechaDesde == default || fechaHasta == default)
+                {
+                    // Si las fechas son nulas, devolver un mensaje de error
+                    TempData["ErrorMessage"] = "Las fechas de inicio y fin de alquiler son obligatorias.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Obtener los datos del inmueble e inquilino
+                Inmueble inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
+                Inquilino inquilino = repoInq.ObtenerInquilinoPorID(idInquilino);
+
+                // Crear el modelo de contrato y establecer sus propiedades
+                Contrato contrato = new Contrato
+                {
+                    IdInquilino = idInquilino,
+                    IdInmueble = idInmueble,
+                    Precio = precioInmueble,
+                    AlquilerDesde = fechaDesde,
+                    AlquilerHasta = fechaHasta,
+                    Inquilino = inquilino,
+                    Inmueble = inmueble,
+                };
+
+                // Llamar al método de alta física del repositorio
                 repoC.AltaFisica(contrato);
+
+                // Registrar la acción
                 DateTime horaActual = DateTime.Now;
                 TimeSpan hora = new TimeSpan(horaActual.Hour, horaActual.Minute, horaActual.Second);
                 var registroP = new Registro
@@ -136,14 +163,20 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     HoraDeAccion = hora
                 };
                 rg.AltaFisica(registroP);
+
+                // Redirecciona a la acción Index
                 TempData["Id"] = contrato.IdContrato;
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                // Manejo de excepciones
+                Console.WriteLine($"Error al crear el contrato: {ex.Message}");
+                // Puedes agregar un mensaje de error a TempData para mostrarlo en la vista
+                TempData["ErrorMessage"] = "Ha ocurrido un error al crear el contrato.";
+                return RedirectToAction(nameof(Index));
             }
-        }
+        }*/
 
         public ActionResult CreatePago(int idContrato, decimal monto)
         {
@@ -154,27 +187,22 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Contrato/CreateFromParameters
         [HttpGet]
-
         public ActionResult Create(int id)
         {
-
             // Crear el modelo de contrato y establecer sus propiedades
             Contrato contrato = repoC.ObtenerContratoById(id);
-
-
             // Devolver la vista con el modelo de contrato
             return View(contrato);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Contrato contrato, IFormCollection collection)
+        //[ValidateAntiForgeryToken]
+        public ActionResult Create(Contrato contrato)
         {
+            Console.WriteLine(contrato.IdContrato);
             try
             {
                 contrato.AlquilerHastaOriginal = contrato.AlquilerHasta;
-                contrato.IdInquilino = contrato.Inquilino.IdInquilino;
-                contrato.IdInmueble = contrato.Inmueble.IdInmueble;
                 Console.WriteLine("Post entrada");
                 Console.WriteLine("IdInquilino: " + contrato.IdInquilino);
                 Console.WriteLine("IdInmueble: " + contrato.IdInmueble);

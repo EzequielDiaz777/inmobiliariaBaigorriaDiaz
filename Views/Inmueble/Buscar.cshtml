@@ -1,7 +1,8 @@
 @model List<Inmueble>
 
 <!-- Modal para campo DNI vacío -->
-<div class="modal fade error-modal" id="dniVacioModal" tabindex="-1" aria-labelledby="dniVacioModalLabel" aria-hidden="true">
+<div class="modal fade error-modal" id="dniVacioModal" tabindex="-1" aria-labelledby="dniVacioModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,7 +11,8 @@
             </div>
             <div class="modal-body">
                 <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
-                <span style="margin-left: 10px;">Por favor ingrese el DNI del inquilino antes de realizar la búsqueda.</span>
+                <span style="margin-left: 10px;">Por favor ingrese el DNI del inquilino antes de realizar la
+                    búsqueda.</span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
@@ -21,7 +23,8 @@
 
 
 <!-- Modal para campos vacíos al buscar inmueble -->
-<div class="modal fade error-modal" id="camposVaciosModal" tabindex="-1" aria-labelledby="camposVaciosModalLabel" aria-hidden="true">
+<div class="modal fade error-modal" id="camposVaciosModal" tabindex="-1" aria-labelledby="camposVaciosModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" style="max-width: 600px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -30,7 +33,8 @@
             </div>
             <div class="modal-body">
                 <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
-                <span style="margin-left: 10px;"> Por favor complete todos los campos antes de buscar un inmueble.</span>
+                <span style="margin-left: 10px;"> Por favor complete todos los campos antes de buscar un
+                    inmueble.</span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-cerrar" data-bs-dismiss="modal">Cerrar</button>
@@ -40,64 +44,68 @@
 </div>
 
 <!-- Modal para cuando el ambiente es cero o negativo -->
-<div class="modal fade error-modal" id="ambienteNegativoModal" tabindex="-1" aria-labelledby="ambienteNegativoModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="max-width: 600px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" style="color: black">¡Atención!</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-            <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
-            <span style="margin-left: 10px;"> El ambiente no puede ser 0 o negativo.</span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+<div class="modal fade error-modal" id="ambienteNegativoModal" tabindex="-1"
+    aria-labelledby="ambienteNegativoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black">¡Atención!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+                <span style="margin-left: 10px;"> El ambiente no puede ser 0 o negativo.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Modal para cuando el precio es negativo -->
-<div class="modal fade error-modal" id="precioNegativoModal" tabindex="-1" aria-labelledby="precioNegativoModal" aria-hidden="true">
-  <div class="modal-dialog" style="max-width: 600px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" style="color: black">¡Atención!</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-            <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
-            <span style="margin-left: 10px;">El precio no puede ser negativo.</span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+<div class="modal fade error-modal" id="precioNegativoModal" tabindex="-1" aria-labelledby="precioNegativoModal"
+    aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black">¡Atención!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+                <span style="margin-left: 10px;">El precio no puede ser negativo.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Modal para cuando el precio hasta es menor que el precio desde -->
-<div class="modal fade error-modal" id="precioInvalidoModal" tabindex="-1" aria-labelledby="precioInvalidoModal" aria-hidden="true">
-  <div class="modal-dialog" style="max-width: 600px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" style="color: black">¡Atención!</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-            <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
-            <span style="margin-left: 10px;">El precio hasta debe ser mayor o igual que el precio desde.</span>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+<div class="modal fade error-modal" id="precioInvalidoModal" tabindex="-1" aria-labelledby="precioInvalidoModal"
+    aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: black">¡Atención!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-times-circle" style="color: red; font-size: 24px;"></i>
+                <span style="margin-left: 10px;">El precio hasta debe ser mayor o igual que el precio desde.</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Modal para fecha inválida -->
-<div class="modal fade error-modal" id="fechaInvalidaModal" tabindex="-1" aria-labelledby="fechaInvalidaModalLabel" aria-hidden="true">
+<div class="modal fade error-modal" id="fechaInvalidaModal" tabindex="-1" aria-labelledby="fechaInvalidaModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" style="max-width: 600px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -116,13 +124,12 @@
 </div>
 
 
-<div class="container">
+<div class="container text-center">
     <h1 class="text-center">Disponibilidad de Inmuebles</h1>
-
-    <div class="row">
+    <div class="row justify-content-center">
         <!-- Columna para el formulario de búsqueda de inmueble -->
-        <div class="col-md-6 d-none" id="buscarInmuebleContainer">
-            <div class="container mt-3">
+        <div class="col-md-6" id="buscarInmuebleContainer">
+            <div class="container text-center mt-3">
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <div class="card">
@@ -131,9 +138,24 @@
                                     <h2>Buscar Inmueble</h2>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
+                                            <label class="control-label">Inquilino</label>
+                                            <input type="text" value="@ViewBag.Inquilino.ToString()"
+                                                class="form-control text-center" readonly>
+                                            <input type="hidden" id="idInquilino" name="idInquilino"
+                                                value="@ViewBag.IdInquilino" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="ambientes" class="form-label">Cantidad de ambientes:</label>
+                                            <input type="number" id="ambientes" name="ambientes"
+                                                class="form-control text-center">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
                                             <label for="IdUsoDeInmueble" class="form-label">Uso del inmueble:</label>
-                                            <select id="IdUsoDeInmueble" class="form-select" name="IdUsoDeInmueble">
-                                                <option disabled selected hidden value="">Seleccionar</option>
+                                            <select id="IdUsoDeInmueble" class="form-select text-center"
+                                                name="IdUsoDeInmueble">
+                                                <option selected value="">Seleccionar</option>
                                                 @foreach (var item in ViewBag.UsosDeInmuebles)
                                                 {
                                                     <option value="@item.IdUsoDeInmueble">@item.Nombre</option>
@@ -142,8 +164,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label for="IdTipoDeInmueble" class="form-label">Tipo de inmueble:</label>
-                                            <select id="IdTipoDeInmueble" class="form-select" name="IdTipoDeInmueble">
-                                                <option disabled selected hidden value="">Seleccionar</option>
+                                            <select id="IdTipoDeInmueble" class="form-select text-center"
+                                                name="IdTipoDeInmueble">
+                                                <option selected value="">Seleccionar</option>
                                                 @foreach (var item in ViewBag.TiposDeInmuebles)
                                                 {
                                                     <option value="@item.IdTipoDeInmueble">@item.Nombre</option>
@@ -153,30 +176,26 @@
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
-                                            <label for="ambientes" class="form-label">Cantidad de ambientes:</label>
-                                            <input type="number" id="ambientes" name="ambientes" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
                                             <label for="precioDesde" class="form-label">Precio desde:</label>
                                             <input type="number" id="precioDesde" name="precioDesde"
-                                                class="form-control">
+                                                class="form-control text-center">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="precioHasta" class="form-label">Precio hasta:</label>
                                             <input type="number" id="precioHasta" name="precioHasta"
-                                                class="form-control">
+                                                class="form-control text-center">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label for="fechaDesde" class="form-label">Fecha desde:</label>
-                                            <input type="date" id="fechaDesde" name="fechaDesde" class="form-control">
+                                            <input type="date" id="fechaDesde" name="fechaDesde"
+                                                class="form-control text-center">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="fechaHasta" class="form-label">Fecha hasta:</label>
-                                            <input type="date" id="fechaHasta" name="fechaHasta" class="form-control">
+                                            <input type="date" id="fechaHasta" name="fechaHasta"
+                                                class="form-control text-center">
                                         </div>
                                     </div>
                                     <div class="text-center">
@@ -186,326 +205,126 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Columna para el formulario de búsqueda de inquilino -->
-        <div class="col-md-6">
-            <div class="container mt-3">
-                <div class="row justify-content-center">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <form id="BuscarInquilino" class="mt-md-0 mt-4">
-                                    <h2>Buscar Inquilino</h2>
-                                    <div class="mb-3">
-                                        <label for="dni" class="form-label">Ingrese el DNI del inquilino:</label>
-                                        <input type="number" name="dni" id="dni" class="form-control">
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Buscar</button>
-                                    </div>
-                                </form>
-                                <div class="resultadoInquilino"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Columna para la tabla -->
-    <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="mt-4">Inmuebles disponibles:</h2>
-                    <table id="tablaResultados" class="table table-striped table-hover table-bordered custom-table">
-                        <thead>
-                            <tr>
-                                <th>Dirección</th>
-                                <th>Tipo de Inmueble</th>
-                                <th>Uso del Inmueble</th>
-                                <th>Precio mensual del inmueble</th>
-                                <th>Dueño</th>
-                                <th class="no-ordenable">Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+
+<!-- Columna para la tabla -->
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="mt-4">Inmuebles disponibles:</h2>
+                <table id="tablaResultados" class="table table-striped table-hover table-bordered custom-table">
+                    <thead>
+                        <tr>
+                            <th>Dirección</th>
+                            <th>Tipo de Inmueble</th>
+                            <th>Uso del Inmueble</th>
+                            <th>Precio mensual del inmueble</th>
+                            <th>Dueño</th>
+                            <th class="no-ordenable">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#BuscarInquilino').submit(function (event) {
+        $('#formBuscar').submit(function (event) {
             event.preventDefault(); // Evitar que se recargue la página
-            var dni = $('#dni').val();
-            $.ajax({
-                url: '@Url.Action("BuscarInquilino", "Inmueble")',
-                type: 'GET',
-                data: { dni: dni },
-                success: function (response) {
-                    if (response.success) {
-                        $('#buscarInmuebleContainer').removeClass('d-none');
-                        $('.resultadoInquilino').html(`
-                            <div class="row">
-                                <div>
-                                    <hr>
-                                    <div>
-                                        <input type="hidden" id="idInquilino" name="idInquilino" value="${response.inquilino.idInquilino}">
-                                        <div class="form-group text-center">
-                                            <label asp-for="DNI" class="control-label">DNI</label>
-                                            <input asp-for="DNI" value="${response.inquilino.dni}" readonly class="form-control" required />
-                                            <span asp-validation-for="DNI" class="text-danger"></span>
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <label asp-for="Apellido" class="control-label">Apellido</label>
-                                            <input asp-for="Apellido" value="${response.inquilino.apellido}" readonly class="form-control" required />
-                                            <span asp-validation-for="Apellido" class="text-danger"></span>
-                                        </div>
-                                        <div class="form-group text-center">
-                                            <label asp-for="Nombre" class="control-label">Nombre</label>
-                                            <input asp-for="Nombre" value="${response.inquilino.nombre}" readonly class="form-control" required />
-                                            <span asp-validation-for="Nombre" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `);
-                    } else {
-                        $('.resultadoInquilino').html(`
-                    <div class="row">
-                        <div>
-                            <hr>
-                            <input type="hidden" id="idInquilino" name="idInquilino" value="">
-                            <div class="form-group text-center">
-                                <label for="dni" class="control-label">DNI</label>
-                                <input id="dniForm" value="${dni}" class="form-control" required />
-                            </div>
-                            <div class="form-group text-center">
-                                <label for="apellido" class="control-label">Apellido</label>
-                                <input id="apellido" class="form-control" required />
-                            </div>
-                            <div class="form-group text-center">
-                                <label for="nombre" class="control-label">Nombre</label>
-                                <input id="nombre" class="form-control" required />
-                            </div>
-                            <br>
-                        </div>
-                    </div>
-                `);
-                    }
-                }
-            });
-        });
+            var formData = {};
 
-        // Delegado de evento para el botón de crear inquilino
-        $(document).on('click', '#crearInquilinoBtn', function () {
-            // Recopilar los datos del formulario
-            var dni = $('#dni').val();
-            var apellido = $('#apellido').val();
-            var nombre = $('#nombre').val();
-
-            // Crear un objeto con los datos del inquilino
-            var inquilino = {
-                DNI: dni,
-                Apellido: apellido,
-                Nombre: nombre,
-                Telefono: "",
-                Email: "",
-            };
-
-            // Enviar los datos del inquilino al servidor para su almacenamiento en la base de datos
-            $.ajax({
-                url: '@Url.Action("CreateJSON", "Inquilino")', // Ruta para el controlador de creación de inquilinos
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(inquilino),
-                success: function (response) {
-                    // Manejar la respuesta del servidor
-                    if (response.success) {
-                        // Ocultar el botón 'crearInquilinoBtn'
-                        $('#crearInquilinoBtn').hide();
-                        // Establecer los campos 'dni', 'apellido' y 'nombre' como readonly
-                        $('#dniForm').prop('readonly', true);
-                        $('#apellido').prop('readonly', true);
-                        $('#nombre').prop('readonly', true);
-                        $('#buscarInmuebleContainer').removeClass('d-none');
-                        $('#idInquilino').val(response.idInquilino);
-                    } else {
-                        // Mostrar un mensaje de error si ocurrió algún problema durante la creación del inquilino
-                        $('#errorModal').modal('show');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Manejar errores de la solicitud AJAX si es necesario
-                    $('#errorModal').modal('show');
-                }
-            });
-        });
-
-        function validarNumeros(precioDesde, precioHasta, ambientes) {
-            // Verificar que los ambientes no sean negativos
-            if(ambientes < 1){
-                $('#ambienteNegativoModal').modal('show');
-                return false;
-            }
-            if (precioDesde < 1 || precioHasta < 1) {
-                $('#precioNegativoModal').modal('show');
-                return false;
-            }
-            // Verificar que el precio hasta no sea menor que el precio desde
-            if (precioHasta < precioDesde) {
-                $('#precioInvalidoModal').modal('show');
-                return false;
-            }
-            // Si pasa todas las validaciones, retornar true
-            return true;
-        }
-
-        $('#formBuscar button[type="submit"]').click(function (event) {
-            // Evitar que se envíe el formulario automáticamente
-            event.preventDefault();
-
-            // Validar que los campos no estén vacíos
-            var usoDeInmueble = $('#IdUsoDeInmueble').val();
-            var tipoDeInmueble = $('#IdTipoDeInmueble').val();
+            // Obtener los valores de los campos
+            var idUsoDeInmueble = $('#IdUsoDeInmueble').val();
+            var idTipoDeInmueble = $('#IdTipoDeInmueble').val();
             var ambientes = $('#ambientes').val();
             var precioDesde = $('#precioDesde').val();
             var precioHasta = $('#precioHasta').val();
             var fechaDesde = $('#fechaDesde').val();
             var fechaHasta = $('#fechaHasta').val();
 
-            var precioDesde = parseFloat($('#precioDesde').val());
-            var precioHasta = parseFloat($('#precioHasta').val());
-
-            if (usoDeInmueble && tipoDeInmueble && ambientes && precioDesde && precioHasta && fechaDesde && fechaHasta) {
-                    // Si ningún campo está vacío, continuar con las otras validaciones
-                    // Convertir los precios a números flotantes
-                    var precioDesde = parseFloat($('#precioDesde').val());
-                    var precioHasta = parseFloat($('#precioHasta').val());
-
-                    // Validar los precios
-                    if (!validarNumeros(precioDesde, precioHasta, ambientes)) {
-                        // Si la validación falla, detener el proceso
-                        return;
-                    }
-
-                    // Enviar el formulario si todas las validaciones son exitosas
-                    $('#formBuscar').submit();
-                } else {
-                    // Si algún campo está vacío, mostrar un mensaje de error
-                    $('#camposVaciosModal').modal('show');
-                }
-            });
-
-        $('#BuscarInquilino button[type="submit"]').click(function (event) {
-            // Evitar que se envíe el formulario automáticamente
-            event.preventDefault();
-
-            // Validar que el campo no esté vacío
-            var dni = $('#dni').val();
-
-            // Verificar que el campo no esté vacío
-            if (dni) {
-                // Si el campo no está vacío, enviar el formulario
-                $('#BuscarInquilino').submit();
-            } else {
-                // Si el campo está vacío, mostrar un mensaje de error
-                $('#dniVacioModal').modal('show');
+            if (idUsoDeInmueble) {
+                formData.idUsoDeInmueble = idUsoDeInmueble;
             }
-        });
-
-        $(document).ready(function () {
-            function formatDate(dateString) {
-                var parts = dateString.split('-');
-                if (parts.length === 3) {
-                    var year = parts[0];
-                    var month = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-                    var day = parts[2].length === 1 ? '0' + parts[2] : parts[2];
-                    return year + '-' + month + '-' + day;
-                } else {
-                    return '';
-                }
+            if (idTipoDeInmueble) {
+                formData.idTipoDeInmueble = idTipoDeInmueble;
+            }
+            if (ambientes) {
+                formData.ambientes = ambientes;
+            }
+            if (precioDesde) {
+                formData.precioDesde = precioDesde;
+            }
+            if (precioHasta) {
+                formData.precioHasta = precioHasta;
+            }
+            if (fechaDesde) {
+                formData.fechaDesde = fechaDesde;
+                urlCrearContratoWithParams += `/${fechaDesde}`;
+            }
+            if (fechaHasta) {
+                formData.fechaHasta = fechaHasta;
+                urlCrearContratoWithParams += `/${fechaHasta}`;
             }
 
-            // Delegado de evento para el formulario de búsqueda
-            $('#formBuscar').submit(function (event) {
-                event.preventDefault(); // Evitar que se recargue la página
-
-                // Obtener los datos del formulario
-                var formData = $(this).serialize();
-
-                // Obtener las fechas desde los campos de fecha
-                var fechaDesde = $('#fechaDesde').val();
-                var fechaHasta = $('#fechaHasta').val();
-
-                // Verificar que las fechas no estén vacías antes de formatearlas
-                if (fechaDesde != null && fechaHasta != null) {
-                    // Formatear las fechas al formato "yyyy-MM-dd"
-                    var fechaDesdeFormatted = formatDate(fechaDesde);
-                    var fechaHastaFormatted = formatDate(fechaHasta);
-
-                    // Verificar si la fecha hasta es anterior a la fecha desde y viceversa
-                    if (fechaHastaFormatted < fechaDesdeFormatted) {
-                        $('#fechaInvalidaModal').modal('show');
-                        return; // Detener el proceso si la validación falla
-                    }
-
-                    // Agregar las fechas formateadas al formulario
-                    formData += `&fechaDesde=${fechaDesdeFormatted}&fechaHasta=${fechaHastaFormatted}`;
-                }
-
-                // Obtener el ID del inquilino del campo oculto si está presente
-                var idInquilino = $('#idInquilino').val();
-
-                // Construir la URL para el botón "Crear contrato"
-                var urlCrearContrato = '/Contrato/Create/?' + formData;
-
-                // Si hay un ID de inquilino, agregarlo a la URL
-                if (idInquilino) {
-                    urlCrearContrato += `&idInquilino=${idInquilino}`;
-                }
-
-                // Realizar la solicitud AJAX para buscar inmuebles
+            if (
+                idUsoDeInmueble || idTipoDeInmueble || ambientes || precioDesde || precioHasta || fechaDesde || fechaHasta
+            ) {
+                console.log(idUsoDeInmueble, idTipoDeInmueble, ambientes, precioDesde, precioHasta, fechaDesde, fechaHasta)
                 $.ajax({
                     url: '@Url.Action("Buscar", "Inmueble")',
                     type: 'POST',
                     data: formData,
                     success: function (response) {
+                        // Manejar los resultados
                         $('#tablaResultados tbody').empty(); // Limpiar la tabla
-                        // Renderizar los resultados en la tabla
                         response.forEach(function (inmueble) {
+                            var idInquilino = $('#idInquilino').val();
                             // Construir la URL del contrato con los parámetros necesarios
-                            // Construir la URL del contrato con los parámetros necesarios
-                            var urlCrearContratoWithParams = `/Contrato/Create/${inmueble.idInmueble}/${idInquilino}/${inmueble.precio}/${fechaDesde}/${fechaHasta}`;
-                            var rows = `<tr class="centered-row">
+                            var urlCrearContratoWithParams = `/Contrato/Create/${inmueble.idInmueble}/${idInquilino}/${inmueble.precio}`;
+                            if (fechaDesde) {
+                                urlCrearContratoWithParams += `/${fechaDesde}`;
+                            }
+                            if (fechaHasta) {
+                                urlCrearContratoWithParams += `/${fechaHasta}`;
+                            }
 
-                            <td>${inmueble.direccion}</td>
-                            <td>${inmueble.tipo.nombre}</td>
-                            <td>${inmueble.uso.nombre}</td>
-                            <td>${inmueble.precio}</td>
-                            <td>${inmueble.duenio.apellido}</td>
-                            <td>
-                                <span class="button-column">
-                                    <a href="${urlCrearContratoWithParams}" class="button" title="Crear Contrato"><i class="fas fa-plus"></i></a>
-                                </span>
-                            </td>
-                        </tr>`;
+                            // Construir filas de resultados y agregarlas a la tabla
+                            var rows = `<tr class="centered-row">
+                                            <td>${inmueble.direccion}</td>
+                                            <td>${inmueble.tipo.nombre}</td>
+                                            <td>${inmueble.uso.nombre}</td>
+                                            <td>${inmueble.precio}</td>
+                                            <td>${inmueble.duenio.nombre} ${inmueble.duenio.apellido}</td>
+                                            <td>
+                                                <span class="button-column">
+                                                    <a href="${urlCrearContratoWithParams}" class="button" title="Crear Contrato"><i class="fas fa-plus"></i></a>
+                                                </span>
+                                            </td>
+                                        </tr>`;
                             $('#tablaResultados tbody').append(rows);
                         });
-
+                    },
+                    error: function (xhr, status, error) {
+                        // Manejar errores de la solicitud
+                        console.error("Error durante la búsqueda de inmuebles: ", error);
                     }
                 });
-            });
+            } else {
+                // Si no se proporciona ningún parámetro opcional, mostrar mensaje de error
+                $('#camposVaciosModal').modal('show');
+            }
         });
 
         // Agregar evento de ordenación a los encabezados de las columnas
@@ -527,16 +346,16 @@
                 $(this).append('<span class="sort-icon">' + (this.asc ? '▲' : '▼') + '</span>');
             }
         });
+
+        function comparer(index) {
+            return function (a, b) {
+                var valA = getCellValue(a, index), valB = getCellValue(b, index);
+                return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+            };
+        }
+
+        function getCellValue(row, index) {
+            return $(row).children('td').eq(index).text();
+        }
     });
-
-    function comparer(index) {
-        return function (a, b) {
-            var valA = getCellValue(a, index), valB = getCellValue(b, index);
-            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
-        };
-    }
-
-    function getCellValue(row, index) {
-        return $(row).children('td').eq(index).text();
-    }
 </script>

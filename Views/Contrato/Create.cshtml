@@ -1,7 +1,14 @@
 @model inmobiliariaBaigorriaDiaz.Models.Contrato
 
 @{
-    ViewData["Title"] = "Create";
+    if (@Model.IdContrato != 0)
+    {
+        ViewData["Title"] = "Renovar";
+    }
+    else
+    {
+        ViewData["Title"] = "Create";
+    }
 }
 
 <div class="container mt-3">
@@ -9,36 +16,65 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h1 class="text-center"><b>RENOVAR CONTRATO</b></h1>
-                    <form asp-action="Create" class="needs-validation" novalidate>
+                    @if (@Model.IdContrato != 0)
+                    {
+                        <h1 class="text-center"><b>RENOVAR CONTRATO</b></h1>
+                    }
+                    else
+                    {
+                        <h1 class="text-center"><b>CREAR CONTRATO</b></h1>
+                    }
+                    <form action="/Contrato/Create" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label class="control-label">Inquilino</label>
-                            <input asp-for="Inquilino.IdInquilino" type="hidden" />
-                            <input asp-for="Inquilino.Apellido" class="form-control" readonly />
+                            <input type="hidden" asp-for="IdInquilino" />
+                            @if (Model.Inquilino != null)
+                            {
+                                <input asp-for="Inquilino" class="form-control" readonly
+                                    value="@Model.Inquilino.ToString()" />
+                            }
                         </div>
                         <div class="form-group">
                             <label class="control-label">Dirección del inmueble</label>
-                            <input asp-for="Inmueble.IdInmueble" type="hidden" />
-                            <input asp-for="Inmueble.Direccion" class="form-control" readonly />
+                            <input type="hidden" asp-for="IdInmueble" />
+                            @if (Model.Inmueble != null)
+                            {
+                                <input asp-for="Inmueble.Direccion" class="form-control" readonly
+                                    value="@Model.Inmueble.Direccion" />
+                            }
                         </div>
+                        <!-- Precio -->
                         <div class="form-group">
                             <label class="control-label">Precio del inmueble</label>
                             <input asp-for="Precio" class="form-control" />
                         </div>
+                        <!-- AlquilerDesde -->
                         <div class="form-group">
-                            <label for="AlquilerDesde" class="control-label">Fecha de inicio de alquiler</label>
-                            <input asp-for="AlquilerDesde" type="date" class="form-control" />
+                            <label class="control-label">Fecha de inicio de alquiler</label>
+                            <input asp-for="AlquilerDesde" type="date" class="form-control" required />
                         </div>
+
+                        <!-- AlquilerHasta -->
                         <div class="form-group">
-                            <label for="AlquilerHasta" class="control-label">Fecha del fin de alquiler</label>
-                            <input asp-for="AlquilerHasta" type="date" class="form-control" />
+                            <label class="control-label">Fecha del fin de alquiler</label>
+                            <input asp-for="AlquilerHasta" type="date" class="form-control" required />
                         </div>
+                        <!-- Botones -->
                         <div class="form-group text-center mt-2">
-                            <button type="submit" class="btn btn-primary">Renovar</button>
-                            <a href="@Url.Action("Index", "Contrato")" class="m-2 p-2 btn btn-outline-warning">Volver
-                                a la
-                                Lista</a>
+                            <button type="submit" class="btn btn-primary">@(Model.IdContrato == 0 ? "Crear" :
+                                "Renovar")</button>
+                            @if (@Model.IdContrato != 0)
+                            {
+                                <a href="@Url.Action("Index", "Contrato")" class="m-2 p-2 btn btn-outline-warning">Volver a
+                                    la Lista</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Buscar", "Inmueble", new { id = @Model.IdInquilino })"
+                                    class="m-2 p-2 btn btn-outline-warning" title="Volver a la busqueda">Volver a
+                                    la Busqueda</a>
+                            }
                         </div>
                     </form>
                 </div>
@@ -51,8 +87,14 @@
     <script>
         // Validar los campos y mostrar los iconos de verificación
         $(document).ready(function () {
-            $('#AlquilerDesde').val($('#AlquilerHasta').val());
-            $('#AlquilerHasta').val('')
+            if (@Model.IdContrato != 0) {
+                $('#AlquilerDesde').val($('#AlquilerHasta').val());
+                $('#AlquilerHasta').val('')
+            } else {
+                $('#AlquilerDesde').val('');
+                $('#AlquilerHasta').val('');
+            }
+
             $('.input-group input').on('input', function () {
                 var inputGroup = $(this).closest('.input-group');
                 var iconCheck = inputGroup.find('.fa-check');

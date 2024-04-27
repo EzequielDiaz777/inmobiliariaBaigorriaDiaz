@@ -122,35 +122,41 @@
                 </td>
                 <td>
                     <span class="button-column">
-                        <a href="@Url.Action("Edit", new { id = item.IdPropietario })" title="Editar"> <i
-                                class="fas fa-edit custom-color"></i></a>
-                        |
-                        <a href="@Url.Action("Details", new { id = item.IdPropietario })" title="Detalles"> <i
-                                class="fas fa-info-circle"></i></a>
+                        <span class="button-icon">
+                            <a href="@Url.Action("Edit", new { id = item.IdPropietario })" title="Editar"><i
+                                    class="fas fa-edit custom-color"></i></a>
+                        </span>
+                        <span class="button-icon">
+                            | <a href="@Url.Action("Details", new { id = item.IdPropietario })" title="Detalles"><i
+                                    class="fas fa-info-circle"></i></a>
+                        </span>
                         @if (User.IsInRole("Administrador"))
                         {
                             @if (item.Estado)
                             {
                                 <span class="button-icon">
-                                    | <a href="@Url.Action("Delete", new { id = item.IdPropietario })" title="Baja">
-                                        <i class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                    | <a href="@Url.Action("Delete", new { id = item.IdPropietario })" title="Baja"><i
+                                            class="fa-solid fas fa-trash-alt text-danger"></i></a>
                                 </span>
                             }
                             else @if (!item.Estado)
                             {
                                 <span class="button-icon text-success">
                                     | <a href="@Url.Action("Alta", new { id = item.IdPropietario })" title="Alta"
-                                        class="text-success">
-                                        <i class="fa-solid fa-check-circle"></i></a>
+                                        class="text-success"><i class="fa-solid fa-check-circle"></i></a>
                                 </span>
                             }
                         }
                         <span class="button-icon">
+                            | <a href="@Url.Action("ListarInmuebles", "Inmuebles", new { idPropietario = item.IdPropietario })"
+                                title="Listar inmuebles"><i class="fa fa-list text-black"></i></a>
+                        </span>
+                        <span class="button-icon">
                             | <a href="@Url.Action("Create", "Inmueble", new { id = item.IdPropietario })"
-                                title="Alta Inmueble">
-                                <i class="fa fa-home custom-color"></i>
-                            </span>
+                                title="Agregar inmueble"><i class="fa fa-home text-success"></i></a>
+                        </span>
                     </span>
+
                 </td>
             </tr>
         }
@@ -252,7 +258,7 @@
                 var limite = $(this).val(); // Límite de filas por página
 
                 // Redirige al método `Index` del controlador `Propietario` pasando `limite` y `paginado` como parámetros de consulta
-                window.location.href = '@Url.Action("Index", "Propietario")'+'?paginado='+1+'&limite='+limite;
+                window.location.href = '@Url.Action("Index", "Propietario")' + '?paginado=' + 1 + '&limite=' + limite;
             });
 
 

@@ -505,45 +505,96 @@ public class RepositorioInmueble
         return inmuebles;
     }
 
-    public List<Inmueble> BuscarInmuebles(int idUsoDeInmueble, int idTipoDeInmueble, int ambientes, decimal precioDesde, decimal precioHasta, DateTime fechaDesde, DateTime fechaHasta)
+    public List<Inmueble> BuscarInmuebles(int? idUsoDeInmueble, int? idTipoDeInmueble, int? ambientes, decimal? precioDesde, decimal? precioHasta, DateTime? fechaDesde, DateTime? fechaHasta)
     {
         List<Inmueble> inmueblesEncontrados = new List<Inmueble>();
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
             var sql = @"
-                    SELECT 
-                        inmueble.IdInmueble,
-                        inmueble.Direccion,
-                        inmueble.Precio,
-                        usodeinmueble.Nombre AS UsoDeInmuebleNombre,
-                        tipodeinmueble.Nombre AS TipoDeInmuebleNombre,
-                        propietario.Nombre AS PropietarioNombre,
-                        propietario.Apellido AS PropietarioApellido
-                    FROM inmueble 
-                        INNER JOIN tipodeinmueble 
-                            ON inmueble.IdTipoDeInmueble = tipodeinmueble.IdTipoDeInmueble
-                        INNER JOIN propietario 
-                            ON inmueble.IdPropietario = propietario.IdPropietario
-                        INNER JOIN usodeinmueble 
-                            ON inmueble.IdUsoDeInmueble = usodeinmueble.IdUsoDeInmueble
-                    WHERE inmueble.Estado = 1 
-                        AND inmueble.Ambientes = @ambientes
-                        AND inmueble.Precio BETWEEN @precioDesde AND @precioHasta
-                        AND inmueble.IdTipoDeInmueble = @idTipoDeInmueble
-                        AND inmueble.IdUsoDeInmueble = @idUsoDeInmueble
-                        AND NOT EXISTS (
-                            SELECT 1 FROM Contrato c
-                            WHERE c.IdInmueble = inmueble.IdInmueble
-                                AND c.AlquilerHasta >= @fechaDesde AND c.AlquilerDesde <= @fechaHasta);";
+            SELECT 
+                inmueble.IdInmueble,
+                inmueble.Direccion,
+                inmueble.Precio,
+                usodeinmueble.Nombre AS UsoDeInmuebleNombre,
+                tipodeinmueble.Nombre AS TipoDeInmuebleNombre,
+                propietario.Nombre AS PropietarioNombre,
+                propietario.Apellido AS PropietarioApellido
+            FROM inmueble 
+                INNER JOIN tipodeinmueble 
+                    ON inmueble.IdTipoDeInmueble = tipodeinmueble.IdTipoDeInmueble
+                INNER JOIN propietario 
+                    ON inmueble.IdPropietario = propietario.IdPropietario
+                INNER JOIN usodeinmueble 
+                    ON inmueble.IdUsoDeInmueble = usodeinmueble.IdUsoDeInmueble
+            WHERE inmueble.Estado = 1";
+            if (idTipoDeInmueble.HasValue)
+            {
+                sql += " AND inmueble.IdTipoDeInmueble = @idTipoDeInmueble";
+            }
+            if (idUsoDeInmueble.HasValue)
+            {
+                sql += " AND inmueble.IdUsoDeInmueble = @idUsoDeInmueble";
+            }
+            if (ambientes.HasValue)
+            {
+                sql += " AND inmueble.Ambientes = @ambientes";
+            }
+            if (precioDesde.HasValue)
+            {
+                sql += " AND inmueble.Precio >= @precioDesde";
+            }
+            if (precioHasta.HasValue)
+            {
+                sql += " AND inmueble.Precio <= @precioHasta";
+            }
+            if (fechaDesde.HasValue && fechaHasta.HasValue)
+            {
+                sql += @"
+                AND NOT EXISTS (
+                    SELECT 1 FROM Contrato c
+                    WHERE c.IdInmueble = inmueble.IdInmueble
+                        AND c.AlquilerHasta >= @fechaDesde AND c.AlquilerDesde <= @fechaHasta
+                )";
+            }
+            else if (fechaDesde.HasValue)
+            {
+                sql += @"
+                AND NOT EXISTS (
+                    SELECT 1 FROM Contrato c
+                    WHERE c.IdInmueble = inmueble.IdInmueble
+                        AND c.AlquilerHasta >= @fechaDesde
+                )";
+            }
+            else if (fechaHasta.HasValue)
+            {
+                sql += @"
+                AND NOT EXISTS (
+                    SELECT 1 FROM Contrato c
+                    WHERE c.IdInmueble = inmueble.IdInmueble
+                        AND c.AlquilerDesde <= @fechaHasta
+                )";
+            }
             using (MySqlCommand cmd = new MySqlCommand(sql, conn))
             {
                 cmd.Parameters.AddWithValue("@idUsoDeInmueble", idUsoDeInmueble);
                 cmd.Parameters.AddWithValue("@idTipoDeInmueble", idTipoDeInmueble);
                 cmd.Parameters.AddWithValue("@ambientes", ambientes);
-                cmd.Parameters.AddWithValue("@precioDesde", precioDesde);
-                cmd.Parameters.AddWithValue("@precioHasta", precioHasta);
-                cmd.Parameters.AddWithValue("@fechaDesde", fechaDesde);
-                cmd.Parameters.AddWithValue("@fechaHasta", fechaHasta);
+                if (precioDesde.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@precioDesde", precioDesde.Value);
+                }
+                if (precioHasta.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@precioHasta", precioHasta.Value);
+                }
+                if (fechaDesde.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@fechaDesde", fechaDesde.Value);
+                }
+                if (fechaHasta.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@fechaHasta", fechaHasta.Value);
+                }
                 conn.Open();
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
