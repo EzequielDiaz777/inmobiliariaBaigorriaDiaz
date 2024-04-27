@@ -238,6 +238,81 @@ public class RepositorioInmueble
         return inmuebles;
     }
 
+    public List<Inmueble> ObtenerInmueblesPorPropietario(int id, int limite, int paginado)
+    {
+        List<Inmueble> inmuebles = new List<Inmueble>();
+        int offset = (paginado - 1) * limite;
+
+        if (offset < 0)
+        {
+            offset = 0;
+        }
+        using (MySqlConnection conn = new MySqlConnection(connectionString))
+        {
+            var sql =
+                    @$"SELECT 
+                        i.{nameof(Inmueble.IdInmueble)},
+                        i.{nameof(Inmueble.Direccion)},
+                        i.{nameof(Inmueble.Ambientes)},
+                        i.{nameof(Inmueble.Superficie)},
+                        i.{nameof(Inmueble.Longitud)},
+                        i.{nameof(Inmueble.Latitud)},
+                        i.{nameof(Inmueble.Precio)},
+                        u.{nameof(UsoDeInmueble.Nombre)} AS UsoDeInmuebleNombre,
+                        i.{nameof(Inmueble.Estado)},
+                        t.{nameof(TipoDeInmueble.Nombre)} AS TipoDeInmuebleNombre,
+                        p.{nameof(Propietario.Nombre)} AS PropietarioNombre,
+                        p.{nameof(Propietario.Apellido)} AS PropietarioApellido
+                    FROM {nameof(Inmueble)} i 
+                    INNER JOIN {nameof(Propietario)} p 
+                    ON i.{nameof(Inmueble.IdPropietario)} = p.{nameof(Propietario.IdPropietario)}
+                    INNER JOIN {nameof(TipoDeInmueble)} t
+                    ON i.{nameof(Inmueble.IdTipoDeInmueble)} = t.{nameof(TipoDeInmueble.IdTipoDeInmueble)}
+                    INNER JOIN {nameof(UsoDeInmueble)} u
+                    ON i.{nameof(Inmueble.IdUsoDeInmueble)} = u.{nameof(UsoDeInmueble.IdUsoDeInmueble)}
+                    WHERE i.{nameof(Inmueble.IdPropietario)} = @id
+                    LIMIT {limite} OFFSET {offset};";
+            using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", id);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var inmueble = new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32("IdInmueble"),
+                            Direccion = reader.GetString("Direccion"),
+                            Ambientes = reader.GetInt32("Ambientes"),
+                            Superficie = reader.GetDecimal("Superficie"),
+                            Longitud = reader.IsDBNull(reader.GetOrdinal("Longitud")) ? (decimal?)null : reader.GetDecimal("Longitud"),
+                            Latitud = reader.IsDBNull(reader.GetOrdinal("Latitud")) ? (decimal?)null : reader.GetDecimal("Latitud"),
+                            Precio = reader.GetDecimal("Precio"),
+                            Uso = new UsoDeInmueble
+                            {
+                                Nombre = reader.GetString("UsoDeInmuebleNombre"),
+                            },
+                            Estado = reader.GetBoolean("Estado"),
+                            Tipo = new TipoDeInmueble
+                            {
+                                Nombre = reader.GetString("TipoDeInmuebleNombre"),
+                            },
+                            Duenio = new Propietario
+                            {
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido"),
+                            }
+                        };
+                        inmuebles.Add(inmueble);
+                    }
+                }
+                conn.Close();
+            }
+        }
+        return inmuebles;
+    }
+
     public List<Inmueble> ObtenerInmuebles()
     {
         List<Inmueble> inmuebles = new List<Inmueble>();

@@ -218,6 +218,36 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         [HttpGet]
+        public IActionResult ListarInmuebles(int id, int limite = 5, int paginado = 1, int cantidad = 0)
+        {
+            ViewBag.entidad = "inmueble";
+            ViewBag.limite = limite;
+
+            ViewBag.rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            // Obtener la cantidad total de filas de Propietario
+            if (cantidad == 0)
+            {
+                cantidad = repoI.ObtenerCantidadDeFilas();
+            }
+
+            // Calcula el número total de páginas
+            ViewBag.totalPages = (int)Math.Ceiling((double)cantidad / limite);
+            ViewBag.id = id;
+            // Establece la página actual en `ViewBag`
+            ViewBag.currentPage = paginado;
+            return View(repoI.ObtenerInmueblesPorPropietario(id, limite, paginado));
+        }
+
+        [HttpGet]
+        public IActionResult PaginadoListarInmuebles(int paginado, int limite)
+        {
+            // Asegúrate de recibir el valor de `limite` y `paginado`
+            ViewBag.limite = limite;
+            return Json(repoI.ObtenerInmuebles(limite, paginado));
+        }
+
+        [HttpGet]
         public ActionResult BuscarInquilino(int dni)
         {
             var inquilino = repoIn.ObtenerInquilinoPorDNI(dni);
