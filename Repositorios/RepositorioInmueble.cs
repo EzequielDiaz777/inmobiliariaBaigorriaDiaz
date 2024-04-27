@@ -13,9 +13,6 @@ public class RepositorioInmueble
 
     public int AltaFisica(Inmueble inmueble)
     {
-        Console.WriteLine(inmueble.IdPropietario);
-        Console.WriteLine(inmueble.IdTipoDeInmueble);
-        Console.WriteLine(inmueble.IdUsoDeInmueble);
         var res = -1;
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {

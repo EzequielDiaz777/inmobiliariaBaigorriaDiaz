@@ -47,17 +47,20 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
         // GET: Inmueble/Details/5
         public ActionResult Details(int id)
-        {;
+        {
+            ;
             return View(repoI.ObtenerInmueblePorID(id));
         }
 
         // GET: Inmueble/Create
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult Create(int id)
         {
             try
             {
+                ViewBag.Duenio = repoP.ObtenerPropietarioPorID(id);
+                Console.WriteLine(ViewBag.Duenio);
                 ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
-                ViewBag.Propietarios = repoP.ObtenerPropietarios();
                 ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
                 return View();
             }
@@ -69,6 +72,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             }
         }
 
+
         // POST: Inmueble/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -76,43 +80,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    // Itera sobre cada par clave-valor en ModelState
-                    foreach (var entry in ModelState)
-                    {
-                        // Obtiene el nombre de la propiedad
-                        var propertyName = entry.Key;
-
-                        // Obtiene la colección de errores para la propiedad actual
-                        var errors = entry.Value.Errors;
-
-                        // Itera sobre los errores en la colección
-                        foreach (var error in errors)
-                        {
-                            // Accede a la descripción del error
-                            var errorMessage = error.ErrorMessage;
-
-                            // Haz lo que necesites con el mensaje de error
-                            Console.WriteLine($"Error en la propiedad '{propertyName}': {errorMessage}");
-                        }
-                    }
-                    return View(inmueble);
-                }
-                else
-                {
-                    Console.WriteLine(inmueble.IdPropietario);
-                    inmueble.IdPropietario = inmueble.Duenio.IdPropietario;
-                    Console.WriteLine(inmueble.IdPropietario);
-                    Console.WriteLine(inmueble.IdTipoDeInmueble);
-                    Console.WriteLine(inmueble.IdUsoDeInmueble);
-                    if(inmueble.IdPropietario != 0)
-                    {
-                        repoI.AltaFisica(inmueble);
-                    }
-                    TempData["Id"] = inmueble.IdInmueble;
-                    return RedirectToAction(nameof(Index));
-                }
+                repoI.AltaFisica(inmueble);
+                TempData["Id"] = inmueble.IdInmueble;
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception e)
             {
@@ -151,7 +121,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             ViewBag.Propietarios = repoP.ObtenerPropietarios();
             ViewBag.TiposDeInmuebles = repoTI.ObtenerTiposDeInmuebles();
             ViewBag.UsosDeInmuebles = repoUI.ObtenerUsosDeInmuebles();
-            return View(repoI.ObtenerInmueblePorID(id));  
+            return View(repoI.ObtenerInmueblePorID(id));
         }
 
         // POST: Inmueble/Edit/5
@@ -162,8 +132,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             try
             {
                 Inmueble? inmuebleBD = repoI.ObtenerInmueblePorID(id);
-                if(inmuebleBD != null){
-                    inmuebleBD.IdTipoDeInmueble= inmueble.IdTipoDeInmueble;
+                if (inmuebleBD != null)
+                {
+                    inmuebleBD.IdTipoDeInmueble = inmueble.IdTipoDeInmueble;
                     inmuebleBD.IdUsoDeInmueble = inmueble.IdUsoDeInmueble;
                     inmuebleBD.IdPropietario = inmueble.IdPropietario;
                     inmuebleBD.Direccion = inmueble.Direccion;
@@ -174,7 +145,9 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                     inmuebleBD.Precio = inmueble.Precio;
                     repoI.ModificarInmueble(inmuebleBD);
                     return RedirectToAction(nameof(Index));
-                } else {
+                }
+                else
+                {
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -228,7 +201,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         }
 
         [HttpGet]
-        public IActionResult ObtenerInmueblesPorUso(int id){
+        public IActionResult ObtenerInmueblesPorUso(int id)
+        {
             var inmuebles = repoI.ObtenerInmueblesPorUso(id);
             return Json(inmuebles);
         }
@@ -249,7 +223,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
             {
                 // Si el inquilino se encuentra, devolvemos los datos como un objeto JSON con la propiedad "success" igual a true
                 // y los datos del inquilino en la propiedad "inquilino"
-                
+
                 return Json(new { success = true, inquilino = inquilino });
             }
             else

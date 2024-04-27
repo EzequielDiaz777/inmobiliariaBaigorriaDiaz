@@ -10,19 +10,13 @@
             <div class="card">
                 <div class="card-body">
                     <h1 class="text-center"><b>ALTA DE INMUEBLE</b></h1>
-                    <form id="BuscarPropietario" class="mt-md-0 mt-4">
-                        <h2>Buscar Propietario</h2>
-                        <div class="mb-3">
-                            <label for="dni" class="form-label">Ingrese el DNI del propietario:</label>
-                            <input type="number" name="dni" id="dni" class="form-control">
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Buscar</button>
-                        </div>
-                    </form>
-                    <div class="resultadoPropietario mt-3"></div>
                     <form asp-action="Create" class="needs-validation" novalidate id="formAltaInmueble">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="control-label">Propietario</label>
+                            <input type="text" readonly class="form-control" value="@ViewBag.Duenio?.ToString()" />
+                            <input type="hidden" asp-for="IdPropietario" value="@ViewBag.Duenio?.IdPropietario" />
+                        </div>
                         <div class="form-group">
                             <label asp-for="Direccion" class="control-label"></label>
                             <input asp-for="Direccion" class="form-control" />
@@ -99,101 +93,17 @@
 
 @section Scripts {
     <script>
-        $('#BuscarPropietario').submit(function (event) {
-            event.preventDefault();
-            var dni = $('#dni').val();
-            $.ajax({
-                url: '@Url.Action("BuscarPropietario", "Propietario")',
-                type: 'GET',
-                data: { dni: dni },
-                success: function (response) {
-                    if (response.propietario.dni !== '') {
-                        $('.resultadoPropietario').html(`
-                                        <div class="row">
-                                            <div>
-                                                <hr>
-                                                <div>
-                                                    <input type="hidden" asp-for="IdPropietario" id="idPropietario" value="${response.propietario.idPropietario}" name="IdPropietario" />
-                                                    <div class="form-group text-center">
-                                                        <label asp-for="DNI" class="control-label">DNI</label>
-                                                        <input asp-for="DNI" value="${response.propietario.dni}" readonly class="form-control" required />
-                                                        <span asp-validation-for="DNI" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="form-group text-center">
-                                                        <label asp-for="Apellido" class="control-label">Apellido</label>
-                                                        <input asp-for="Apellido" value="${response.propietario.apellido}" readonly class="form-control" required />
-                                                        <span asp-validation-for="Apellido" class="text-danger"></span>
-                                                    </div>
-                                                    <div class="form-group text-center">
-                                                        <label asp-for="Nombre" class="control-label">Nombre</label>
-                                                        <input asp-for="Nombre" value="${response.propietario.nombre}" readonly class="form-control" required />
-                                                        <span asp-validation-for="Nombre" class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `);
-                        $('#idPropietario').val(response.propietario.idPropietario);
-                        console.log($('#idPropietario').val());
-                    } else {
-                        // Mostrar el formulario para crear un nuevo propietario si no se encuentra
-                        $('.resultadoPropietario').html(`
-                                        <div class="row">
-                                            <div>
-                                                <hr>
-                                                <input type="hidden" asp-for="IdPropietario" id="idPropietario" name="IdPropietario" />
-                                                <div class="form-group text-center">
-                                                    <label for="dniForm" class="control-label">DNI</label>
-                                                    <input id="dniForm" value="${dni}" class="form-control" required />
-                                                </div>
-                                                <div class="form-group text-center">
-                                                    <label for="apellido" class="control-label">Apellido</label>
-                                                    <input id="apellido" class="form-control" required />
-                                                </div>
-                                                <div class="form-group text-center">
-                                                    <label for="nombre" class="control-label">Nombre</label>
-                                                    <input id="nombre" class="form-control" required />
-                                                </div>
-                                                <br>
-                                                <div class="text-center">
-                                                    <button id="crearPropietarioBtn" class="btn btn-primary">Crear Propietario</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `);
-                    }
-                }
-            });
-        });
-        $(document).on('click', '#crearPropietarioBtn', function () {
-            var dni = $('#dniForm').val();
-            var apellido = $('#apellido').val();
-            var nombre = $('#nombre').val();
-            var propietario = {
-                DNI: dni,
-                Apellido: apellido,
-                Nombre: nombre,
-                Telefono: "",
-                Email: "",
-            };
-            $.ajax({
-                url: '@Url.Action("CreateJSON", "Propietario")',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(propietario),
-                success: function (response) {
-                    if (response.success) {
-                        $('#crearPropietarioBtn').hide();
-                        $('#dniForm').prop('readonly', true);
-                        $('#apellido').prop('readonly', true);
-                        $('#nombre').prop('readonly', true);
-                        $('#idPropietario').val(response.idPropietario);
-                    } else {
-                        alert('Error al crear el propietario:', response.message);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    alert('Error en la solicitud AJAX:', error);
+        $(document).ready(function () {
+            $('.input-group input').on('input', function () {
+                var inputGroup = $(this).closest('.input-group');
+                var iconCheck = inputGroup.find('.fa-check');
+                var iconTimes = inputGroup.find('.fa-times');
+                if ($(this).val().trim() !== '') {
+                    iconCheck.removeClass('d-none');
+                    iconTimes.addClass('d-none');
+                } else {
+                    iconCheck.addClass('d-none');
+                    iconTimes.removeClass('d-none');
                 }
             });
         });
