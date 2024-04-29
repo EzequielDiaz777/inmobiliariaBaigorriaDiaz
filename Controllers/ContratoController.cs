@@ -92,14 +92,8 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde?}/{fechaHasta?}")]
         public ActionResult Create(int idInmueble, int idInquilino, decimal precioInmueble, DateOnly? fechaDesde, DateOnly? fechaHasta)
         {
-            Console.WriteLine("IdInquilino: " + idInquilino);
-            Console.WriteLine("IdInmueble: " + idInmueble);
-            Console.WriteLine("Precio: " + precioInmueble);
-            Console.WriteLine("AlquilerDesde: " + fechaDesde);
-            Console.WriteLine("AlquilerHasta: " + fechaHasta);
-            Inmueble inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
+            Inmueble? inmueble = repoInm.ObtenerInmueblePorID(idInmueble);
             Inquilino inquilino = repoInq.ObtenerInquilinoPorID(idInquilino);
-            // Crear el modelo de contrato y establecer sus propiedades
             Contrato contrato = new Contrato
             {
                 IdInquilino = idInquilino,
@@ -110,8 +104,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 Inquilino = inquilino,
                 Inmueble = inmueble,
             };
-
-            // Devolver la vista con el modelo de contrato
             return View(contrato);
         }
 
@@ -189,27 +181,21 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public ActionResult Create(int id)
         {
-            // Crear el modelo de contrato y establecer sus propiedades
             Contrato contrato = repoC.ObtenerContratoById(id);
-            // Devolver la vista con el modelo de contrato
             return View(contrato);
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public ActionResult Create(Contrato contrato)
+        [Route("Contrato/Create/{idInmueble}/{idInquilino}/{precioInmueble}/{fechaDesde}/{fechaHasta}")]
+        public ActionResult Create(int idInmueble, int idInquilino, decimal precioInmueble, DateTime fechaDesde, DateTime fechaHasta, Contrato contrato)
         {
-            Console.WriteLine(contrato.IdContrato);
             try
             {
-                contrato.AlquilerHastaOriginal = contrato.AlquilerHasta;
-                Console.WriteLine("Post entrada");
-                Console.WriteLine("IdInquilino: " + contrato.IdInquilino);
-                Console.WriteLine("IdInmueble: " + contrato.IdInmueble);
-                Console.WriteLine("Precio: " + contrato.Precio);
-                Console.WriteLine("AlquilerDesde: " + contrato.AlquilerDesde);
-                Console.WriteLine("AlquilerHasta: " + contrato.AlquilerHasta);
-                Console.WriteLine("AlquilerHastaOriginal: " + contrato.AlquilerHastaOriginal);
+                contrato.IdInmueble = idInmueble;
+                contrato.IdInquilino = idInquilino;
+                contrato.Precio = precioInmueble;
+                contrato.AlquilerDesde = DateOnly.FromDateTime(fechaDesde);
+                contrato.AlquilerHasta = DateOnly.FromDateTime(fechaHasta);
                 repoC.AltaFisica(contrato);
                 TempData["Id"] = contrato.IdContrato;
                 return RedirectToAction(nameof(Index));
@@ -219,6 +205,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
                 return View();
             }
         }
+
 
         [HttpGet]
         public ActionResult Alta(int id)

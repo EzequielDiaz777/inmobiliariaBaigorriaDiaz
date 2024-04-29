@@ -245,7 +245,7 @@
             $('#limite').change(function () {
                 // Obtén el valor seleccionado en el desplegable `limite`
                 var limite = $(this).val(); // Límite de filas por página
-                window.location.href = '@Url.Action("ListarInmuebles", "Inmueble")' + '?id=' + @ViewBag.id + '&limite=' + limite + '&paginado=' + 1;
+                window.location.href = '@Url.Action("ListarInmuebles", "Inmueble")' + '?id=' + @ViewBag.idPropietario + '&limite=' + limite + '&paginado=' + 1;
             });
 
 

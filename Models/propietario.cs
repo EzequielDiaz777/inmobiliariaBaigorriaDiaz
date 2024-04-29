@@ -9,7 +9,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Required]
         public string Nombre { get; set; } = "";
         [Required]
-        [Display(Name = "Apellido del propietario")]
         public string Apellido { get; set; } = "";
         [Display(Name = "Teléfono")]
         public string? Telefono { get; set; }
@@ -18,7 +17,6 @@ namespace inmobiliariaBaigorriaDiaz.Models
         [Required]
         public string DNI { get; set; } = "";
         [Required]
-        [Display(Name = "Estado del propietario")]
         public bool Estado { get; set; }
         public override string ToString()
         {

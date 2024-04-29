@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 /*
 Inmobiliaria:
-- Corregir renovar contrato (LISTO)
+- Corregir renovar contrato
 - Mejorar el crear inmueble (LISTO)
-- Mejorar el buscar inmueble (LISTO)
+- Mejorar el buscar inmueble (PREGUNTAR AL PROFE)
 - Corregir actualizar contrato
 - Corregir el 'Volver' en Renovar contrato (LISTO)
 - Corregir el buscador para que no sea por JS

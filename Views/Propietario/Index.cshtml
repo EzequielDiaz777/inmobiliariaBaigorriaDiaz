@@ -135,15 +135,14 @@
                             @if (item.Estado)
                             {
                                 <span class="button-icon">
-                                    | <a href="@Url.Action("Delete", new { id = item.IdPropietario })" title="Baja"><i
-                                            class="fa-solid fas fa-trash-alt text-danger"></i></a>
+                                    | <a href="@Url.Action("Delete", new { id = item.IdPropietario })" title="Baja"><i class="fas fa-arrow-down text-danger"></i></a>
                                 </span>
                             }
                             else @if (!item.Estado)
                             {
                                 <span class="button-icon text-success">
                                     | <a href="@Url.Action("Alta", new { id = item.IdPropietario })" title="Alta"
-                                        class="text-success"><i class="fa-solid fa-check-circle"></i></a>
+                                        class="text-success"><i class="fas fa-arrow-up text-success"></i></a>
                                 </span>
                             }
                         }

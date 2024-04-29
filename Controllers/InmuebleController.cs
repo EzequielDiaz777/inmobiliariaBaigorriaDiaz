@@ -220,7 +220,6 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
         [HttpGet]
         public IActionResult ListarInmuebles(int id, int limite = 5, int paginado = 1, int cantidad = 0)
         {
-            ViewBag.entidad = "inmueble";
             ViewBag.limite = limite;
 
             ViewBag.rol = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
@@ -233,7 +232,7 @@ namespace inmobiliariaBaigorriaDiaz.Controllers
 
             // Calcula el número total de páginas
             ViewBag.totalPages = (int)Math.Ceiling((double)cantidad / limite);
-            ViewBag.id = id;
+            ViewBag.idPropietario = id;
             // Establece la página actual en `ViewBag`
             ViewBag.currentPage = paginado;
             return View(repoI.ObtenerInmueblesPorPropietario(id, limite, paginado));
